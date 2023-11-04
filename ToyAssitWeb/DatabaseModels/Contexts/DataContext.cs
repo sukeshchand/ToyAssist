@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeveloperTools.DatabaseModels;
+namespace ToyAssist.Web.DatabaseModels;
 
 public partial class DataContext : DbContext
 {

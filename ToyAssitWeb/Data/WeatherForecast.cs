@@ -1,4 +1,4 @@
-namespace DeveloperTools.Data
+namespace ToyAssist.Web.Data
 {
     public class WeatherForecast
     {

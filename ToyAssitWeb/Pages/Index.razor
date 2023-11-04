@@ -2,5 +2,14 @@
 
 <PageTitle>ToyAssist</PageTitle>
 
-<h1>ToyAssist</h1>
+<h1>Assist</h1>
+@foreach (var incomeExpenseSetup in IncomeExpenseSetups)
+{
+    <div class="row" style="width:600px">
+        <div class="col-6" >@incomeExpenseSetup.Descr</div>
+        <div class="col-4" >@incomeExpenseSetup.Amount</div>
+        <div class="col-2">@incomeExpenseSetup.Currency</div>
+    </div>
+    
+}
 

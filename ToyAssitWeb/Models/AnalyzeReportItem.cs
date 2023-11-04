@@ -1,32 +1,20 @@
-﻿namespace DeveloperTools.Pages
+﻿namespace ToyAssist.Web.Pages
 {
     public partial class Index
     {
-        public class AnalyzeReportItem
+        public class IncomeExpenseSetup 
         {
-            public AnalyzeReportItem()
+            public IncomeExpenseSetup()
             {
 
             }
-            public AnalyzeReportItem(int id, string groupName, string operatorName, string description, DateTime dateAndTime, ReportStatusEnum reportStatus, bool isExecuteError, string? tableHtml)
-            {
-                Id = id;
-                GroupName = groupName;
-                OperatorName = operatorName;
-                Description = description;
-                DateAndTime = dateAndTime;
-                ReportStatus = reportStatus;
-                IsExecuteError = isExecuteError;
-                TableHtml = tableHtml;
-            }
-            public int Id { get; set; }
-            public DateTime DateAndTime { get; set; }
-            public string? Description { get; set; }
-            public string? GroupName { get; set; }
-            public string? OperatorName { get; set; }
-            public bool IsExecuteError { get; set; }
-            public ReportStatusEnum ReportStatus { get; set; }
-            public string TableHtml { get; set; }
+            public int IncomeExpenseSetupId { get; set; }
+            public DateTime StartDate { get; set; }
+            public DateTime? EndDate { get; set; }
+            public int IncomeExpenseType { get; set; }
+            public double Amount { get; set; }
+            public string Currency { get; set; }
+            public string Descr { get; set; }
         }
 
     }

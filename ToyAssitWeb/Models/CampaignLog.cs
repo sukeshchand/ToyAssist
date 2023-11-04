@@ -1,4 +1,4 @@
-﻿namespace DeveloperTools.Pages
+﻿namespace ToyAssist.Web.Pages
 {
     public class CampaignLog
     {

@@ -1,4 +1,4 @@
-﻿namespace DeveloperTools.Helpers
+﻿namespace ToyAssist.Web.Helpers
 {
     using Microsoft.Extensions.Configuration;
     public class ConfigurationReader
