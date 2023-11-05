@@ -1,15 +1,36 @@
 ﻿@page "/"
 
+<style>
+
+</style>
+
 <PageTitle>ToyAssist</PageTitle>
 
 <h1>Assist</h1>
-@foreach (var incomeExpenseSetup in IncomeExpenseSetups)
-{
-    <div class="row" style="width:600px">
-        <div class="col-6" >@incomeExpenseSetup.Descr</div>
-        <div class="col-4" >@incomeExpenseSetup.Amount</div>
-        <div class="col-2">@incomeExpenseSetup.Currency</div>
-    </div>
-    
-}
+<div>
+    @foreach (var groupItem in IncomeExpenseSetups.GroupBy(x => x.Currency).Select(g => new { g }).ToList())
+    {
+        <div style="padding:5px; margin: 5px; border:1px solid #ccc; border-radius:5px">
+            @{
+                var itemFiltered = IncomeExpenseSetups.Where(x => x.Currency == groupItem.g.Key).ToList();
+            }
+
+            @foreach (var incomeExpenseSetup in itemFiltered)
+            {
+                <div class="row" style="width:600px; padding: 3px;">
+                    <div class="col-6">@incomeExpenseSetup.Descr</div>
+                    <div class="col-4" style="text-align:right">@incomeExpenseSetup.Amount @incomeExpenseSetup.Currency</div>
+                    <div class="col-2"></div>
+                </div>
+
+            }
+            <hr />
+            <div class="row" style="width:600px; padding: 3px;">
+                <div class="col-6">Total:</div>
+                <div class="col-4" style="text-align:right; font-weight:bold">@itemFiltered.Sum(x => x.Amount) @groupItem.g.Key</div>
+                <div class="col-2"></div>
+            </div>
+        </div>
+    }
+</div>
 
