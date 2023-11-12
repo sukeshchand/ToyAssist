@@ -28,7 +28,12 @@ namespace ToyAssist.Web.Pages
         List<IncomeExpenseSetup> IncomeExpenseSetups = new List<IncomeExpenseSetup>();
         private readonly DataContext _dataContext;
 
-       
+        public string Month1ButtonLabel { get; set; }
+        public string Month2ButtonLabel { get; set; }
+        public string Month3ButtonLabel { get; set; }
+        public string Month4ButtonLabel { get; set; }
+
+
         public Index()
         {
             ConnectionString = (new ConfigurationReader()).GetSetting("ConnectionStrings:MainConnection");
@@ -37,8 +42,30 @@ namespace ToyAssist.Web.Pages
 
             _dataContext = new DataContext(options);
            
-            var incomeExpenseSetups = ExecuteSQL<IncomeExpenseSetup>("SELECT IncomeExpenseSetupId, StartDate, EndDate, IncomeExpenseType, Amount, Currency, Descr FROM IncomeExpenseSetup");
+            var incomeExpenseSetups = ExecuteSQL<IncomeExpenseSetup>("SELECT IncomeExpenseSetupId, StartDate, EndDate, IncomeExpenseType, Amount, Currency, Descr, NextPaymentDate, NextBillingDate, PaymentUrl, AccountLogInUrl FROM IncomeExpenseSetup");
             IncomeExpenseSetups.AddRange(incomeExpenseSetups);
+
+            Month1ButtonLabel = DateTime.Now.ToString("MMM");
+            Month2ButtonLabel = FirstDayOfNextMonth(1).ToString("MMM");
+            Month3ButtonLabel = FirstDayOfNextMonth(2).ToString("MMM");
+            Month4ButtonLabel = FirstDayOfNextMonth(3).ToString("MMM");
+        }
+
+        public DateTime FirstDayOfNextMonth(int nextMonthAfter)
+        {
+            DateTime today = DateTime.Now;
+            if (nextMonthAfter > 1)
+            {
+                today = FirstDayOfNextMonth(nextMonthAfter - 1);
+            }
+
+            // Find the last day of the current month
+            DateTime lastDayOfMonth = new DateTime(today.Year, today.Month, DateTime.DaysInMonth(today.Year, today.Month));
+
+            // Find the first day of the next month
+            DateTime firstDayOfNextMonth = lastDayOfMonth.AddDays(1);
+            return firstDayOfNextMonth;
+
         }
 
         public static List<(string Name, PropertyInfo PropertyInfo)> GetProperties(Object obj)
@@ -121,5 +148,9 @@ namespace ToyAssist.Web.Pages
             }
         }
 
+        private async Task btnExpenseSettings_Click(MouseEventArgs e, int monthIndex)
+        {
+            
+        }
     }
 }
