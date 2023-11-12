@@ -5,6 +5,10 @@ VisualStudioVersion = 17.8.34212.112
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToyAssist.Web", "ToyAssitWeb\ToyAssist.Web.csproj", "{D11493F0-DEE7-40E7-AB4D-D89212634ED0}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ToyAssist.TransactionDatabase", "Databases\TransactionDatabase\ToyAssist.TransactionDatabase.sqlproj", "{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{713FD267-65D1-4E36-9990-5274B9D623A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,18 @@ Global
 		{D11493F0-DEE7-40E7-AB4D-D89212634ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D11493F0-DEE7-40E7-AB4D-D89212634ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D11493F0-DEE7-40E7-AB4D-D89212634ED0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F1AD5FDC-4E3B-4409-A741-39BF99F2A667} = {713FD267-65D1-4E36-9990-5274B9D623A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EF29A2FF-69BA-45E4-8F93-2FEC369F83A6}
