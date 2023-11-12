@@ -68,6 +68,20 @@ namespace ToyAssist.Web.Pages
 
         }
 
+        public string GetMonthAndDaysLeftString(DateTime? date)
+        {
+            if (date == null) return string.Empty;
+
+            var diff = (date - DateTime.Now).Value;
+            if(diff.TotalDays > 30)
+            {
+                var months = (int)(diff.TotalDays / 30);
+                var days = (int)(diff.TotalDays - (months * 30));
+                return $"{months} months {days} days left";
+            }
+            return $"{(int)diff.TotalDays} days left";
+        }
+
         public static List<(string Name, PropertyInfo PropertyInfo)> GetProperties(Object obj)
         {
             var properties = new List<(string, PropertyInfo)>();
