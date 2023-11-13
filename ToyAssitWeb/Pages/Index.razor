@@ -85,7 +85,7 @@
             {
                 <div class="row" style="padding: 6px;">
                     <div class="col-4">@incomeExpenseSetup.Descr</div>
-                    <div class="col-3" style="text-align:right">
+                    <div class="col-3" style="text-align: right; max-width: 250px">
                         <div class="row">
                             <div class="col-12">
                                 @incomeExpenseSetup.Amount @incomeExpenseSetup.Currency
@@ -94,16 +94,27 @@
                         @if (index == itemFiltered.Count - 1)
                         {
                             <div class="row">
-                                <div class="col-12" style="color: #808080a6;">
+                                <div class="col-12" style="color:#808080a6;">
                                     <hr />
-                                    <span style="border: 2px solid #cccc; padding: 3px; border-radius: 3px">
-                                        <span>
-                                            Total @groupItem.g.Key:
-                                        </span>
-                                        <span style="font-weight:bold">
-                                            @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
-                                        </span>
-                                    </span>
+                                    <div style="border: 2px solid #cccc; padding: 3px; border-radius: 3px">
+                                        <div>
+                                            <span>
+                                                Total:
+                                            </span>
+                                            <span style="font-weight: bold">
+                                                @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
+                                            </span>
+                                        </div>
+                                        <div>
+                                            ≈
+                                            @foreach (var conversionItem in GetConversionList(@groupItem.g.Key, @itemFiltered.Sum(x => x.Amount)))
+                                            {
+                                                <span style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
+                                                    @conversionItem
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         }
