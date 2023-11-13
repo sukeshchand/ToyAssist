@@ -1,20 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Data.Common;
-using System.Data.SqlClient;
-using System.Data;
-using ToyAssist.Web.Helpers;
-using ToyAssist.Web.DatabaseModels;
+﻿using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.VisualBasic;
-using System.Runtime.CompilerServices;
-using System;
-using System.Text;
 using System.Reflection;
-using static ToyAssist.Web.Pages.Index;
+using System.Runtime.CompilerServices;
+using System.Text;
+using ToyAssist.Web.DatabaseModels;
+using ToyAssist.Web.Helpers;
 
 namespace ToyAssist.Web.Pages
 {
@@ -41,7 +31,7 @@ namespace ToyAssist.Web.Pages
             var options = SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<DataContext>(), ConnectionString).Options;
 
             _dataContext = new DataContext(options);
-           
+
             var incomeExpenseSetups = ExecuteSQL<IncomeExpenseSetup>("SELECT IncomeExpenseSetupId, StartDate, EndDate, IncomeExpenseType, Amount, Currency, Descr, NextPaymentDate, NextBillingDate, PaymentUrl, AccountLogInUrl FROM IncomeExpenseSetup");
             IncomeExpenseSetups.AddRange(incomeExpenseSetups);
 
@@ -73,7 +63,7 @@ namespace ToyAssist.Web.Pages
             if (date == null) return string.Empty;
 
             var diff = (date - DateTime.Now).Value;
-            if(diff.TotalDays > 30)
+            if (diff.TotalDays > 30)
             {
                 var months = (int)(diff.TotalDays / 30);
                 var days = (int)(diff.TotalDays - (months * 30));
@@ -87,8 +77,6 @@ namespace ToyAssist.Web.Pages
             var properties = new List<(string, PropertyInfo)>();
             // Get the type of the object
             Type type = obj.GetType();
-
-
 
             // Get all public properties
             PropertyInfo[] publicProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -105,8 +93,6 @@ namespace ToyAssist.Web.Pages
         {
             try
             {
-
-
                 if (dataList == null || dataList.Count == 0)
                 {
                     return "<p>No data to display.</p>";
@@ -151,20 +137,13 @@ namespace ToyAssist.Web.Pages
 
         private List<T> ExecuteSQL<T>(string sql)
         {
-            try
-            {
-                FormattableString sqlExec = FormattableStringFactory.Create(sql);
-                return _dataContext.Database.SqlQuery<T>(sqlExec).ToList();
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            FormattableString sqlExec = FormattableStringFactory.Create(sql);
+            return _dataContext.Database.SqlQuery<T>(sqlExec).ToList();
         }
 
         private async Task btnExpenseSettings_Click(MouseEventArgs e, int monthIndex)
         {
-            
+
         }
     }
 }
