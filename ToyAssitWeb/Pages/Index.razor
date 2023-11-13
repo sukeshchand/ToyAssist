@@ -109,11 +109,11 @@
                         </div>
                     </div>
                     <div class="col-1">
-                        @if (@incomeExpenseSetup.PaymentUrl != null)
+                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
                         {
                             <a href="@incomeExpenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
                         }
-                        @if (@incomeExpenseSetup.AccountLogInUrl != null)
+                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.AccountLogInUrl))
                         {
                             <a href="@incomeExpenseSetup.AccountLogInUrl" target="_blank" class="link-box"> Account</a>
                         }
