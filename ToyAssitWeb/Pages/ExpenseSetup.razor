@@ -1,0 +1,139 @@
+﻿@page "/ExpenseSetup"
+@using ToyAssist.Web.Helpers
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
+
+    body {
+        margin: 0;
+        font-family: 'Roboto Condensed';
+        color: #4d4d4d;
+    }
+
+    .link-box {
+        border: solid 1px #0000ff5e;
+        border-radius: 5px;
+        padding: 4px;
+        font-size: x-small;
+        display: inline-block;
+    }
+
+</style>
+
+<PageTitle>ToyAssist</PageTitle>
+
+<h1>Expense setup</h1>
+<div class="row">
+
+    <div class="col-6">
+        
+    </div>
+    <div class="col-6">
+        <div class="row" style="padding: 5px; max-width: 450px;">
+            <div class="col-8">
+                Today:
+                <span style="font-weight: bold">
+                    @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd")
+                </span>
+            </div>
+
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+    </div>
+</div>
+<div style="padding:5px; margin: 5px; border:1px solid #ccc; border-radius:5px">
+    <div class="row">
+        <div class="col-4" style="font-weight:bold">Detail</div>
+        <div class="col-3" style="text-align:right;font-weight:bold">Amount</div>
+        <div class="col-2" style="font-weight:bold">Next Billing</div>
+        <div class="col-2" style="font-weight:bold">Next Payment</div>
+        <div class="col-1" style="font-weight:bold"></div>
+    </div>
+
+    <hr />
+    @foreach (var groupItem in IncomeExpenseSetups.GroupBy(x => x.Currency).Select(g => new { g }).ToList())
+    {
+        <div>
+            @{
+                var itemFiltered = IncomeExpenseSetups.Where(x => x.Currency == groupItem.g.Key).ToList();
+            }
+            @foreach (var (incomeExpenseSetup, index) in itemFiltered.Select((value, i) => (value, i)))
+            {
+                <div class="row" style="padding: 6px;">
+                    <div class="col-4">@incomeExpenseSetup.Descr</div>
+                    <div class="col-3" style="text-align: right; max-width: 250px">
+                        <div class="row">
+                            <div class="col-12">
+                                @incomeExpenseSetup.Amount @incomeExpenseSetup.Currency
+                            </div>
+                        </div>
+                        @if (index == itemFiltered.Count - 1)
+                        {
+                            <div class="row">
+                                <div class="col-12" style="color:#808080a6;">
+                                    <hr />
+                                    <div style="border: 2px solid #cccc; padding: 3px; border-radius: 3px">
+                                        <div>
+                                            <span>
+                                                Total:
+                                            </span>
+                                            <span style="font-weight: bold">
+                                                @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
+                                            </span>
+                                        </div>
+                                        <div>
+                                            ≈
+                                            @foreach (var conversionItem in GetConversionList(@groupItem.g.Key, @itemFiltered.Sum(x => x.Amount)))
+                                            {
+                                                <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
+                                                    @conversionItem
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-2">
+                        @if (@incomeExpenseSetup.NextBillingDate != null)
+                        {
+                            <div>
+                                <div>
+                                    @incomeExpenseSetup.NextBillingDate?.ToString("yyyy-MM-dd")
+                                </div>
+                                <div style="font-size:small">@GeneralHelper.GetMonthAndDaysLeftString(@incomeExpenseSetup.NextBillingDate)</div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-2">
+                        <div>
+                            <div>
+                                @incomeExpenseSetup.NextPaymentDate?.ToString("yyyy-MM-dd")
+                            </div>
+                            <div style="font-size:small">@GeneralHelper.GetMonthAndDaysLeftString(@incomeExpenseSetup.NextPaymentDate)</div>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
+                        {
+                            <a href="@incomeExpenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
+                        }
+                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.AccountLogInUrl))
+                        {
+                            <a href="@incomeExpenseSetup.AccountLogInUrl" target="_blank" class="link-box"> Account</a>
+                        }
+                    </div>
+                </div>
+
+            }
+        </div>
+    }
+</div>
