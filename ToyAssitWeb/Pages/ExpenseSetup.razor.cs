@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using ToyAssist.Web.DatabaseModels;
 using ToyAssist.Web.Helpers;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Pages
 {
@@ -14,20 +15,12 @@ namespace ToyAssist.Web.Pages
     public partial class ExpenseSetup
     {
         public string ConnectionString;
-        private List<string> results = new List<string>();
 
-        public IConfiguration _configuration { get; }
-
-        List<IncomeExpenseSetup> IncomeExpenseSetups = new List<IncomeExpenseSetup>();
+        List<ExpenseSetupModel> ExpenseSetups = new List<ExpenseSetupModel>();
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
         private readonly DataContext _dataContext;
 
-        public string Month1ButtonLabel { get; set; }
-        public string Month2ButtonLabel { get; set; }
-        public string Month3ButtonLabel { get; set; }
-        public string Month4ButtonLabel { get; set; }
-
-
+    
         public ExpenseSetup()
         {
             ConnectionString = (new ConfigurationReader()).GetSetting("ConnectionStrings:MainConnection");
@@ -36,16 +29,11 @@ namespace ToyAssist.Web.Pages
 
             _dataContext = new DataContext(options);
 
-            var incomeExpenseSetups = GeneralHelper.ExecuteSQL<IncomeExpenseSetup>(_dataContext, "SELECT IncomeExpenseSetupId, StartDate, EndDate, IncomeExpenseType, Amount, Currency, Descr, NextPaymentDate, NextBillingDate, PaymentUrl, AccountLogInUrl FROM IncomeExpenseSetup");
-            IncomeExpenseSetups.AddRange(incomeExpenseSetups);
+            var expenseSetup = GeneralHelper.ExecuteSQL<ExpenseSetupModel>(_dataContext, "SELECT ExpenseSetupId, UserId, ExpenseName, ExpenseDescr, StartDate, EndDate, Amount, CurrencyId, BillGeneratedDay, BillPaymentDay, ExpirationDay, PaymentUrl, AccountProfileUrl FROM dbo.ExpenseSetup Where UserId = 1");
+            ExpenseSetups.AddRange(expenseSetup);
 
-            var currencyConversionRates = GeneralHelper.ExecuteSQL<CurrencyConversionRate>(_dataContext, "SELECT BaseCurrency, ToCurrency, ConversionRate FROM [dbo].[CurrencyConversionRate]");
+            var currencyConversionRates = GeneralHelper.ExecuteSQL<CurrencyConversionRate>(_dataContext, "SELECT BaseCurrency, ToCurrency,BaseCurrencyId, ToCurrencyId, ConversionRate FROM [dbo].[CurrencyConversionRate]");
             CurrencyConversionRates.AddRange(currencyConversionRates);
-
-            Month1ButtonLabel = DateTime.Now.ToString("MMM");
-            Month2ButtonLabel = FirstDayOfNextMonth(1).ToString("MMM");
-            Month3ButtonLabel = FirstDayOfNextMonth(2).ToString("MMM");
-            Month4ButtonLabel = FirstDayOfNextMonth(3).ToString("MMM");
         }
 
         public DateTime FirstDayOfNextMonth(int nextMonthAfter)
@@ -65,23 +53,23 @@ namespace ToyAssist.Web.Pages
 
         }
 
-        public List<string> GetConversionList(string baseCurrency, double amount)
+        public List<string> GetConversionList(int baseCurrencyId, double amount)
         {
-            var currenciesInUse = IncomeExpenseSetups.Select(x => x.Currency).Distinct().ToList();
+            var currenciesInUse = ExpenseSetups.Select(x => x.CurrencyId).Distinct().ToList();
             var conversionList = new List<string>();
-            foreach (var currency in currenciesInUse)
+            foreach (var currencyId in currenciesInUse)
             {
-                var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrency == baseCurrency && x.ToCurrency == currency);
+                var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == baseCurrencyId && x.ToCurrencyId == currencyId);
                 if (conversionRate != null)
                 {
-                    conversionList.Add($"{currency} {(int)(amount * (double)conversionRate.ConversionRate)}");
+                    conversionList.Add($"{currencyId} {(int)(amount * (double)conversionRate.ConversionRate)}");
                 }
                 else
                 {
-                    var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrency == currency && x.ToCurrency == baseCurrency);
+                    var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currencyId && x.ToCurrencyId == baseCurrencyId);
                     if (conversionRateReverse != null)
                     {
-                        conversionList.Add($"{currency} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
+                        conversionList.Add($"{currencyId} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
                     }
                 }
             }

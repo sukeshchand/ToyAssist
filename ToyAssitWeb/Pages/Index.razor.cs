@@ -7,15 +7,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using ToyAssist.Web.DatabaseModels;
 using ToyAssist.Web.Helpers;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Pages
 {
-    public class CurrencyConversionRate
-    {
-        public string BaseCurrency { get; set; }
-        public string ToCurrency { get; set; }
-        public decimal ConversionRate { get; set; }
-    }
 
     public partial class Index
     {
@@ -45,7 +40,7 @@ namespace ToyAssist.Web.Pages
             var incomeExpenseSetups = GeneralHelper.ExecuteSQL<IncomeExpenseSetup>(_dataContext, "SELECT IncomeExpenseSetupId, StartDate, EndDate, IncomeExpenseType, Amount, Currency, Descr, NextPaymentDate, NextBillingDate, PaymentUrl, AccountLogInUrl FROM IncomeExpenseSetup");
             IncomeExpenseSetups.AddRange(incomeExpenseSetups);
 
-            var currencyConversionRates = GeneralHelper.ExecuteSQL<CurrencyConversionRate>(_dataContext, "SELECT BaseCurrency, ToCurrency, ConversionRate FROM [dbo].[CurrencyConversionRate]");
+            var currencyConversionRates = GeneralHelper.ExecuteSQL<CurrencyConversionRate>(_dataContext, "SELECT BaseCurrency, ToCurrency,BaseCurrencyId, ToCurrencyId, ConversionRate FROM [dbo].[CurrencyConversionRate]");
             CurrencyConversionRates.AddRange(currencyConversionRates);
 
             Month1ButtonLabel = DateTime.Now.ToString("MMM");

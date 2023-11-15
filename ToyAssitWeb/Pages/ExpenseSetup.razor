@@ -58,20 +58,20 @@
     </div>
 
     <hr />
-    @foreach (var groupItem in IncomeExpenseSetups.GroupBy(x => x.Currency).Select(g => new { g }).ToList())
+    @foreach (var groupItem in ExpenseSetups.GroupBy(x => x.CurrencyId).Select(g => new { g }).ToList())
     {
         <div>
             @{
-                var itemFiltered = IncomeExpenseSetups.Where(x => x.Currency == groupItem.g.Key).ToList();
+                var itemFiltered = ExpenseSetups.Where(x => x.CurrencyId == groupItem.g.Key).ToList();
             }
             @foreach (var (incomeExpenseSetup, index) in itemFiltered.Select((value, i) => (value, i)))
             {
                 <div class="row" style="padding: 6px;">
-                    <div class="col-4">@incomeExpenseSetup.Descr</div>
+                    <div class="col-4">@incomeExpenseSetup.ExpenseName</div>
                     <div class="col-3" style="text-align: right; max-width: 250px">
                         <div class="row">
                             <div class="col-12">
-                                @incomeExpenseSetup.Amount @incomeExpenseSetup.Currency
+                                @incomeExpenseSetup.Amount @incomeExpenseSetup.CurrencyId
                             </div>
                         </div>
                         @if (index == itemFiltered.Count - 1)
@@ -90,7 +90,7 @@
                                         </div>
                                         <div>
                                             ≈
-                                            @foreach (var conversionItem in GetConversionList(@groupItem.g.Key, @itemFiltered.Sum(x => x.Amount)))
+                                            @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
                                             {
                                                 <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
                                                     @conversionItem
@@ -103,22 +103,20 @@
                         }
                     </div>
                     <div class="col-2">
-                        @if (@incomeExpenseSetup.NextBillingDate != null)
+                        @if (@incomeExpenseSetup.BillGeneratedDay != 0)
                         {
                             <div>
                                 <div>
-                                    @incomeExpenseSetup.NextBillingDate?.ToString("yyyy-MM-dd")
+                                    @incomeExpenseSetup.BillGeneratedDay
                                 </div>
-                                <div style="font-size:small">@GeneralHelper.GetMonthAndDaysLeftString(@incomeExpenseSetup.NextBillingDate)</div>
                             </div>
                         }
                     </div>
                     <div class="col-2">
                         <div>
                             <div>
-                                @incomeExpenseSetup.NextPaymentDate?.ToString("yyyy-MM-dd")
+                                @incomeExpenseSetup.BillPaymentDay
                             </div>
-                            <div style="font-size:small">@GeneralHelper.GetMonthAndDaysLeftString(@incomeExpenseSetup.NextPaymentDate)</div>
                         </div>
                     </div>
                     <div class="col-1">
@@ -126,9 +124,9 @@
                         {
                             <a href="@incomeExpenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
                         }
-                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.AccountLogInUrl))
+                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
                         {
-                            <a href="@incomeExpenseSetup.AccountLogInUrl" target="_blank" class="link-box"> Account</a>
+                            <a href="@incomeExpenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
                         }
                     </div>
                 </div>
