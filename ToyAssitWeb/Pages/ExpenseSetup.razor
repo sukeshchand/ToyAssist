@@ -1,4 +1,4 @@
-﻿@page "/ExpenseSetup"
+﻿@page "/"
 @using ToyAssist.Web.Helpers
 
 <style>
@@ -11,7 +11,7 @@
     }
 
     .link-box {
-        border: solid 1px #0000ff5e;
+        border: solid 1px rgba(0, 255, 94, 0);
         border-radius: 5px;
         padding: 4px;
         font-size: x-small;
@@ -64,9 +64,9 @@
     </div>
 
     <hr />
-    @foreach (var groupItem in ExpenseSetups.GroupBy(x => x.CurrencyCode).Select(g => new { g }).ToList())
+    @foreach (var groupItem in ExpenseSetups.GroupBy(x => x.CurrencyId).Select(g => new { g }).ToList())
     {
-        var itemFiltered = ExpenseSetups.Where(x => x.CurrencyCode == groupItem.g.Key).ToList();
+        var itemFiltered = ExpenseSetups.Where(x => x.CurrencyId == groupItem.g.Key).ToList();
         @foreach (var (incomeExpenseSetup, index) in itemFiltered.Select((value, i) => (value, i)))
         {
             <div class="row" style="padding: 6px;">
@@ -91,7 +91,7 @@
                                             @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
                                         </span>
                                     </div>
-                                    <div>
+                                    @* <div>
                                         ≈
                                         @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
                                         {
@@ -99,7 +99,7 @@
                                                 @conversionItem
                                             </div>
                                         }
-                                    </div>
+                                    </div> *@
                                 </div>
                             </div>
                         </div>

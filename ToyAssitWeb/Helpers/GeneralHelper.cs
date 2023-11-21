@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ToyAssist.Web.DatabaseModels;
+using ToyAssist.Web.DatabaseModels.Models;
 
 namespace ToyAssist.Web.Helpers
 {

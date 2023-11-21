@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext "Server=tcp:toyassist.database.windows.net,1433;Initial Catalog=ToyAssist.Test;Persist Security Info=False;User ID=sukeshchand;Password=bNEcea5tJe@Nj5!r;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DatabaseModels\Models -Context "_DataContext" -Force
