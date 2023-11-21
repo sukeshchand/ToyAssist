@@ -29,7 +29,11 @@ namespace ToyAssist.Web.Pages
 
             _dataContext = new DataContext(options);
 
-            var expenseSetup = GeneralHelper.ExecuteSQL<ExpenseSetupModel>(_dataContext, "SELECT ExpenseSetupId, UserId, ExpenseName, ExpenseDescr, StartDate, EndDate, Amount, CurrencyId, BillGeneratedDay, BillPaymentDay, ExpirationDay, PaymentUrl, AccountProfileUrl FROM dbo.ExpenseSetup Where UserId = 1");
+            var expenseSql = @"SELECT EX.ExpenseSetupId, EX.UserId, EX.ExpenseName, EX.ExpenseDescr, EX.StartDate, EX.EndDate, EX.Amount, 
+                                EX.CurrencyId, CR.CurrencyCode, EX.BillGeneratedDay, EX.BillPaymentDay, EX.ExpirationDay, EX.PaymentUrl, EX.AccountProfileUrl 
+                                FROM dbo.ExpenseSetup EX Left Outer Join  [dbo].[Currency] CR ON EX.CurrencyId = CR.CurrencyId
+                               "; 
+            var expenseSetup = GeneralHelper.ExecuteSQL<ExpenseSetupModel>(_dataContext, expenseSql);
             ExpenseSetups.AddRange(expenseSetup);
 
             var currencyConversionRates = GeneralHelper.ExecuteSQL<CurrencyConversionRate>(_dataContext, "SELECT BaseCurrency, ToCurrency,BaseCurrencyId, ToCurrencyId, ConversionRate FROM [dbo].[CurrencyConversionRate]");
@@ -62,14 +66,14 @@ namespace ToyAssist.Web.Pages
                 var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == baseCurrencyId && x.ToCurrencyId == currencyId);
                 if (conversionRate != null)
                 {
-                    conversionList.Add($"{currencyId} {(int)(amount * (double)conversionRate.ConversionRate)}");
+                    conversionList.Add($"{currencyCode} {(int)(amount * (double)conversionRate.ConversionRate)}");
                 }
                 else
                 {
-                    var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currencyId && x.ToCurrencyId == baseCurrencyId);
+                    var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currencyCode && x.ToCurrencyId == baseCurrencyId);
                     if (conversionRateReverse != null)
                     {
-                        conversionList.Add($"{currencyId} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
+                        conversionList.Add($"{currencyCode} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
                     }
                 }
             }

@@ -4,3 +4,4 @@
 Databases/TransactionDatabase/Import Schema Logs/
 *.user
 Databases/TransactionDatabase/ToyAssist.TransactionDatabase.jfm
+Databases/TransactionDatabase/ToyAssist.TransactionDatabase.dbmdl

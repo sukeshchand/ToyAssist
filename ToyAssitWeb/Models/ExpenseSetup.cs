@@ -18,6 +18,7 @@
         public DateTime? EndDate { get; set; }
         public double? Amount { get; set; }
         public int? CurrencyId { get; set; }
+        public string CurrencyCode { get; set; }
         public int? BillGeneratedDay { get; set; }
         public int? BillPaymentDay { get; set; }
         public int? ExpirationDay { get; set; }

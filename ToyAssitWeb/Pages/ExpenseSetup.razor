@@ -18,6 +18,13 @@
         display: inline-block;
     }
 
+    .box {
+        /* border: solid 1px #0000ff5e;
+            border-radius: 5px;
+            padding: 4px;
+            display: inline-block; */
+    }
+
 </style>
 
 <PageTitle>ToyAssist</PageTitle>
@@ -25,10 +32,9 @@
 <h1>Expense setup</h1>
 <div class="row">
 
-    <div class="col-6">
-        
+    <div class="col-6 box">
     </div>
-    <div class="col-6">
+    <div class="col-6 box">
         <div class="row" style="padding: 5px; max-width: 450px;">
             <div class="col-8">
                 Today:
@@ -37,101 +43,97 @@
                 </span>
             </div>
 
-            <div class="col-1">
+            <div class="col-1 box">
             </div>
-            <div class="col-1">
+            <div class="col-1 box">
             </div>
-            <div class="col-1">
+            <div class="col-1 box">
             </div>
-            <div class="col-1">
+            <div class="col-1 box">
             </div>
         </div>
     </div>
 </div>
 <div style="padding:5px; margin: 5px; border:1px solid #ccc; border-radius:5px">
     <div class="row">
-        <div class="col-4" style="font-weight:bold">Detail</div>
-        <div class="col-3" style="text-align:right;font-weight:bold">Amount</div>
-        <div class="col-2" style="font-weight:bold">Next Billing</div>
-        <div class="col-2" style="font-weight:bold">Next Payment</div>
-        <div class="col-1" style="font-weight:bold"></div>
+        <div class="col-4 box" style="font-weight:bold">Detail</div>
+        <div class="col-3 box" style="text-align:right;font-weight:bold;max-width: 250px">Amount</div>
+        <div class="col-2 box" style="font-weight:bold">Next Billing</div>
+        <div class="col-2 box" style="font-weight:bold">Next Payment</div>
+        <div class="col-1 box" style="font-weight:bold"></div>
     </div>
 
     <hr />
-    @foreach (var groupItem in ExpenseSetups.GroupBy(x => x.CurrencyId).Select(g => new { g }).ToList())
+    @foreach (var groupItem in ExpenseSetups.GroupBy(x => x.CurrencyCode).Select(g => new { g }).ToList())
     {
-        <div>
-            @{
-                var itemFiltered = ExpenseSetups.Where(x => x.CurrencyId == groupItem.g.Key).ToList();
-            }
-            @foreach (var (incomeExpenseSetup, index) in itemFiltered.Select((value, i) => (value, i)))
-            {
-                <div class="row" style="padding: 6px;">
-                    <div class="col-4">@incomeExpenseSetup.ExpenseName</div>
-                    <div class="col-3" style="text-align: right; max-width: 250px">
-                        <div class="row">
-                            <div class="col-12">
-                                @incomeExpenseSetup.Amount @incomeExpenseSetup.CurrencyId
-                            </div>
+        var itemFiltered = ExpenseSetups.Where(x => x.CurrencyCode == groupItem.g.Key).ToList();
+        @foreach (var (incomeExpenseSetup, index) in itemFiltered.Select((value, i) => (value, i)))
+        {
+            <div class="row" style="padding: 6px;">
+                <div class="col-4 box">@incomeExpenseSetup.ExpenseName</div>
+                <div class="col-3 box" style="text-align: right;; max-width: 250px">
+                    <div class="row">
+                        <div class="col-12">
+                            @incomeExpenseSetup.Amount @incomeExpenseSetup.CurrencyCode
                         </div>
-                        @if (index == itemFiltered.Count - 1)
-                        {
-                            <div class="row">
-                                <div class="col-12" style="color:#808080a6;">
-                                    <hr />
-                                    <div style="border: 2px solid #cccc; padding: 3px; border-radius: 3px">
-                                        <div>
-                                            <span>
-                                                Total:
-                                            </span>
-                                            <span style="font-weight: bold">
-                                                @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
-                                            </span>
-                                        </div>
-                                        <div>
-                                            ≈
-                                            @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
-                                            {
-                                                <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
-                                                    @conversionItem
-                                                </div>
-                                            }
-                                        </div>
+                    </div>
+                    @if (index == itemFiltered.Count - 1)
+                    {
+                        <div class="row">
+                            <div class="col-12" style="color:#808080a6;">
+                                <hr />
+                                <div style="border: 2px solid #cccc; padding: 3px; border-radius: 3px">
+                                    <div>
+                                        <span>
+                                            Total:
+                                        </span>
+                                        <span style="font-weight: bold">
+                                            @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
+                                        </span>
+                                    </div>
+                                    <div>
+                                        ≈
+                                        @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
+                                        {
+                                            <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
+                                                @conversionItem
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>
-                        }
-                    </div>
-                    <div class="col-2">
-                        @if (@incomeExpenseSetup.BillGeneratedDay != 0)
-                        {
-                            <div>
-                                <div>
-                                    @incomeExpenseSetup.BillGeneratedDay
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <div class="col-2">
+                        </div>
+                    }
+                </div>
+                <div class="col-2 box">
+                    @if (@incomeExpenseSetup.BillGeneratedDay != 0)
+                    {
                         <div>
                             <div>
-                                @incomeExpenseSetup.BillPaymentDay
+                                @incomeExpenseSetup.BillGeneratedDay
                             </div>
                         </div>
-                    </div>
-                    <div class="col-1">
-                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
-                        {
-                            <a href="@incomeExpenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
-                        }
-                        @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
-                        {
-                            <a href="@incomeExpenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
-                        }
+                    }
+                </div>
+                <div class="col-2 box">
+                    <div>
+                        <div>
+                            @incomeExpenseSetup.BillPaymentDay
+                        </div>
                     </div>
                 </div>
+                <div class="col-1 box">
+                    @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
+                    {
+                        <a href="@incomeExpenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
+                    }
+                    @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
+                    {
+                        <a href="@incomeExpenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
+                    }
+                </div>
+            </div>
 
-            }
-        </div>
+        }
     }
 </div>
