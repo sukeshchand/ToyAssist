@@ -20,10 +20,10 @@
     }
 
     .box {
-        /* border: solid 1px #0000ff5e;
-                    border-radius: 5px;
-                    padding: 4px;
-                    display: inline-block; */
+        /*  border: solid 1px #0000ff5e;
+                border-radius: 5px;
+                padding: 4px;
+                display: inline-block; */
     }
 
 </style>
@@ -32,25 +32,29 @@
 
 <h1>Expense setup</h1>
 <div class="row">
-
-    <div class="col-6 box">
-    </div>
-    <div class="col-6 box">
-        <div class="row" style="padding: 5px; max-width: 450px;">
-            <div class="col-8">
-                Today:
-                <span style="font-weight: bold">
-                    @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd")
+    <div class="col-12 box">
+        <div class="row" style="padding: 5px;">
+            <div class="col-8 box">
+                <span style="border: 1px solid #ccc; padding: 6px; border-radius:5px;">
+                    <span>
+                        Today:
+                    </span>
+                    <span style="font-weight: bold">
+                        @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd")
+                    </span>
                 </span>
+                <span style="margin-left:10px; border: 1px solid #ccc; padding: 6px; border-radius:5px;">
+                    <span>
+                        Week number:
+                    </span>
+                    <span>
+                        @GeneralHelper.GetCurrentWeekNumber(DateTime.Now)
+                    </span>
+                </span>
+
             </div>
 
-            <div class="col-1 box">
-            </div>
-            <div class="col-1 box">
-            </div>
-            <div class="col-1 box">
-            </div>
-            <div class="col-1 box">
+            <div class="col-3 box">
             </div>
         </div>
     </div>
@@ -113,19 +117,27 @@
                     @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
                     {
                         <span>
-                            @expenseSetup.BillGeneratedDay@(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillGeneratedDay)))
+                            @expenseSetup.BillGeneratedDay
                         </span>
-                        <span> st of every month</span>
+                        <sup>
+                            @(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillGeneratedDay)))
+                        </sup>
+                        <span>
+                            of every month
+                        </span>
                     }
                 </div>
                 <div class="col-2 box">
                     @if ((expenseSetup.BillPaymentDay ?? 0) != 0)
                     {
                         <span>
-                            @expenseSetup.BillPaymentDay@(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillPaymentDay)))
+                            @expenseSetup.BillPaymentDay
                         </span>
+                        <sup>
+                            @(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillPaymentDay)))
+                        </sup>
                         <span>
-                             <sup>st</sup> dasfadsf of every month
+                            of every month
                         </span>
                     }
                 </div>

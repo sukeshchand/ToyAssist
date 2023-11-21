@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,18 +12,18 @@ namespace ToyAssist.Web.Helpers
         public static string GetOrdinalSuffix(int number)
         {
             if (number % 100 >= 11 && number % 100 <= 13)
-                return number + "ᵗʰ";
+                return "th";
 
             switch (number % 10)
             {
                 case 1:
-                    return number + "ˢᵗ";
+                    return "st";
                 case 2:
-                    return number + "ⁿᵈ";
+                    return "nd";
                 case 3:
-                    return number + "ʳᵈ";
+                    return "rd";
                 default:
-                    return number + "ᵗʰ";
+                    return "th";
             }
         }
 
@@ -102,6 +103,16 @@ namespace ToyAssist.Web.Helpers
             }
         }
 
+        public static int GetCurrentWeekNumber(DateTime? dateTime = null)
+        {
+            if(dateTime == null) dateTime = DateTime.Now;
+
+            var currentCulture = CultureInfo.CurrentCulture;
+            var weekNo = currentCulture.Calendar.GetWeekOfYear((DateTime)dateTime, 
+                            currentCulture.DateTimeFormat.CalendarWeekRule, 
+                            currentCulture.DateTimeFormat.FirstDayOfWeek);
+            return weekNo;
+        }
 
         public static List<T> ExecuteSQL<T>(_DataContext dataContext, string sql)
         {
