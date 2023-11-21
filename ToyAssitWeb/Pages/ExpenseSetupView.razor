@@ -7,9 +7,8 @@
     body {
         margin: 0;
         font-family: 'Roboto Condensed';
-        color:whitesmoke;
+        color: whitesmoke;
         background-color: #1e1e1e;
-        
     }
 
     .link-box {
@@ -22,14 +21,14 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-            border-radius: 5px;
-            padding: 4px;
-            display: inline-block; */
+                    border-radius: 5px;
+                    padding: 4px;
+                    display: inline-block; */
     }
 
 </style>
 
-<PageTitle>ToyAssist</PageTitle>
+<PageTitle>Assist Toy</PageTitle>
 
 <h1>Expense setup</h1>
 <div class="row">
@@ -60,26 +59,29 @@
     <div class="row">
         <div class="col-4 box" style="font-weight:bold">Detail</div>
         <div class="col-3 box" style="text-align:right;font-weight:bold;max-width: 250px">Amount</div>
-        <div class="col-2 box" style="font-weight:bold">Next Billing</div>
-        <div class="col-2 box" style="font-weight:bold">Next Payment</div>
+        <div class="col-2 box" style="font-weight:bold">Bill Generation</div>
+        <div class="col-2 box" style="font-weight:bold">Payment</div>
         <div class="col-1 box" style="font-weight:bold"></div>
     </div>
 
     <hr />
-    @foreach (var groupItem in ExpenseSetups.GroupBy(x => x.CurrencyId).Select(g => new { g }).ToList())
+    @{
+        var currencyGroups = ExpenseSetups.GroupBy(x => x.Currency).Select(currencyGroup => new { currencyGroup }).ToList();
+    }
+    @foreach (var currencyGroupItem in currencyGroups)
     {
-        var itemFiltered = ExpenseSetups.Where(x => x.CurrencyId == groupItem.g.Key).ToList();
-        @foreach (var (incomeExpenseSetup, index) in itemFiltered.Select((value, i) => (value, i)))
+        var expenseSetupsByCurrency = ExpenseSetups.Where(x => x.CurrencyId == currencyGroupItem.currencyGroup.Key?.CurrencyId).ToList();
+        @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
         {
             <div class="row" style="padding: 6px;">
-                <div class="col-4 box">@incomeExpenseSetup.ExpenseName</div>
+                <div class="col-4 box">@expenseSetup.ExpenseName</div>
                 <div class="col-3 box" style="text-align: right;; max-width: 250px">
                     <div class="row">
                         <div class="col-12">
-                            @incomeExpenseSetup.Amount @incomeExpenseSetup.CurrencyId
+                            @expenseSetup.Amount @currencyGroupItem.currencyGroup.Key?.CurrencyCode
                         </div>
                     </div>
-                    @if (index == itemFiltered.Count - 1)
+                    @if (index == expenseSetupsByCurrency.Count - 1)
                     {
                         <div class="row">
                             <div class="col-12" style="color:#808080a6;">
@@ -90,48 +92,51 @@
                                             Total:
                                         </span>
                                         <span style="font-weight: bold">
-                                            @itemFiltered.Sum(x => x.Amount) @groupItem.g.Key
+                                            @expenseSetupsByCurrency.Sum(x => x.Amount) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
                                         </span>
                                     </div>
                                     @* <div>
-                                        ≈
-                                        @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
-                                        {
-                                            <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
-                                                @conversionItem
-                                            </div>
-                                        }
-                                    </div> *@
+                        ≈
+                        @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
+                        {
+                        <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
+                        @conversionItem
+                        </div>
+                        }
+                        </div> *@
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
                 <div class="col-2 box">
-                    @if (@incomeExpenseSetup.BillGeneratedDay != 0)
+                    @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
                     {
-                        <div>
-                            <div>
-                                @incomeExpenseSetup.BillGeneratedDay
-                            </div>
-                        </div>
+                        <span>
+                            @expenseSetup.BillGeneratedDay@(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillGeneratedDay)))
+                        </span>
+                        <span> st of every month</span>
                     }
                 </div>
                 <div class="col-2 box">
-                    <div>
-                        <div>
-                            @incomeExpenseSetup.BillPaymentDay
-                        </div>
-                    </div>
+                    @if ((expenseSetup.BillPaymentDay ?? 0) != 0)
+                    {
+                        <span>
+                            @expenseSetup.BillPaymentDay@(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillPaymentDay)))
+                        </span>
+                        <span>
+                             of every month
+                        </span>
+                    }
                 </div>
                 <div class="col-1 box">
-                    @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
+                    @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
                     {
-                        <a href="@incomeExpenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
+                        <a href="@expenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
                     }
-                    @if (!string.IsNullOrEmpty(@incomeExpenseSetup.PaymentUrl))
+                    @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
                     {
-                        <a href="@incomeExpenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
+                        <a href="@expenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
                     }
                 </div>
             </div>

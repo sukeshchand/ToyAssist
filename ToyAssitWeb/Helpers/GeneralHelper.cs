@@ -8,6 +8,24 @@ namespace ToyAssist.Web.Helpers
 {
     public class GeneralHelper
     {
+        public static string GetOrdinalSuffix(int number)
+        {
+            if (number % 100 >= 11 && number % 100 <= 13)
+                return number + "ᵗʰ";
+
+            switch (number % 10)
+            {
+                case 1:
+                    return number + "ˢᵗ";
+                case 2:
+                    return number + "ⁿᵈ";
+                case 3:
+                    return number + "ʳᵈ";
+                default:
+                    return number + "ᵗʰ";
+            }
+        }
+
         public static string GetMonthAndDaysLeftString(DateTime? date)
         {
             if (date == null) return string.Empty;
