@@ -21,9 +21,9 @@
 
     .box {
         /*  border: solid 1px #0000ff5e;
-                border-radius: 5px;
-                padding: 4px;
-                display: inline-block; */
+                    border-radius: 5px;
+                    padding: 4px;
+                    display: inline-block; */
     }
 
 </style>
@@ -99,15 +99,15 @@
                                             @expenseSetupsByCurrency.Sum(x => x.Amount) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
                                         </span>
                                     </div>
-                                    @* <div>
-                        ≈
-                        @foreach (var conversionItem in GetConversionList((int)@groupItem.g.Key, @itemFiltered.Sum(x => (int)x.Amount)))
-                        {
-                        <div style="font-size: small; border: 1px solid #ccc; margin-left: 2px; padding: 2px; display: inline-block; border-radius: 4px;">
-                        @conversionItem
-                        </div>
-                        }
-                        </div> *@
+                                    <div style="margin:5px;">
+                                        ≈
+                                        @foreach (var conversionItem in GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount)))
+                                        {
+                                            <div style="font-size: small; border: 1px solid #ccc; margin-left: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
+                                                @conversionItem
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>

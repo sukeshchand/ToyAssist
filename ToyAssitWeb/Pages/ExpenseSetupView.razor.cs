@@ -52,28 +52,28 @@ namespace ToyAssist.Web.Pages
 
         }
 
-        //public List<string> GetConversionList(int baseCurrencyId, double amount)
-        //{
-        //    var currenciesInUse = ExpenseSetups.Select(x => x.CurrencyId).Distinct().ToList();
-        //    var conversionList = new List<string>();
-        //    foreach (var currencyId in currenciesInUse)
-        //    {
-        //        var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == baseCurrencyId && x.ToCurrencyId == currencyId);
-        //        if (conversionRate != null)
-        //        {
-        //            conversionList.Add($"{currencyId} {(int)(amount * (double)conversionRate.ConversionRate)}");
-        //        }
-        //        else
-        //        {
-        //            var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currencyId && x.ToCurrencyId == baseCurrencyId);
-        //            if (conversionRateReverse != null)
-        //            {
-        //                conversionList.Add($"{currencyId} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
-        //            }
-        //        }
-        //    }
-        //    return conversionList;
-        //}
+        public List<string> GetConversionList(Currency baseCurrency, double amount)
+        {
+            var currenciesInUse = ExpenseSetups.Select(x => x.Currency).Distinct().ToList();
+            var conversionList = new List<string>();
+            foreach (var currency in currenciesInUse)
+            {
+                var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == baseCurrency.CurrencyId && x.ToCurrencyId == currency!.CurrencyId);
+                if (conversionRate != null)
+                {
+                    conversionList.Add($"{currency.CurrencyCode} {(int)(amount * (double)conversionRate.ConversionRate)}");
+                }
+                else
+                {
+                    var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currency.CurrencyId && x.ToCurrencyId == baseCurrency.CurrencyId);
+                    if (conversionRateReverse != null)
+                    {
+                        conversionList.Add($"{currency.CurrencyCode} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
+                    }
+                }
+            }
+            return conversionList;
+        }
 
     }
 }
