@@ -52,6 +52,12 @@ namespace ToyAssist.Web.Pages
 
         }
 
+        public string GetConversionListForToolTip(Currency baseCurrency, double amount)
+        {
+            var list = GetConversionList(baseCurrency, amount);
+            return string.Join(", ", list);
+        }
+
         public List<string> GetConversionList(Currency baseCurrency, double amount)
         {
             var currenciesInUse = ExpenseSetups.Select(x => x.Currency).Distinct().ToList();

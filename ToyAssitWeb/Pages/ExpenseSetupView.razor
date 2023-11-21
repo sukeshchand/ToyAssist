@@ -21,9 +21,9 @@
 
     .box {
         /*  border: solid 1px #0000ff5e;
-                    border-radius: 5px;
-                    padding: 4px;
-                    display: inline-block; */
+                            border-radius: 5px;
+                            padding: 4px;
+                            display: inline-block; */
     }
 
 </style>
@@ -82,7 +82,9 @@
                 <div class="col-3 box" style="text-align: right;; max-width: 250px">
                     <div class="row">
                         <div class="col-12">
-                            @expenseSetup.Amount @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                            <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
+                                @expenseSetup.Amount @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                            </span>
                         </div>
                     </div>
                     @if (index == expenseSetupsByCurrency.Count - 1)
