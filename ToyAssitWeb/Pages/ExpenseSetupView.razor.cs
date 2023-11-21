@@ -7,28 +7,39 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using ToyAssist.Web.DatabaseModels;
 using ToyAssist.Web.DatabaseModels.Models;
+using ToyAssist.Web.Factories;
 using ToyAssist.Web.Helpers;
-
+using ToyAssist.Web.Factories;
 
 namespace ToyAssist.Web.Pages
 {
 
     public partial class ExpenseSetupView
     {
-        public string ConnectionString;
-
         List<ExpenseSetup> ExpenseSetups = new List<ExpenseSetup>();
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
-        private readonly DataContext _dataContext;
-
+        public bool IsPostBack { get; set; }
     
         public ExpenseSetupView()
         {
-            ConnectionString = (new ConfigurationReader()).GetSetting("ConnectionStrings:MainConnection");
-            var options = new DbContextOptionsBuilder<DataContext>().UseSqlServer(ConnectionString).Options;
-            _dataContext = new DataContext(options);
-
+            if (IsPostBack == false)
+            {
+                LoadData();
+            }
         }
+
+        private void LoadData()
+        {
+            var dataContext = DataContextFactory.Create();
+            ExpenseSetups = dataContext.ExpenseSetups.ToList();
+            CurrencyConversionRates = dataContext.CurrencyConversionRates.ToList();
+        }
+
+        protected override void OnInitialized()
+        {
+            IsPostBack = true;
+        }
+
 
         public static DateTime FirstDayOfNextMonth(int nextMonthAfter)
         {

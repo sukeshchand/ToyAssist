@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="DatabaseModels\Entities\**" />
+    <Compile Remove="Models\**" />
     <Content Remove="DatabaseModels\Entities\**" />
+    <Content Remove="Models\**" />
     <EmbeddedResource Remove="DatabaseModels\Entities\**" />
+    <EmbeddedResource Remove="Models\**" />
     <None Remove="DatabaseModels\Entities\**" />
+    <None Remove="Models\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,10 +24,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

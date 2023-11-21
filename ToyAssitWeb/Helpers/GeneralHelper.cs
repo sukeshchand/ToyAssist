@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using ToyAssist.Web.DatabaseModels;
 using ToyAssist.Web.DatabaseModels.Models;
 
 namespace ToyAssist.Web.Helpers
@@ -86,7 +85,7 @@ namespace ToyAssist.Web.Helpers
         }
 
 
-        public static List<T> ExecuteSQL<T>(DataContext dataContext, string sql)
+        public static List<T> ExecuteSQL<T>(_DataContext dataContext, string sql)
         {
             FormattableString sqlExec = FormattableStringFactory.Create(sql);
             return dataContext.Database.SqlQuery<T>(sqlExec).ToList();
