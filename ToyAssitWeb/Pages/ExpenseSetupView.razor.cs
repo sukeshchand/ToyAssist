@@ -19,6 +19,7 @@ namespace ToyAssist.Web.Pages
         {
             var dataContext = DataContextFactory.Create();
             ExpenseSetups = dataContext.ExpenseSetups
+                // .Where(x=>x.CurrencyId == 1) // this is for testing
                 .Include(i1=>i1.Currency)
                 .Include(i2=>i2.Account)
                 .ToList();
@@ -55,7 +56,7 @@ namespace ToyAssist.Web.Pages
         public string GetConversionListForToolTip(Currency baseCurrency, double amount)
         {
             var list = GetConversionList(baseCurrency, amount);
-            return string.Join(", ", list);
+            return $" ≈ {string.Join(", ", list)}";
         }
 
         public List<string> GetConversionList(Currency baseCurrency, double amount)

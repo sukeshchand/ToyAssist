@@ -21,9 +21,9 @@
 
     .box {
         /*  border: solid 1px #0000ff5e;
-                            border-radius: 5px;
-                            padding: 4px;
-                            display: inline-block; */
+                                    border-radius: 5px;
+                                    padding: 4px;
+                                    display: inline-block; */
     }
 
 </style>
@@ -102,8 +102,16 @@
                                         </span>
                                     </div>
                                     <div style="margin:5px;">
-                                        ≈
-                                        @foreach (var conversionItem in GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount)))
+                                        @{
+                                            var conversionItems = GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount));
+                                        }
+                                        @if (conversionItems.Count > 0)
+                                        {
+                                            <span>
+                                                ≈
+                                            </span>
+                                        }
+                                        @foreach (var conversionItem in conversionItems)
                                         {
                                             <div style="font-size: small; border: 1px solid #ccc; margin-left: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
                                                 @conversionItem
