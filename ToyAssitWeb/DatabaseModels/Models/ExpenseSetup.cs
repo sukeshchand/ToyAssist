@@ -7,7 +7,7 @@ public partial class ExpenseSetup
 {
     public int ExpenseSetupId { get; set; }
 
-    public int UserId { get; set; }
+    public int AccountId { get; set; }
 
     public string ExpenseName { get; set; } = null!;
 
@@ -30,4 +30,8 @@ public partial class ExpenseSetup
     public string? PaymentUrl { get; set; }
 
     public string? AccountProfileUrl { get; set; }
+
+    public virtual Account Account { get; set; } = null!;
+
+    public virtual Currency? Currency { get; set; }
 }

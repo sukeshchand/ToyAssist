@@ -1,14 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-using Microsoft.EntityFrameworkCore;
-
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using ToyAssist.Web.DatabaseModels;
+﻿using Microsoft.EntityFrameworkCore;
 using ToyAssist.Web.DatabaseModels.Models;
-using ToyAssist.Web.Factories;
-using ToyAssist.Web.Helpers;
 using ToyAssist.Web.Factories;
 
 namespace ToyAssist.Web.Pages
@@ -22,21 +13,24 @@ namespace ToyAssist.Web.Pages
     
         public ExpenseSetupView()
         {
-            if (IsPostBack == false)
-            {
-                LoadData();
-            }
         }
 
         private void LoadData()
         {
             var dataContext = DataContextFactory.Create();
-            ExpenseSetups = dataContext.ExpenseSetups.ToList();
+            ExpenseSetups = dataContext.ExpenseSetups
+                .Include(i1=>i1.Currency)
+                .Include(i2=>i2.Account)
+                .ToList();
             CurrencyConversionRates = dataContext.CurrencyConversionRates.ToList();
         }
 
         protected override void OnInitialized()
         {
+            if (!IsPostBack)
+            {
+                LoadData();
+            }
             IsPostBack = true;
         }
 

@@ -59,17 +59,19 @@ public partial class _DataContext : DbContext
 
         modelBuilder.Entity<CurrencyConversionRate>(entity =>
         {
-            entity.HasKey(e => new { e.BaseCurrency, e.ToCurrency }).HasName("PK_CurrencyRate");
+            entity.HasKey(e => new { e.BaseCurrencyId, e.ToCurrencyId });
 
             entity.ToTable("CurrencyConversionRate");
 
-            entity.Property(e => e.BaseCurrency)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.ToCurrency)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.ConversionRate).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.BaseCurrency).WithMany(p => p.CurrencyConversionRateBaseCurrencies)
+                .HasForeignKey(d => d.BaseCurrencyId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.ToCurrency).WithMany(p => p.CurrencyConversionRateToCurrencies)
+                .HasForeignKey(d => d.ToCurrencyId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<ExpenseSetup>(entity =>
@@ -84,6 +86,12 @@ public partial class _DataContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.PaymentUrl).HasMaxLength(500);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.ExpenseSetups)
+                .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Currency).WithMany(p => p.ExpenseSetups).HasForeignKey(d => d.CurrencyId);
         });
 
         OnModelCreatingPartial(modelBuilder);
