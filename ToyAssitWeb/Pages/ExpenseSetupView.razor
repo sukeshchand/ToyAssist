@@ -62,9 +62,10 @@
 <div style="padding:5px; margin: 5px; border:1px solid #ccc; border-radius:5px">
     <div class="row">
         <div class="col-4 box" style="font-weight:bold">Detail</div>
-        <div class="col-3 box" style="text-align:right;font-weight:bold;max-width: 250px">Amount</div>
+        <div class="col-2 box" style="text-align:right;font-weight:bold;max-width: 250px">Amount</div>
         <div class="col-2 box" style="font-weight:bold">Bill Generation</div>
         <div class="col-2 box" style="font-weight:bold">Payment</div>
+        <div class="col-1 box" style="font-weight:bold">Start/End</div>
         <div class="col-1 box" style="font-weight:bold"></div>
     </div>
 
@@ -79,7 +80,7 @@
         {
             <div class="row" style="padding: 6px;">
                 <div class="col-4 box">@expenseSetup.ExpenseName</div>
-                <div class="col-3 box" style="text-align: right;; max-width: 250px">
+                <div class="col-2 box" style="text-align: right;; max-width: 250px">
                     <div class="row">
                         <div class="col-12">
                             <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
@@ -148,6 +149,21 @@
                         </sup>
                         <span>
                             of every month
+                        </span>
+                    }
+                </div>
+                <div class="col-1 box">
+                    @if ((expenseSetup.StartDate ?? DateTime.MinValue) != DateTime.MinValue)
+                    {
+                        <span style="border:1px solid #ccc; padding:3px;">
+                            @expenseSetup.StartDate?.ToString("yyyy-MM-dd")
+                        </span>
+                    }
+                    
+                    @if ((expenseSetup.EndDate ?? DateTime.MinValue) != DateTime.MinValue)
+                    {
+                        <span style="border:1px solid #ccc; padding:3px;">
+                            @expenseSetup.EndDate?.ToString("yyyy-MM-dd")
                         </span>
                     }
                 </div>
