@@ -13,7 +13,7 @@ using ToyAssist.Web.Helpers;
 namespace ToyAssist.Web.Pages
 {
 
-    public partial class ExpenseSetup
+    public partial class ExpenseSetupView
     {
         public string ConnectionString;
 
@@ -22,7 +22,7 @@ namespace ToyAssist.Web.Pages
         private readonly DataContext _dataContext;
 
     
-        public ExpenseSetup()
+        public ExpenseSetupView()
         {
             ConnectionString = (new ConfigurationReader()).GetSetting("ConnectionStrings:MainConnection");
             var options = new DbContextOptionsBuilder<DataContext>().UseSqlServer(ConnectionString).Options;
