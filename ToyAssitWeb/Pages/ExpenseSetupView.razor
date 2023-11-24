@@ -20,10 +20,39 @@
     }
 
     .box {
-        /*  border: solid 1px #0000ff5e;
-                                    border-radius: 5px;
-                                    padding: 4px;
-                                    display: inline-block; */
+        /* border: solid 1px #0000ff5e; */
+        /* border-radius: 5px; */
+        /* padding: 4px; */
+        /* display: inline-block; */
+    }
+
+    .head {
+        font-weight: bold;
+    }
+
+    .col-descr {
+        max-width: 300px;
+    }
+
+    .col-amt {
+        max-width: 200px;
+        text-align: right;
+    }
+
+    .col-bill-setting {
+        max-width: 150px;
+    }
+
+    .col-payment-setting {
+        max-width: 200px;
+    }
+
+    .col-start-end-dt {
+        max-width: 300px;
+    }
+
+    .col-links {
+        max-width: 200px;
     }
 
 </style>
@@ -59,14 +88,14 @@
         </div>
     </div>
 </div>
-<div style="padding:5px; margin: 5px; border:1px solid #ccc; border-radius:5px">
+<div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px">
     <div class="row">
-        <div class="col-4 box" style="font-weight:bold">Detail</div>
-        <div class="col-2 box" style="text-align:right;font-weight:bold;max-width: 250px">Amount</div>
-        <div class="col-2 box" style="font-weight:bold">Bill Generation</div>
-        <div class="col-2 box" style="font-weight:bold">Payment</div>
-        <div class="col-1 box" style="font-weight:bold">Start/End</div>
-        <div class="col-1 box" style="font-weight:bold"></div>
+        <div class="col-4 head col-descr box">Detail</div>
+        <div class="col-2 head col-amt box">Amount</div>
+        <div class="col-2 head col-bill-setting box">Bill Generation</div>
+        <div class="col-2 head col-payment-setting col box">Payment</div>
+        <div class="col-1 head col-start-end-dt box">Start/End</div>
+        <div class="col-1 head col-links box"></div>
     </div>
 
     <hr />
@@ -79,8 +108,8 @@
         @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
         {
             <div class="row" style="padding: 6px;">
-                <div class="col-4 box">@expenseSetup.ExpenseName</div>
-                <div class="col-2 box" style="text-align: right;; max-width: 250px">
+                <div class="col-4 col-descr box">@expenseSetup.ExpenseName</div>
+                <div class="col-2  col-amt box">
                     <div class="row">
                         <div class="col-12">
                             <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
@@ -124,7 +153,7 @@
                         </div>
                     }
                 </div>
-                <div class="col-2 box">
+                <div class="col-2 col-bill-setting box">
                     @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
                     {
                         <span>
@@ -138,7 +167,7 @@
                         </span>
                     }
                 </div>
-                <div class="col-2 box">
+                <div class="col-2 col-payment-setting box">
                     @if ((expenseSetup.BillPaymentDay ?? 0) != 0)
                     {
                         <span>
@@ -152,14 +181,14 @@
                         </span>
                     }
                 </div>
-                <div class="col-1 box">
+                <div class="col-1 col-start-end-dt box">
                     @if ((expenseSetup.StartDate ?? DateTime.MinValue) != DateTime.MinValue)
                     {
                         <span style="border:1px solid #ccc; padding:3px;">
                             @expenseSetup.StartDate?.ToString("yyyy-MM-dd")
                         </span>
                     }
-                    
+
                     @if ((expenseSetup.EndDate ?? DateTime.MinValue) != DateTime.MinValue)
                     {
                         <span style="border:1px solid #ccc; padding:3px;">
