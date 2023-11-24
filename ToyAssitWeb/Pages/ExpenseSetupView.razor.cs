@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+
+using Microsoft.EntityFrameworkCore;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
 
@@ -13,6 +15,14 @@ namespace ToyAssist.Web.Pages
     
         public ExpenseSetupView()
         {
+            SetCulture("en-US");
+        }
+
+        private void SetCulture(string userCulture)
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(userCulture);
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(userCulture);
+
         }
 
         private void LoadData()

@@ -57,6 +57,7 @@
 
 </style>
 
+
 <PageTitle>Assist Toy</PageTitle>
 
 <h1>Expense setup</h1>
@@ -69,7 +70,10 @@
                         Today:
                     </span>
                     <span style="font-weight: bold">
-                        @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd")
+                        @* @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd") *@
+                    </span>
+                    <span>
+                        @DateTime.Now.ToLongDateString()
                     </span>
                 </span>
                 <span style="margin-left:10px; border: 1px solid #ccc; padding: 6px; border-radius:5px;">
@@ -80,9 +84,7 @@
                         @GeneralHelper.GetCurrentWeekNumber(DateTime.Now)
                     </span>
                 </span>
-
             </div>
-
             <div class="col-3 box">
             </div>
         </div>
@@ -207,7 +209,6 @@
                     }
                 </div>
             </div>
-
         }
     }
 </div>
