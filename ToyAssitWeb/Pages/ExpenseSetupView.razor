@@ -20,10 +20,11 @@
     }
 
     .box {
-        /* border: solid 1px #0000ff5e; */
-        /* border-radius: 5px; */
-        /* padding: 4px; */
-        /* display: inline-block; */
+        /* border: solid 1px #0000ff5e;
+        border-radius: 5px;
+        padding: 4px;
+        display: inline-block; */
+        display: inline-block;
     }
 
     .head {
@@ -48,187 +49,187 @@
     }
 
     .col-start-end-dt {
-        width: 450px;
-        max-width: 450px;
-        display:inline-block;
+        width: 200px;
+        max-width: 200px;
     }
 
     .col-links {
-        max-width: 200px;
+        width:200px;
     }
 
 </style>
 
 
 <PageTitle>Assist Toy</PageTitle>
-
-<h1>Expense setup</h1>
-<div class="row">
-    <div class="col-12 box">
-        <div class="row" style="padding: 5px;">
-            <div class="col-8 box">
-                <span style="border: 1px solid #ccc; padding: 6px; border-radius:5px;">
-                    <span>
-                        Today:
+<div class="box" style="width:100%">
+    <h1>Expense setup</h1>
+    <div class="row">
+        <div class="col-12 box">
+            <div class="row" style="padding: 5px;">
+                <div class="col-8 box">
+                    <span style="border: 1px solid #ccc; padding: 6px; border-radius:5px;">
+                        <span>
+                            Today:
+                        </span>
+                        <span style="font-weight: bold">
+                            @* @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd") *@
+                        </span>
+                        <span>
+                            @DateTime.Now.ToLongDateString()
+                        </span>
                     </span>
-                    <span style="font-weight: bold">
-                        @* @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd") *@
+                    <span style="margin-left:10px; border: 1px solid #ccc; padding: 6px; border-radius:5px;">
+                        <span>
+                            Week number:
+                        </span>
+                        <span>
+                            @GeneralHelper.GetCurrentWeekNumber(DateTime.Now)
+                        </span>
                     </span>
-                    <span>
-                        @DateTime.Now.ToLongDateString()
-                    </span>
-                </span>
-                <span style="margin-left:10px; border: 1px solid #ccc; padding: 6px; border-radius:5px;">
-                    <span>
-                        Week number:
-                    </span>
-                    <span>
-                        @GeneralHelper.GetCurrentWeekNumber(DateTime.Now)
-                    </span>
-                </span>
-            </div>
-            <div class="col-3 box">
+                </div>
+                <div class="col-4 box">
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px">
-    <div class="row">
-        <div class="col-4 head col-descr box">Detail</div>
-        <div class="col-2 head col-amt box">Amount</div>
-        <div class="col-2 head col-bill-setting box">Bill Generation</div>
-        <div class="col-2 head col-payment-setting col box">Payment</div>
-        <div class="col-1 head col-start-end-dt box">Start/End</div>
-        <div class="col-1 head col-links box"></div>
-    </div>
+    <div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px">
+        <div class="row">
+            <div class="col-4 head col-descr box">Detail</div>
+            <div class="col-2 head col-amt box">Amount</div>
+            <div class="col-2 head col-bill-setting box">Bill Generation</div>
+            <div class="col-2 head col-payment-setting col box">Payment</div>
+            <div class="col-1 head col-start-end-dt box">Start/End</div>
+            <div class="col-1 head col-links box"></div>
+        </div>
 
-    <hr />
-    @{
-        var currencyGroups = ExpenseSetups.GroupBy(x => x.Currency).Select(currencyGroup => new { currencyGroup }).ToList();
-    }
-    @foreach (var currencyGroupItem in currencyGroups)
-    {
-        var expenseSetupsByCurrency = ExpenseSetups.Where(x => x.CurrencyId == currencyGroupItem.currencyGroup.Key?.CurrencyId).ToList();
-        @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
+        <hr />
+        @{
+            var currencyGroups = ExpenseSetups.GroupBy(x => x.Currency).Select(currencyGroup => new { currencyGroup }).ToList();
+        }
+        @foreach (var currencyGroupItem in currencyGroups)
         {
-            <div class="row" style="padding: 6px;">
-                <div class="col-4 col-descr box">@expenseSetup.ExpenseName</div>
-                <div class="col-2  col-amt box">
-                    <div class="row">
-                        <div class="col-12">
-                            <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
-                                @expenseSetup.Amount @currencyGroupItem.currencyGroup.Key?.CurrencyCode
-                            </span>
-                        </div>
-                    </div>
-                    @if (index == expenseSetupsByCurrency.Count - 1)
-                    {
+            var expenseSetupsByCurrency = ExpenseSetups.Where(x => x.CurrencyId == currencyGroupItem.currencyGroup.Key?.CurrencyId).ToList();
+            @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
+            {
+                <div class="row" style="padding: 6px;">
+                    <div class="col-4 col-descr box">@expenseSetup.ExpenseName</div>
+                    <div class="col-2 col-amt box">
                         <div class="row">
-                            <div class="col-12" style="color:#808080a6;">
-                                <hr />
-                                <div style="border: 2px solid rgba(204, 204, 204, 0.8); padding: 3px; border-radius: 3px">
-                                    <div>
-                                        <span>
-                                            Total:
-                                        </span>
-                                        <span style="font-weight: bold">
-                                            @expenseSetupsByCurrency.Sum(x => x.Amount) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
-                                        </span>
-                                    </div>
-                                    <div style="margin:5px;">
-                                        @{
-                                            var conversionItems = GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount));
-                                        }
-                                        @if (conversionItems.Count > 0)
-                                        {
+                            <div class="col-12">
+                                <span style="display:inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
+                                    @expenseSetup.Amount @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                                </span>
+                            </div>
+                        </div>
+                        @if (index == expenseSetupsByCurrency.Count - 1)
+                        {
+                            <div class="row">
+                                <div class="col-12" style="color:#808080a6;">
+                                    <hr />
+                                    <div style="border: 2px solid rgba(204, 204, 204, 0.8); padding: 3px; border-radius: 3px">
+                                        <div>
                                             <span>
-                                                ≈
+                                                Total:
                                             </span>
-                                        }
-                                        @foreach (var conversionItem in conversionItems)
-                                        {
-                                            <div style="font-size: small; border: 1px solid #ccc; margin-left: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
-                                                @conversionItem
-                                            </div>
-                                        }
+                                            <span style="font-weight: bold">
+                                                @expenseSetupsByCurrency.Sum(x => x.Amount) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                                            </span>
+                                        </div>
+                                        <div style="margin:5px;">
+                                            @{
+                                                var conversionItems = GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount));
+                                            }
+                                            @if (conversionItems.Count > 0)
+                                            {
+                                                <span>
+                                                    ≈
+                                                </span>
+                                            }
+                                            @foreach (var conversionItem in conversionItems)
+                                            {
+                                                <div style="font-size: small; border: 1px solid #ccc; margin: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
+                                                    @conversionItem
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </div>
-                <div class="col-2 col-bill-setting box">
-                    @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
-                    {
-                        <span>
-                            @expenseSetup.BillGeneratedDay.ToString()
-                        </span>
-                        <sup>
-                            @(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillGeneratedDay)))
-                        </sup>
-                        <span>
-                            of every month
-                        </span>
-                    }
-                </div>
-                <div class="col-2 col-payment-setting box">
-                    @if ((expenseSetup.BillPaymentDay ?? 0) != 0)
-                    {
-                        <span>
-                            @expenseSetup.BillPaymentDay
-                        </span>
-                        <sup>
-                            @(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillPaymentDay)))
-                        </sup>
-                        <span>
-                            of every month
-                        </span>
-                    }
-                </div>
-                <div class="col-1 col-start-end-dt box">
-                    @{ 
-                        var startStr = "";
-                        var endStr = "";
-                    }   
-                    @if ((expenseSetup.StartDate ?? DateTime.MinValue) != DateTime.MinValue)
-                    {
-                        if (@expenseSetup.EndDate == null)
-                        {
-                            startStr = "Start:";
                         }
-                        startStr = startStr + @expenseSetup.StartDate?.ToString("yyyy-MM-dd");
-                    }
-                    @if ((expenseSetup.EndDate ?? DateTime.MinValue) != DateTime.MinValue)
-                    {
-                        if (@expenseSetup.StartDate != null)
+                    </div>
+                    <div class="col-2 col-bill-setting box">
+                        @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
                         {
-                            endStr = " => ";
+                            <span>
+                                @expenseSetup.BillGeneratedDay.ToString()
+                            </span>
+                            <sup>
+                                @(GeneralHelper.GetOrdinalSuffix((expenseSetup.BillGeneratedDay)))
+                            </sup>
+                            <span>
+                                of every month
+                            </span>
                         }
-                        else
+                    </div>
+                    <div class="col-2 col-payment-setting box">
+                        @if ((expenseSetup.BillPaymentDay ?? 0) != 0)
                         {
-                            endStr = " End: ";
+                            <span>
+                                @expenseSetup.BillPaymentDay
+                            </span>
+                            <sup>
+                                @(GeneralHelper.GetOrdinalSuffix((expenseSetup.BillPaymentDay)))
+                            </sup>
+                            <span>
+                                of every month
+                            </span>
                         }
-                        endStr = endStr + @expenseSetup.EndDate?.ToString("yyyy-MM-dd");
-                    }
+                    </div>
+                    <div class="col-1 col-start-end-dt box">
+                        @{
+                            var startStr = "";
+                            var endStr = "";
+                        }
+                        @if ((expenseSetup.StartDate ?? DateTime.MinValue) != DateTime.MinValue)
+                        {
+                            if (@expenseSetup.EndDate == null)
+                            {
+                                startStr = "Start:";
+                            }
+                            startStr = startStr + @expenseSetup.StartDate?.ToString("yyyy-MM-dd");
+                        }
+                        @if ((expenseSetup.EndDate ?? DateTime.MinValue) != DateTime.MinValue)
+                        {
+                            if (@expenseSetup.StartDate != null)
+                            {
+                                endStr = " => ";
+                            }
+                            else
+                            {
+                                endStr = " End: ";
+                            }
+                            endStr = endStr + @expenseSetup.EndDate?.ToString("yyyy-MM-dd");
+                        }
 
-                    @if (!string.IsNullOrEmpty(startStr + endStr))
-                    {
-                        <span style="border:1px solid #ccc; padding:3px;">
-                            @(startStr + endStr)
-                        </span>
-                    }
+                        @if (!string.IsNullOrEmpty(startStr + endStr))
+                        {
+                            <span style="border:1px solid #ccc; padding:3px;">
+                                @(startStr + endStr)
+                            </span>
+                        }
+                    </div>
+                    <div class="col-1 box" style="display: inline-block;">
+                        @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
+                        {
+                            <a href="@expenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
+                        }
+                        @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
+                        {
+                            <a href="@expenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
+                        }
+                    </div>
                 </div>
-                <div class="col-1 box">
-                    @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
-                    {
-                        <a href="@expenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
-                    }
-                    @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
-                    {
-                        <a href="@expenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
-                    }
-                </div>
-            </div>
+            }
         }
-    }
+    </div>
 </div>

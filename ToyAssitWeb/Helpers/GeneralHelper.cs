@@ -9,8 +9,9 @@ namespace ToyAssist.Web.Helpers
 {
     public class GeneralHelper
     {
-        public static string GetOrdinalSuffix(int number)
+        public static string GetOrdinalSuffix(int? number)
         {
+            if(number == null) return string.Empty;
             if (number % 100 >= 11 && number % 100 <= 13)
                 return "th";
 
