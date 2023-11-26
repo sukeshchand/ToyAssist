@@ -48,7 +48,9 @@
     }
 
     .col-start-end-dt {
-        max-width: 300px;
+        width: 450px;
+        max-width: 450px;
+        display:inline-block;
     }
 
     .col-links {
@@ -159,7 +161,7 @@
                     @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
                     {
                         <span>
-                            @expenseSetup.BillGeneratedDay
+                            @expenseSetup.BillGeneratedDay.ToString()
                         </span>
                         <sup>
                             @(GeneralHelper.GetOrdinalSuffix(((int)expenseSetup.BillGeneratedDay)))
@@ -184,17 +186,35 @@
                     }
                 </div>
                 <div class="col-1 col-start-end-dt box">
+                    @{ 
+                        var startStr = "";
+                        var endStr = "";
+                    }   
                     @if ((expenseSetup.StartDate ?? DateTime.MinValue) != DateTime.MinValue)
                     {
-                        <span style="border:1px solid #ccc; padding:3px;">
-                            @expenseSetup.StartDate?.ToString("yyyy-MM-dd")
-                        </span>
+                        if (@expenseSetup.EndDate == null)
+                        {
+                            startStr = "Start:";
+                        }
+                        startStr = startStr + @expenseSetup.StartDate?.ToString("yyyy-MM-dd");
                     }
-
                     @if ((expenseSetup.EndDate ?? DateTime.MinValue) != DateTime.MinValue)
                     {
+                        if (@expenseSetup.StartDate != null)
+                        {
+                            endStr = " => ";
+                        }
+                        else
+                        {
+                            endStr = " End: ";
+                        }
+                        endStr = endStr + @expenseSetup.EndDate?.ToString("yyyy-MM-dd");
+                    }
+
+                    @if (!string.IsNullOrEmpty(startStr + endStr))
+                    {
                         <span style="border:1px solid #ccc; padding:3px;">
-                            @expenseSetup.EndDate?.ToString("yyyy-MM-dd")
+                            @(startStr + endStr)
                         </span>
                     }
                 </div>
