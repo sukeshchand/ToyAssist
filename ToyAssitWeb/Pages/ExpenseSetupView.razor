@@ -21,9 +21,9 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-        border-radius: 5px;
-        padding: 4px;
-        display: inline-block; */
+            border-radius: 5px;
+            padding: 4px;
+            display: inline-block; */
         display: inline-block;
     }
 
@@ -54,7 +54,7 @@
     }
 
     .col-links {
-        width:200px;
+        width: 200px;
     }
 
 </style>
@@ -186,37 +186,19 @@
                         }
                     </div>
                     <div class="col-1 col-start-end-dt box">
-                        @{
-                            var startStr = "";
-                            var endStr = "";
-                        }
-                        @if ((expenseSetup.StartDate ?? DateTime.MinValue) != DateTime.MinValue)
-                        {
-                            if (@expenseSetup.EndDate == null)
-                            {
-                                startStr = "Start:";
+                        <div style="padding:3px;">
+                            @{
+                                var recurringInfo = @GetRecurringInfo(@expenseSetup.StartDate, @expenseSetup.EndDate);
                             }
-                            startStr = startStr + @expenseSetup.StartDate?.ToString("yyyy-MM-dd");
-                        }
-                        @if ((expenseSetup.EndDate ?? DateTime.MinValue) != DateTime.MinValue)
-                        {
-                            if (@expenseSetup.StartDate != null)
+                            @for (int i = 0; i < recurringInfo.Count; i++)
                             {
-                                endStr = " => ";
+                                var fontSize = i != 0 ? "font-size: small" : "";
+                                <div data-toggle="tooltip" title="@recurringInfo[i].ToolTipText" style="@fontSize">
+                                    @recurringInfo[i].Text
+                                </div>
                             }
-                            else
-                            {
-                                endStr = " End: ";
-                            }
-                            endStr = endStr + @expenseSetup.EndDate?.ToString("yyyy-MM-dd");
-                        }
-
-                        @if (!string.IsNullOrEmpty(startStr + endStr))
-                        {
-                            <span style="border:1px solid #ccc; padding:3px;">
-                                @(startStr + endStr)
-                            </span>
-                        }
+                           
+                        </div>
                     </div>
                     <div class="col-1 box" style="display: inline-block;">
                         @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))

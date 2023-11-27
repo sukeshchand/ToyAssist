@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
@@ -12,7 +12,7 @@ namespace ToyAssist.Web.Pages
         List<ExpenseSetup> ExpenseSetups = new List<ExpenseSetup>();
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
         public bool IsPostBack { get; set; }
-    
+
         public ExpenseSetupView()
         {
             SetCulture("en-US");
@@ -30,8 +30,8 @@ namespace ToyAssist.Web.Pages
             var dataContext = DataContextFactory.Create();
             ExpenseSetups = dataContext.ExpenseSetups
                 // .Where(x=>x.CurrencyId == 1) // this is for testing
-                .Include(i1=>i1.Currency)
-                .Include(i2=>i2.Account)
+                .Include(i1 => i1.Currency)
+                .Include(i2 => i2.Account)
                 .ToList();
             CurrencyConversionRates = dataContext.CurrencyConversionRates.ToList();
         }
@@ -90,6 +90,22 @@ namespace ToyAssist.Web.Pages
                 }
             }
             return conversionList;
+        }
+
+        public List<(string Text, string ToolTipText)> GetRecurringInfo(DateTime? startDate, DateTime? endDate)
+        {
+            var list = new List<(string, string)>();
+            if (startDate == null || endDate == null) return list;
+            if (startDate != null && endDate != null)
+            {
+                list.Add(($"{((DateTime)startDate).ToShortDateString()} - {((DateTime)endDate).ToShortDateString()}", string.Empty));
+
+                var totalMonths = ((((DateTime)endDate).Year - ((DateTime)startDate).Year) * 12) + (((DateTime)endDate).Month - ((DateTime)startDate).Month);
+                var totalMonthsLeft = ((((DateTime)endDate).Year - DateTime.Now.Year) * 12) + (((DateTime)endDate).Month - DateTime.Now.Month);
+
+                list.Add(($"Total Months: {totalMonths}/{totalMonthsLeft}", "Total Months/Total Months Left"));
+            }
+            return list;
         }
 
     }
