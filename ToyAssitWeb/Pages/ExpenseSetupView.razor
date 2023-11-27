@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using BlazorBootstrap
 @using ToyAssist.Web.Helpers
 
 <style>
@@ -59,8 +60,34 @@
 
 </style>
 
+@code {
+    private Modal modal = default!;
+
+    private async Task OnShowModalClick()
+    {
+        await modal.ShowAsync();
+    }
+
+    private async Task OnHideModalClick()
+    {
+        await modal.HideAsync();
+    }
+}
 
 <PageTitle>Assist Toy</PageTitle>
+
+ <Modal @ref="modal" Title="Modal title">
+    <BodyTemplate>
+        Modal body text goes here.
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+        <Button Color="ButtonColor.Primary">Save changes</Button>
+    </FooterTemplate>
+</Modal>
+
+<Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">Show Modal</Button> 
+
 <div class="box" style="width:100%">
     <h1>Expense setup</h1>
     <div class="row">
