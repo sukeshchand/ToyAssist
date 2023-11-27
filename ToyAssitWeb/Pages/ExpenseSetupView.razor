@@ -62,9 +62,10 @@
 
 @code {
     private Modal modal = default!;
-
-    private async Task OnShowModalClick()
+    private string? Data = string.Empty;
+    private async Task OnShowModalClick(string? data)
     {
+        Data = data;
         await modal.ShowAsync();
     }
 
@@ -82,11 +83,9 @@
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
-        <Button Color="ButtonColor.Primary">Save changes</Button>
+        <Button Color="ButtonColor.Primary" @onclick="OnHideModalClick">Save changes</Button>
     </FooterTemplate>
 </Modal>
-
-<Button Color="ButtonColor.Primary" @onclick="OnShowModalClick">Show Modal</Button> 
 
 <div class="box" style="width:100%">
     <h1>Expense setup</h1>
@@ -224,7 +223,7 @@
                                     @recurringInfo[i].Text
                                 </div>
                             }
-                           
+                            <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowModalClick(expenseSetup.StartDate.ToString())"><Icon Name="IconName.ThreeDots" /></Button>
                         </div>
                     </div>
                     <div class="col-1 box" style="display: inline-block;">
