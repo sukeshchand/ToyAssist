@@ -95,7 +95,6 @@ namespace ToyAssist.Web.Pages
         public List<(string Text, string ToolTipText)> GetRecurringInfo(DateTime? startDate, DateTime? endDate)
         {
             var list = new List<(string, string)>();
-            if (startDate == null || endDate == null) return list;
             if (startDate != null && endDate != null)
             {
                 list.Add(($"{((DateTime)startDate).ToShortDateString()} - {((DateTime)endDate).ToShortDateString()}", string.Empty));
@@ -104,6 +103,18 @@ namespace ToyAssist.Web.Pages
                 var totalMonthsLeft = ((((DateTime)endDate).Year - DateTime.Now.Year) * 12) + (((DateTime)endDate).Month - DateTime.Now.Month);
 
                 list.Add(($"Total Months: {totalMonths}/{totalMonthsLeft}", "Total Months/Total Months Left"));
+            }
+            else if(startDate == null && endDate != null)
+            {
+                list.Add(($"Until {((DateTime)endDate).ToShortDateString()}", $"From not specified, occurrence until {((DateTime)endDate).ToShortDateString()}"));
+            }
+            else if (startDate != null && endDate == null)
+            {
+                list.Add(($"From {((DateTime)startDate).ToShortDateString()} until changed", $"End date is not specified, occurrence continues until changed"));
+            }
+            else if (startDate == null && endDate == null)
+            {
+                list.Add(("n/a","No start - end date specified"));
             }
             return list;
         }
