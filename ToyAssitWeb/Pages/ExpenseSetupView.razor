@@ -129,7 +129,7 @@
                                     <div style="border: 2px solid rgba(204, 204, 204, 0.8); padding: 3px; border-radius: 3px">
                                         <div>
                                             <span>
-                                                Total:
+                                                @currencyGroupItem.currencyGroup.Key?.CurrencyCode total:
                                             </span>
                                             <span style="font-weight: bold">
                                                 @expenseSetupsByCurrency.Sum(x => x.Amount) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
@@ -211,6 +211,7 @@
                         }
                     </div>
                 </div>
+                <hr style="border:1px black; border-style: inset;" />
             }
         }
     </div>
