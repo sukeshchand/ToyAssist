@@ -19,6 +19,8 @@ public partial class ExpenseSetup
 
     public double? Amount { get; set; }
 
+    public double? TaxAmount { get; set; }
+
     public int? CurrencyId { get; set; }
 
     public int? BillGeneratedDay { get; set; }
