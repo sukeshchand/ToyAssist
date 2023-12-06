@@ -1,6 +1,8 @@
 ﻿@page "/"
 @using BlazorBootstrap
+@using ToyAssist.Web.DatabaseModels.Models
 @using ToyAssist.Web.Helpers
+@using System.Text.Json;
 
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
@@ -22,9 +24,9 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-            border-radius: 5px;
-            padding: 4px;
-            display: inline-block; */
+                border-radius: 5px;
+                padding: 4px;
+                display: inline-block; */
         display: inline-block;
     }
 
@@ -58,14 +60,18 @@
         width: 200px;
     }
 
+    .model-content-custom {
+        background-color: black;
+    }
+
 </style>
 
 @code {
     private Modal modal = default!;
-    private string? Data = string.Empty;
-    private async Task OnShowModalClick(string? data)
+    private ExpenseSetup? ModalData = null;
+    private async Task OnShowModalClick(ExpenseSetup? data)
     {
-        Data = data;
+        ModalData = data;
         await modal.ShowAsync();
     }
 
@@ -73,13 +79,37 @@
     {
         await modal.HideAsync();
     }
+
+    JsonSerializerOptions options = new JsonSerializerOptions
+        {
+            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
+            WriteIndented = true, // Optional: Make the output more readable
+            
+        };
 }
 
 <PageTitle>Assist Toy</PageTitle>
 
- <Modal @ref="modal" Title="Modal title">
+<Modal @ref="modal" Title="Modal title">
     <BodyTemplate>
-        Modal body text goes here.
+        <div style="color:black;">
+            <h1>@ModalData.ExpenseName</h1>
+
+            <div class="row">
+                <div class="col-4">
+                    @ModalData.ExpenseName
+                </div>
+                <div class="col-4">
+                    @ModalData.StartDate
+                </div>
+                <div class="col-4">
+                    @ModalData.Amount
+                </div>
+            </div>
+            <div class="row">
+                @* @JsonSerializer.Serialize(ModalData, options); *@
+            </div>
+        </div>
     </BodyTemplate>
     <FooterTemplate>
         <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
@@ -223,7 +253,9 @@
                                     @recurringInfo[i].Text
                                 </div>
                             }
-                            <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowModalClick(expenseSetup.StartDate.ToString())"><Icon Name="IconName.ThreeDots" /></Button>
+                            <Button Color="ButtonColor.Secondary" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowModalClick(expenseSetup)">
+                                <Icon Name="IconName.ThreeDots" />
+                            </Button>
                         </div>
                     </div>
                     <div class="col-1 box" style="display: inline-block;">
