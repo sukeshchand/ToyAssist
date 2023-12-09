@@ -42,6 +42,18 @@ namespace ToyAssist.Web.Helpers
             return $"{(int)diff.TotalDays} days left";
         }
 
+        public static int CalculateMonthDifference(DateTime startDate, DateTime endDate)
+        {
+            return ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
+        }
+
+        public static (int Years, int Months) CalculateYearMonthDifference(DateTime startDate, DateTime endDate)
+        {
+            var years = (endDate.Year - startDate.Year);
+            var months = endDate.Month - startDate.Month;
+            return (years, months);
+        }
+
         public static List<(string Name, PropertyInfo PropertyInfo)> GetProperties(Object obj)
         {
             var properties = new List<(string, PropertyInfo)>();

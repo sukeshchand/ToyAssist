@@ -24,9 +24,9 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-                border-radius: 5px;
-                padding: 4px;
-                display: inline-block; */
+                    border-radius: 5px;
+                    padding: 4px;
+                    display: inline-block; */
         display: inline-block;
     }
 
@@ -84,7 +84,7 @@
         {
             ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
             WriteIndented = true, // Optional: Make the output more readable
-            
+
         };
 }
 
@@ -94,7 +94,10 @@
     <BodyTemplate>
         <div style="color:black;">
             <h1>@ModalData.ExpenseName</h1>
-
+            <span style="border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightgreen">
+                <span>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</span>
+                <span> Months</span>
+            </span>
             <div class="row">
                 <div class="col-4">
                     @ModalData.ExpenseName
