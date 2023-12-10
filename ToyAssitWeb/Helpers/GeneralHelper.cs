@@ -50,7 +50,7 @@ namespace ToyAssist.Web.Helpers
         public static (int Years, int Months) CalculateYearMonthDifference(DateTime startDate, DateTime endDate)
         {
             var years = (endDate.Year - startDate.Year);
-            var months = endDate.Month - startDate.Month;
+            var months = endDate.Month - startDate.Month; // this is wrong, 
             return (years, months);
         }
 

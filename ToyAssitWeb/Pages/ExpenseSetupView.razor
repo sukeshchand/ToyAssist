@@ -24,9 +24,9 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-                    border-radius: 5px;
-                    padding: 4px;
-                    display: inline-block; */
+                                                                        border-radius: 5px;
+                                                                        padding: 4px;
+                                                                        display: inline-block; */
         display: inline-block;
     }
 
@@ -94,11 +94,66 @@
     <BodyTemplate>
         <div style="color:black;">
             <h1>@ModalData.ExpenseName</h1>
-            <span style="border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightgreen">
-                <span>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</span>
-                <span> Months</span>
-            </span>
-            <div class="row">
+            @if (@ModalData.StartDate != null && @ModalData.EndDate != null)
+            {
+                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightgreen; margin-left:10px">
+                    <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</div>
+                    <div style="font-size:small;">Total months</div>
+                </div>
+
+                var yearMonth = @GeneralHelper.CalculateYearMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate);
+                if (yearMonth.Years > 0 || yearMonth.Months > 0)
+                {
+                    <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightgreen; margin-left:10px">
+                        @if (yearMonth.Years > 0)
+                        {
+                            <div style="display:inline-block;">@yearMonth.Years</div>
+                            <br />
+                            <div style="font-size:small;display:inline-block;">Total years</div>
+                        }
+                        @if (yearMonth.Years > 0 && yearMonth.Months > 0)
+                        {
+                            <br />
+                            <div style="display:inline-block;margin-left: 2px;"> + </div>
+                        }
+                        @if (yearMonth.Months > 0)
+                        {
+                            <div style="display:inline-block;">@yearMonth.Months</div>
+                            <div style="font-size:small;display:inline-block;"> Months</div>
+                        }
+                    </div>
+                }
+
+                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightpink; margin-left:10px">
+                    <div>@GeneralHelper.CalculateMonthDifference(DateTime.Now, (DateTime)@ModalData.EndDate)</div>
+                    <div style="font-size:small;">Total months left</div>
+                </div>
+
+                var yearMonthLeft = @GeneralHelper.CalculateYearMonthDifference(DateTime.Now, (DateTime)@ModalData.EndDate);
+                if (yearMonthLeft.Years > 0 || yearMonthLeft.Months > 0)
+                {
+                    <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightpink; margin-left:10px">
+                        @if (yearMonthLeft.Years > 0)
+                        {
+                            <div style="display:inline-block;">@yearMonthLeft.Years</div>
+                            <br />
+                            <div style="font-size:small;display:inline-block;">Total years</div>
+                        }
+                        @if (yearMonthLeft.Years > 0 && yearMonthLeft.Months > 0)
+                        {
+                            <br />
+                            <div style="display:inline-block;margin-left: 2px;"> + </div>
+                        }
+                        @if (yearMonthLeft.Months > 0)
+                        {
+                            <div style="display:inline-block;">@yearMonthLeft.Months</div>
+                            <div style="font-size:small;display:inline-block;"> Months</div>
+                        }
+                        <div style="font-size:small;display:inline-block; margin-left:2px;">Left</div>
+                    </div>
+                }
+            }
+            <div class="row" style="margin-top:10px;">
                 <div class="col-4">
                     @ModalData.ExpenseName
                 </div>
