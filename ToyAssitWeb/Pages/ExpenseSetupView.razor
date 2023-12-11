@@ -24,9 +24,9 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-                                                                                                        border-radius: 5px;
-                                                                                                        padding: 4px;
-                                                                                                        display: inline-block; */
+                                                                        border-radius: 5px;
+                                                                        padding: 4px;
+                                                                        display: inline-block; */
         display: inline-block;
     }
 
@@ -90,56 +90,10 @@
 
 <PageTitle>Assist Toy</PageTitle>
 
-<Modal @ref="modal" Title="@ModalData.ExpenseName">
+<Modal @ref="modal" Title="Modal title">
     <BodyTemplate>
-        @* Start date and End date *@
-        <div>
-            <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
-                <div style="font-size:small;display:inline-block;">Start date</div>
-                <br />
-                <div style="display:inline-block;">@ModalData.StartDate.Value.ToShortDateString()</div>
-            </div>
-            <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
-                <div style="font-size:small;display:inline-block;">End date</div>
-                <br />
-                <div style="display:inline-block;">@ModalData.EndDate.Value.ToShortDateString()</div>
-            </div>
-
-            <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
-                <div style="font-size:small;display:inline-block;">Amount</div>
-                <br />
-                <div style="display:inline-block;">
-                    <div style="display:inline-block;">
-                        @ModalData.Amount
-                    </div>
-                    @if ((@ModalData.TaxAmount ?? 0) > 0)
-                    {
-                        <div style="display:inline-block; margin:0 2px 0 2px;">
-                            +
-                        </div>
-                        <div style="display:inline-block;">
-                            @ModalData.TaxAmount
-                        </div>
-                        <div style="display:inline-block; font-size:small">
-                            Tax
-                        </div>
-                        <br />
-                        <div style="display:inline-block;">
-                            =
-                        </div>
-                        <div style="display:inline-block;">
-                            @(@ModalData.Amount + @ModalData.TaxAmount)
-                        </div>
-                    }
-                    <div style="display:inline-block; margin:0 0 0 5px">
-                        @ModalData.Currency.CurrencyCode
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
         <div style="color:black;">
+            <h1>@ModalData.ExpenseName</h1>
             @if (@ModalData.StartDate != null && @ModalData.EndDate != null)
             {
                 @* Total Months *@
@@ -147,7 +101,7 @@
                     <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</div>
                     <div style="font-size:small;">Total months</div>
                 </div>
-
+                
                 @* Total Years + months *@
                 var totalMonths = @GeneralHelper.CalculateYearMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate);
                 if (totalMonths.Years > 0 || totalMonths.Months > 0)
@@ -203,28 +157,19 @@
                     </div>
                 }
             }
-
-
+            <div class="row" style="margin-top:10px;">
+                <div class="col-4">
+                    @ModalData.ExpenseName
+                </div>
+                <div class="col-4">
+                    @ModalData.StartDate
+                </div>
+                <div class="col-4">
+                    @ModalData.Amount
+                </div>
+            </div>
             <div class="row">
-                @{
-                    var sartDate = (DateTime)@ModalData.StartDate;
-                    var currentDate = (DateTime)@ModalData.StartDate;
-                    var endDate = (DateTime)@ModalData.EndDate;
-                    var index = 1;
-                }
-                @do
-                {
-                    <div>
-                        <span style="margin-left:5px;">@index</span>
-                        <span style="margin-left:5px;">@currentDate </span>
-
-                    </div>
-                    currentDate = currentDate.AddMonths(1);
-                    index++;
-
-                } while (endDate > currentDate);
-
-
+                @* @JsonSerializer.Serialize(ModalData, options); *@
             </div>
         </div>
     </BodyTemplate>
