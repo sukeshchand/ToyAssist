@@ -11,7 +11,7 @@ namespace ToyAssist.Web.Helpers
     {
         public static string GetOrdinalSuffix(int? number)
         {
-            if(number == null) return string.Empty;
+            if (number == null) return string.Empty;
             if (number % 100 >= 11 && number % 100 <= 13)
                 return "th";
 
@@ -49,9 +49,10 @@ namespace ToyAssist.Web.Helpers
 
         public static (int Years, int Months) CalculateYearMonthDifference(DateTime startDate, DateTime endDate)
         {
-            var years = (endDate.Year - startDate.Year);
-            var months = endDate.Month - startDate.Month; // this is wrong, 
-            return (years, months);
+            var totalMonths = CalculateMonthDifference(startDate, endDate);
+            var yearsLeft = totalMonths / 12;
+            var yearsAndMonthsLeft = totalMonths % 12;
+            return (yearsLeft, yearsAndMonthsLeft);
         }
 
         public static List<(string Name, PropertyInfo PropertyInfo)> GetProperties(Object obj)
@@ -118,11 +119,11 @@ namespace ToyAssist.Web.Helpers
 
         public static int GetCurrentWeekNumber(DateTime? dateTime = null)
         {
-            if(dateTime == null) dateTime = DateTime.Now;
+            if (dateTime == null) dateTime = DateTime.Now;
 
             var currentCulture = CultureInfo.CurrentCulture;
-            var weekNo = currentCulture.Calendar.GetWeekOfYear((DateTime)dateTime, 
-                            currentCulture.DateTimeFormat.CalendarWeekRule, 
+            var weekNo = currentCulture.Calendar.GetWeekOfYear((DateTime)dateTime,
+                            currentCulture.DateTimeFormat.CalendarWeekRule,
                             currentCulture.DateTimeFormat.FirstDayOfWeek);
             return weekNo;
         }

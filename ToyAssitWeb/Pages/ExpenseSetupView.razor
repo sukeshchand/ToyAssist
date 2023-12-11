@@ -96,39 +96,43 @@
             <h1>@ModalData.ExpenseName</h1>
             @if (@ModalData.StartDate != null && @ModalData.EndDate != null)
             {
+                @* Total Months *@
                 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightgreen; margin-left:10px">
                     <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</div>
                     <div style="font-size:small;">Total months</div>
                 </div>
-
-                var yearMonth = @GeneralHelper.CalculateYearMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate);
-                if (yearMonth.Years > 0 || yearMonth.Months > 0)
+                
+                @* Total Years + months *@
+                var totalMonths = @GeneralHelper.CalculateYearMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate);
+                if (totalMonths.Years > 0 || totalMonths.Months > 0)
                 {
                     <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightgreen; margin-left:10px">
-                        @if (yearMonth.Years > 0)
+                        @if (totalMonths.Years > 0)
                         {
-                            <div style="display:inline-block;">@yearMonth.Years</div>
+                            <div style="display:inline-block;">@totalMonths.Years</div>
                             <br />
                             <div style="font-size:small;display:inline-block;">Total years</div>
                         }
-                        @if (yearMonth.Years > 0 && yearMonth.Months > 0)
+                        @if (totalMonths.Years > 0 && totalMonths.Months > 0)
                         {
                             <br />
                             <div style="display:inline-block;margin-left: 2px;"> + </div>
                         }
-                        @if (yearMonth.Months > 0)
+                        @if (totalMonths.Months > 0)
                         {
-                            <div style="display:inline-block;">@yearMonth.Months</div>
+                            <div style="display:inline-block;">@totalMonths.Months</div>
                             <div style="font-size:small;display:inline-block;"> Months</div>
                         }
                     </div>
                 }
 
+                @* Months Left *@
                 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:lightpink; margin-left:10px">
                     <div>@GeneralHelper.CalculateMonthDifference(DateTime.Now, (DateTime)@ModalData.EndDate)</div>
-                    <div style="font-size:small;">Total months left</div>
+                    <div style="font-size:small;">Months left</div>
                 </div>
 
+                @* Years + Months Left *@
                 var yearMonthLeft = @GeneralHelper.CalculateYearMonthDifference(DateTime.Now, (DateTime)@ModalData.EndDate);
                 if (yearMonthLeft.Years > 0 || yearMonthLeft.Months > 0)
                 {
@@ -137,7 +141,7 @@
                         {
                             <div style="display:inline-block;">@yearMonthLeft.Years</div>
                             <br />
-                            <div style="font-size:small;display:inline-block;">Total years</div>
+                            <div style="font-size:small;display:inline-block;">Years</div>
                         }
                         @if (yearMonthLeft.Years > 0 && yearMonthLeft.Months > 0)
                         {
