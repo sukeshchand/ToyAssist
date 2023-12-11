@@ -3,6 +3,7 @@
 @using ToyAssist.Web.DatabaseModels.Models
 @using ToyAssist.Web.Helpers
 @using System.Text.Json;
+@using System.Collections.Generic;
 
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
@@ -24,9 +25,9 @@
 
     .box {
         /* border: solid 1px #0000ff5e;
-                                                                                                                        border-radius: 5px;
-                                                                                                                        padding: 4px;
-                                                                                                                        display: inline-block; */
+                                                                                                                                                        border-radius: 5px;
+                                                                                                                                                        padding: 4px;
+                                                                                                                                                        display: inline-block; */
         display: inline-block;
     }
 
@@ -207,27 +208,81 @@
                         <div style="font-size:small;display:inline-block; margin-left:2px;">Left</div>
                     </div>
                 }
+                <hr />
 
-                <div class="row">
-                    @{
-                        var startDate = (DateTime)@ModalData.StartDate;
-                        var currentDate = (DateTime)@ModalData.StartDate;
-                        var endDate = (DateTime)@ModalData.EndDate;
-                        var index = 1;
-                    }
-                    @do
-                    {
-                        <div>
-                            <span style="margin-left:5px;">@index</span>
-                            <span style="margin-left:5px;">@currentDate </span>
-
+                <div>
+                    <div class="row" style="margin: 2px; padding:2px;">
+                        <div class="col-1">
+                            Serial
                         </div>
-                        currentDate = currentDate.AddMonths(1);
-                        index++;
+                        <div class="col-4">
+                            Date
+                        </div>
+                        <div class="col-3">
+                            Amount
+                        </div>
+                        <div class="col-4">
+                            Status
+                        </div>
+                    </div>
+                    @{
 
-                    } while (endDate > currentDate);
+                        var list = GetExpenseRunningList1(@ModalData);
+                        
+                    }
+                    <div style="height:300px; overflow-y:scroll;">
+                        @for (var i = 0; i < list.Count; i++)
+                        {
+                            var currentItemStyle = !@list[i].IsCurrentItem ? "padding:5px; margin:5px;" : "margin: 10px 5px 10px 5px; border: 3px solid red; border-radius: 5px; padding: 10px 2px 10px 2px; background: bisque;";
+                            var currentItemToolTip = @list[i].IsCurrentItem ? "Current Item" : "";
 
+                            <div class="row" style="@currentItemStyle" title="@currentItemToolTip">
+                                <div class="col-1">
+                                    @list[i].Index
+                                </div>
+                                <div class="col-4">
+                                    @list[i].DateAndTime?.ToShortDateString()
+                                </div>
+                                <div class="col-3">
+                                    @list[i].TotalAmount
+                                </div>
+                                <div class="col-4">
+                                    @{
+                                        var styleStatus = "";
+                                        if (@list[i].IsCurrentItem)
+                                        {
+                                            styleStatus = "border: 1px solid green; border-radius: 3px; padding: 3px; background: cyan; color: red;";
+                                        }
+                                        else if(@list[i].Status == "Paid")
+                                        {
+                                            styleStatus = "border: 1px solid gray; border-radius: 3px; padding: 3px; background: lightgreen; color: black;";
+                                        }
+                                        else if (@list[i].Status == "Pending")
+                                        {
+                                            styleStatus = "border: 1px solid gray; border-radius: 3px; padding: 3px; background: lightpink; color: gray;";
+                                        }
+                                        
+                                    }
+                                    <span style="@styleStatus">
+                                        @list[i].Status
+                                    </span>
+                                    @if (@list[i].IsCurrentItem)
+                                    {
+                                        <span style="padding: 3px; color: red;">
+                                            **
+                                        </span>
+                                    }
+                                </div>
+                            </div>
 
+                            if (@list[i].IsYearBreak)
+                            {
+                                <hr />
+                            }
+
+                        }
+
+                    </div>
                 </div>
             </div>
         }
@@ -237,6 +292,9 @@
         <Button Color="ButtonColor.Primary" @onclick="OnHideModalClick">Save changes</Button>
     </FooterTemplate>
 </Modal>
+
+@* ================================================================================================ *@
+
 
 <div class="box" style="width:100%">
     <h1>Expense setup</h1>

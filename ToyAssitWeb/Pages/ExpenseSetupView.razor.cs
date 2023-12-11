@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Text;
+using BlazorBootstrap;
 using Microsoft.EntityFrameworkCore;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
@@ -92,6 +94,71 @@ namespace ToyAssist.Web.Pages
             return conversionList;
         }
 
+        private List<(int Index, DateTime DateAndTime, double? Amount, double? Tax)> GetExpenseRunningList()
+        {
+            return new List<(int Index, DateTime DateAndTime, double? Amount, double? Tax)>();
+        }
+
+        public class ExpenseRunningModel
+        {
+            public int Index { get; set; }
+            public DateTime? DateAndTime { get; set; }
+            public double? Amount { get; set; }
+            public double? Tax { get; set; }
+            public double? TotalAmount { get; set; }
+            public string? Status { get; set; }
+            public bool IsYearBreak { get; set; }
+            public bool IsCurrentItem { get; set; }
+        }
+
+        private List<ExpenseRunningModel> GetExpenseRunningList1(ExpenseSetup expenseSetup)
+        {
+            var list = new List<ExpenseRunningModel>();
+            if (@ModalData?.StartDate == null || @ModalData.EndDate == null) return list;
+
+            var startDate = (DateTime)@ModalData.StartDate;
+            var currentDate = (DateTime)@ModalData.StartDate;
+            var endDate = (DateTime)@ModalData.EndDate;
+            var index = 0;
+            var currentItemAssigned = false;
+
+            do
+            {
+                var listItem = new ExpenseRunningModel
+                {
+                    Index = index + 1,
+                    DateAndTime = currentDate,
+                    Amount = expenseSetup?.Amount ?? 0,
+                    Status = currentDate > DateTime.Now ? "Pending" : "Paid",
+                    TotalAmount = (expenseSetup?.Amount ?? 0) + (expenseSetup?.TaxAmount ?? 0)
+                };
+                if ((index + 1) % 12 == 0)
+                {
+                    listItem.IsYearBreak = true;
+                }
+
+                if ((!currentItemAssigned && index > 0 && list[index - 1].Status == "Paid" && listItem.Status == "Pending") ||
+                        (listItem.Status == "Pending" && index == 0))
+                {
+                    listItem.IsCurrentItem = true;
+                    currentItemAssigned = true;
+                }
+
+                // ------------------------ Calculations end ------------------------
+                list.Add(listItem);
+                currentDate = currentDate.AddMonths(1);
+                index++;
+
+            } while (endDate > currentDate);
+            return list;
+        }
+
+        private (int Index, DateTime DateAndTime, double? Amount, double? Tax, string? Status) GetExpenseRunningItem()
+        {
+            (int Index, DateTime DateAndTime, double? Amount, double? Tax, string? Status) item = new();
+            return item;
+        }
+
         public List<(string Text, string ToolTipText)> GetRecurringInfo(DateTime? startDate, DateTime? endDate)
         {
             var list = new List<(string, string)>();
@@ -104,7 +171,7 @@ namespace ToyAssist.Web.Pages
 
                 list.Add(($"Total Months: {totalMonths}/{totalMonthsLeft}", "Total Months/Total Months Left"));
             }
-            else if(startDate == null && endDate != null)
+            else if (startDate == null && endDate != null)
             {
                 list.Add(($"Until {((DateTime)endDate).ToShortDateString()}", $"From not specified, occurrence until {((DateTime)endDate).ToShortDateString()}"));
             }
@@ -114,7 +181,7 @@ namespace ToyAssist.Web.Pages
             }
             else if (startDate == null && endDate == null)
             {
-                list.Add(("n/a","No start - end date specified"));
+                list.Add(("n/a", "No start - end date specified"));
             }
             return list;
         }
