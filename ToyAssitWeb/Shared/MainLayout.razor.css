@@ -1,7 +1,7 @@
 .page {
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 main {
@@ -10,7 +10,8 @@ main {
 
 .sidebar {
     background-image: linear-gradient(180deg, #1e1e1e 0%, black 70%);
-}
+
+ }
 
 .top-row {
     background-color: black;
@@ -31,20 +32,6 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
-@media (max-width: 640.98px) {
-    .top-row:not(.auth) {
-        display: none;
-    }
-
-    .top-row.auth {
-        justify-content: space-between;
-    }
-
-    .top-row a, .top-row .btn-link {
-        margin-left: 0;
-    }
-}
 
 @media (min-width: 641px) {
     .page {

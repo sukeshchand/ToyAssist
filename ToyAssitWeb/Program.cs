@@ -1,4 +1,5 @@
 using System.Globalization;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddBlazoredLocalStorage();
 
 var app = builder.Build();
 
