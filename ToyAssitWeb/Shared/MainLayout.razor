@@ -3,18 +3,15 @@
 <PageTitle>ASSIST TOY</PageTitle>
 
 <div>
-    <NavMenu UpdateThemeVariable="UpdateThemeVariable " />
+    <NavMenu  />
 
-    <main class="@NavMenuCssClass">
+    <main>
         @Body
     </main>
 </div>
 
 @code {
-    private string? NavMenuCssClass { get; set; } = "dark";
-    private void UpdateThemeVariable(string newValue)
-    {
-        NavMenuCssClass = newValue;
-    }
+   
+   
 }
 

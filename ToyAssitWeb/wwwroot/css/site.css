@@ -13,8 +13,8 @@ hr {
 }
 
 body {
-    color: black;
-    background-color: white;
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
     margin: 0;
     padding: 0;
 }
@@ -41,8 +41,9 @@ main {
     background-color: var(--bg-primary);
     transition: width 600ms ease;
     overflow-x: hidden;
-    overflow-y:auto;
-    z-index:1;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    z-index: 1;
 }
 
 .navbar-nav {
