@@ -1,5 +1,6 @@
 ﻿@using Blazored.LocalStorage
 @inject ILocalStorageService LocalStorage
+@inject IJSRuntime JSRuntime;
 
 <nav class="navbar">
     <ul class="navbar-nav">
@@ -30,9 +31,6 @@
 
 
 @code {
-    [Parameter]
-    public Action<string> UpdateParentVariable { get; set; }
-
 
     private Dictionary<string, string>  themeMaps  = new Dictionary<string, string>
     {
@@ -55,6 +53,7 @@
 
         currentThemeClass = next;
         await LocalStorage.SetItemAsStringAsync("theme", next);
-        UpdateParentVariable?.Invoke(next);
+
+        await JSRuntime.InvokeAsync<string>("setTheme", new object[] { next });
     }
 }
