@@ -14,17 +14,35 @@ hr {
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
 
+html {
+    height: 100%;
+    margin: 0;
+}
+
 body {
     font-family: 'Roboto Condensed';
     color: var(--text-primary);
     background-color: var(--bg-primary);
     margin: 0;
     padding: 0;
+
+    height: 100%;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
 }
 
-    body::-webkit-scrollbar {
-        width: 0.25rem;
-    }
+.modal-content {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+}
+
+body::-webkit-scrollbar {
+    width: 0.25rem;
+}
 
     body::-webkit-scrollbar-track {
         background: #1e1e24;

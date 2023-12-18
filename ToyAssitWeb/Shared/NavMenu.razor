@@ -61,7 +61,7 @@
             CurrentTheme = themeMaps.First();
         }
 
-        var next = themeMaps.Where(x => x.ThemeId > CurrentTheme.ThemeId).OrderBy(o => o.ThemeId).FirstOrDefault();
+        var next = themeMaps.Where(x => x.ThemeId > (CurrentTheme?.ThemeId ?? 0)).OrderBy(o => o.ThemeId).FirstOrDefault();
         if(next == null)
         {
             next = themeMaps.First();
