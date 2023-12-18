@@ -108,7 +108,8 @@
                     <br />
                     <div style="display:inline-block;">@ModalData.EndDate.Value.ToShortDateString()</div>
                 </div>
-
+                
+                @* Monthly Amount *@
                 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">Monthly Amount</div>
                     <br />
@@ -142,7 +143,118 @@
                     </div>
                 </div>
 
+                @* Total Amount *@
+                @{
+                    var totalInfo = GetTotalAmountInfo(@ModalData, (DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate);
+                }
+                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                    <div style="font-size:small;display:inline-block;">Total amount</div>
+                    <br />
+                    <div style="display:inline-block;">
+                        <div style="display:inline-block;">
+                            @totalInfo.TotalAmount
+                        </div>
+                        @if ((@ModalData.TaxAmount ?? 0) > 0)
+                        {
+                            <div style="display:inline-block; margin:0 2px 0 2px;">
+                                +
+                            </div>
+                            <div style="display:inline-block;">
+                                @totalInfo.TotalTax
+                            </div>
+                            <div style="display:inline-block; font-size:small">
+                                Tax
+                            </div>
+                            <br />
+                            <div style="display:inline-block;">
+                                =
+                            </div>
+                            <div style="display:inline-block;">
+                                @(@totalInfo.TotalAmount + @totalInfo.TotalTax)
+                            </div>
+                        }
+                        <div style="display:inline-block; margin:0 0 0 5px">
+                            @ModalData?.Currency?.CurrencyCode
+                        </div>
+
+                    </div>
+                </div>
+
+                @* Total Paid Amount *@
+                @{
+                    var totalPaidInfo = GetTotalAmountInfo(@ModalData, (DateTime)@ModalData.StartDate, DateTime.Now);
+                }
+                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                    <div style="font-size:small;display:inline-block;">Total paid till now</div>
+                    <br />
+                    <div style="display:inline-block;">
+                        <div style="display:inline-block;">
+                            @totalInfo.TotalAmount
+                        </div>
+                        @if ((@ModalData.TaxAmount ?? 0) > 0)
+                        {
+                            <div style="display:inline-block; margin:0 2px 0 2px;">
+                                +
+                            </div>
+                            <div style="display:inline-block;">
+                                @totalInfo.TotalTax
+                            </div>
+                            <div style="display:inline-block; font-size:small">
+                                Tax
+                            </div>
+                            <br />
+                            <div style="display:inline-block;">
+                                =
+                            </div>
+                            <div style="display:inline-block;">
+                                @(@totalInfo.TotalAmount + @totalInfo.TotalTax)
+                            </div>
+                        }
+                        <div style="display:inline-block; margin:0 0 0 5px">
+                            @ModalData?.Currency?.CurrencyCode
+                        </div>
+
+                    </div>
+                </div>
+
+                @* Total Left Amount *@
+                @{
+                    var totalLeftInfo = GetTotalAmountInfo(@ModalData, DateTime.Now, (DateTime)@ModalData.EndDate);
+                }
+                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                    <div style="font-size:small;display:inline-block;">Total left</div>
+                    <br />
+                    <div style="display:inline-block;">
+                        <div style="display:inline-block;">
+                            @totalInfo.TotalAmount
+                        </div>
+                        @if ((@ModalData.TaxAmount ?? 0) > 0)
+                        {
+                            <div style="display:inline-block; margin:0 2px 0 2px;">
+                                +
+                            </div>
+                            <div style="display:inline-block;">
+                                @totalInfo.TotalTax
+                            </div>
+                            <div style="display:inline-block; font-size:small">
+                                Tax
+                            </div>
+                            <br />
+                            <div style="display:inline-block;">
+                                =
+                            </div>
+                            <div style="display:inline-block;">
+                                @(@totalInfo.TotalAmount + @totalInfo.TotalTax)
+                            </div>
+                        }
+                        <div style="display:inline-block; margin:0 0 0 5px">
+                            @ModalData?.Currency?.CurrencyCode
+                        </div>
+
+                    </div>
+                </div>
             </div>
+
             <div>
 
                 @* Total Months *@

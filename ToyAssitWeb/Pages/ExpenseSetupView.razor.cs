@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
+
 using BlazorBootstrap;
+
 using Microsoft.EntityFrameworkCore;
+
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
 
@@ -69,6 +72,22 @@ namespace ToyAssist.Web.Pages
         {
             var list = GetConversionList(baseCurrency, amount);
             return $" ≈ {string.Join(", ", list)}";
+        }
+
+        private (decimal TotalAmount, decimal TotalTax) GetTotalAmountInfo(ExpenseSetup expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
+        {
+            var totalAmount = 0m;
+            var totalTax = 0m;
+            var currentItem = calculationStartDate;
+
+            do
+            {
+                totalAmount += (decimal)(expenseSetupItem.Amount ?? 0);
+                totalTax += (decimal)(expenseSetupItem.TaxAmount ?? 0);
+                currentItem = currentItem.AddMonths(1);
+            } while (currentItem <= calculationEndDate);
+
+            return (totalAmount, totalTax);
         }
 
         public List<string> GetConversionList(Currency baseCurrency, double amount)
