@@ -11,11 +11,11 @@
     @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
 
     /* body {
-                                                                                        margin: 0;
-                                                                                        font-family: 'Roboto Condensed';
-                                                                                        color: whitesmoke;
-                                                                                        background-color: #1e1e1e;
-                                                                                    } */
+                                                                                            margin: 0;
+                                                                                            font-family: 'Roboto Condensed';
+                                                                                            color: whitesmoke;
+                                                                                            background-color: #1e1e1e;
+                                                                                        } */
 
     .link-box {
         border: solid 1px rgba(0, 255, 94, 0);
@@ -26,11 +26,9 @@
     }
 
     .box {
-        /*         border: solid 1px #0000ff5e;
-                                                                                        border-radius: 5px;
-                                                                                        padding: 4px;
-                                                                                        display: inline-block;
-                                                                                        display: inline-block; */
+/*      border: solid 1px #0000ff5e;
+        border-radius: 5px;
+ */
     }
 
     .head {
@@ -479,41 +477,6 @@
                                 </span>
                             </div>
                         </div>
-                        @if (index == expenseSetupsByCurrency.Count - 1)
-                        {
-                            <div class="row">
-                                <div class="col-12" style="color:#808080a6;">
-                                    <hr />
-                                    <div style="border: 2px solid rgba(204, 204, 204, 0.8); padding: 3px; border-radius: 3px">
-                                        <div>
-                                            <span>
-                                                @currencyGroupItem.currencyGroup.Key?.CurrencyCode total:
-                                            </span>
-                                            <span style="font-weight: bold">
-                                                @expenseSetupsByCurrency.Sum(x => x.Amount) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
-                                            </span>
-                                        </div>
-                                        <div style="margin:5px;">
-                                            @{
-                                                var conversionItems = GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount));
-                                            }
-                                            @if (conversionItems.Count > 0)
-                                            {
-                                                <span>
-                                                    ≈
-                                                </span>
-                                            }
-                                            @foreach (var conversionItem in conversionItems)
-                                            {
-                                                <div style="font-size: small; border: 1px solid #ccc; margin: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
-                                                    @conversionItem
-                                                </div>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
                     </div>
                     <div class="col-2 col-bill-setting box">
                         @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
@@ -571,7 +534,47 @@
                         }
                     </div>
                 </div>
-                <hr style="border:1px black; border-style: inset;" />
+                if (index == expenseSetupsByCurrency.Count - 1)
+                {
+                    <div class="row" style="padding: 6px;">
+                        <div class="col-4  col-descr  box"></div>
+                        <div class="col-2 box">
+                            <hr />
+                            <div style="" class="box">
+                                <div>
+                                    <span>
+                                        @currencyGroupItem.currencyGroup.Key?.CurrencyCode total:
+                                    </span>
+                                    <span style="font-weight: bold">
+                                        @(@expenseSetupsByCurrency.Sum(x => x.Amount).ToStringCustom()) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                                    </span>
+                                </div>
+                                <div style="margin:5px;" class="box">
+                                    @{
+                                        var conversionItems = GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount));
+                                    }
+                                    @if (conversionItems.Count > 0)
+                                    {
+                                        <span>
+                                            ≈
+                                        </span>
+                                    }
+                                    @foreach (var conversionItem in conversionItems)
+                                    {
+                                        <div style="font-size: small; border: 1px solid #ccc; margin: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
+                                            @conversionItem
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 box"></div>
+                        <div class="col-2 box"></div>
+                        <div class="col-1 box"></div>
+                        <div class="col-1 box"></div>
+                    </div>
+                }
+                <hr style="border:3px black; border-style: inset;" />
             }
         }
     </div>
