@@ -4,17 +4,18 @@
 @using ToyAssist.Web.Helpers
 @using System.Text.Json;
 @using System.Collections.Generic;
+@using ToyAssist.Web.TypeExtensions;
 
 
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
 
     /* body {
-                margin: 0;
-                font-family: 'Roboto Condensed';
-                color: whitesmoke;
-                background-color: #1e1e1e;
-            } */
+                                                                                        margin: 0;
+                                                                                        font-family: 'Roboto Condensed';
+                                                                                        color: whitesmoke;
+                                                                                        background-color: #1e1e1e;
+                                                                                    } */
 
     .link-box {
         border: solid 1px rgba(0, 255, 94, 0);
@@ -26,10 +27,10 @@
 
     .box {
         /*         border: solid 1px #0000ff5e;
-                border-radius: 5px;
-                padding: 4px;
-                display: inline-block;
-                display: inline-block; */
+                                                                                        border-radius: 5px;
+                                                                                        padding: 4px;
+                                                                                        display: inline-block;
+                                                                                        display: inline-block; */
     }
 
     .head {
@@ -92,30 +93,36 @@
 
 <PageTitle>Assist Toy</PageTitle>
 
-<Modal @ref="modal" Title="@ModalData?.ExpenseName">
+<Modal @ref="modal" Title="@ModalData?.ExpenseName" Size="ModalSize.Large">
     <BodyTemplate>
         @if (@ModalData?.StartDate != null && @ModalData.EndDate != null)
         {
-            @* Start date and End date *@
-            <div>
-                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
+            @* Start date*@
+            <div class="row" style="padding: 10px;">
+                <div class="col-3" style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">Start date</div>
                     <br />
                     <div style="display:inline-block;">@ModalData.StartDate.Value.ToShortDateString()</div>
                 </div>
-                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
+
+                @* End date*@
+                <div class="col-3" style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">End date</div>
                     <br />
                     <div style="display:inline-block;">@ModalData.EndDate.Value.ToShortDateString()</div>
                 </div>
-                
+                <div class="col-6">
+                </div>
+            </div>
+
+            <div class="row" style="padding: 10px;">
                 @* Monthly Amount *@
-                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">Monthly Amount</div>
                     <br />
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
-                            @ModalData.Amount
+                            @ModalData.Amount.ToStringCustom()
                         </div>
                         @if ((@ModalData.TaxAmount ?? 0) > 0)
                         {
@@ -123,7 +130,7 @@
                                 +
                             </div>
                             <div style="display:inline-block;">
-                                @ModalData.TaxAmount
+                                @ModalData.TaxAmount.ToStringCustom()
                             </div>
                             <div style="display:inline-block; font-size:small">
                                 Tax
@@ -133,7 +140,7 @@
                                 =
                             </div>
                             <div style="display:inline-block;">
-                                @(@ModalData.Amount + @ModalData.TaxAmount)
+                                @((@ModalData.Amount + @ModalData.TaxAmount).ToStringCustom())
                             </div>
                         }
                         <div style="display:inline-block; margin:0 0 0 5px">
@@ -147,12 +154,12 @@
                 @{
                     var totalInfo = GetTotalAmountInfo(@ModalData, (DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate);
                 }
-                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">Total amount</div>
                     <br />
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
-                            @totalInfo.TotalAmount
+                            @totalInfo.TotalAmount.ToStringCustom()
                         </div>
                         @if ((@ModalData.TaxAmount ?? 0) > 0)
                         {
@@ -160,7 +167,7 @@
                                 +
                             </div>
                             <div style="display:inline-block;">
-                                @totalInfo.TotalTax
+                                @totalInfo.TotalTax.ToStringCustom()
                             </div>
                             <div style="display:inline-block; font-size:small">
                                 Tax
@@ -170,7 +177,7 @@
                                 =
                             </div>
                             <div style="display:inline-block;">
-                                @(@totalInfo.TotalAmount + @totalInfo.TotalTax)
+                                @((@totalInfo.TotalAmount + @totalInfo.TotalTax).ToStringCustom())
                             </div>
                         }
                         <div style="display:inline-block; margin:0 0 0 5px">
@@ -179,17 +186,18 @@
 
                     </div>
                 </div>
+
 
                 @* Total Paid Amount *@
                 @{
                     var totalPaidInfo = GetTotalAmountInfo(@ModalData, (DateTime)@ModalData.StartDate, DateTime.Now);
                 }
-                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">Total paid till now</div>
                     <br />
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
-                            @totalInfo.TotalAmount
+                            @totalPaidInfo.TotalAmount.ToStringCustom()
                         </div>
                         @if ((@ModalData.TaxAmount ?? 0) > 0)
                         {
@@ -197,7 +205,7 @@
                                 +
                             </div>
                             <div style="display:inline-block;">
-                                @totalInfo.TotalTax
+                                @totalPaidInfo.TotalTax.ToStringCustom()
                             </div>
                             <div style="display:inline-block; font-size:small">
                                 Tax
@@ -207,7 +215,7 @@
                                 =
                             </div>
                             <div style="display:inline-block;">
-                                @(@totalInfo.TotalAmount + @totalInfo.TotalTax)
+                                @((@totalPaidInfo.TotalAmount + @totalPaidInfo.TotalTax).ToStringCustom())
                             </div>
                         }
                         <div style="display:inline-block; margin:0 0 0 5px">
@@ -216,17 +224,18 @@
 
                     </div>
                 </div>
+
 
                 @* Total Left Amount *@
                 @{
                     var totalLeftInfo = GetTotalAmountInfo(@ModalData, DateTime.Now, (DateTime)@ModalData.EndDate);
                 }
-                <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
                     <div style="font-size:small;display:inline-block;">Total left</div>
                     <br />
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
-                            @totalInfo.TotalAmount
+                            @totalLeftInfo.TotalAmount.ToStringCustom()
                         </div>
                         @if ((@ModalData.TaxAmount ?? 0) > 0)
                         {
@@ -234,7 +243,7 @@
                                 +
                             </div>
                             <div style="display:inline-block;">
-                                @totalInfo.TotalTax
+                                @totalLeftInfo.TotalTax.ToStringCustom()
                             </div>
                             <div style="display:inline-block; font-size:small">
                                 Tax
@@ -244,7 +253,7 @@
                                 =
                             </div>
                             <div style="display:inline-block;">
-                                @(@totalInfo.TotalAmount + @totalInfo.TotalTax)
+                                @((@totalLeftInfo.TotalAmount + @totalLeftInfo.TotalTax).ToStringCustom())
                             </div>
                         }
                         <div style="display:inline-block; margin:0 0 0 5px">
@@ -253,10 +262,10 @@
 
                     </div>
                 </div>
+
             </div>
 
             <div>
-
                 @* Total Months *@
                 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin-left:10px; color:black;">
                     <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</div>
@@ -352,11 +361,11 @@
                             <div class="row" style="@currentItemStyle" title="@currentItemToolTip">
                                 @if (@list[i].IsCurrentItem)
                                 {
-                                <div class="row" style="padding: 3px; margin: 4px; color: darkgreen;  font-size: small;">
-                                    <div class="col-12">
-                                        Current item
+                                    <div class="row" style="padding: 3px; margin: 4px; color: darkgreen;  font-size: small;">
+                                        <div class="col-12">
+                                            Current item
+                                        </div>
                                     </div>
-                                </div>
                                 }
                                 <div class="col-1">
                                     @list[i].Index
@@ -365,7 +374,7 @@
                                     @list[i].DateAndTime?.ToShortDateString()
                                 </div>
                                 <div class="col-3">
-                                    @list[i].TotalAmount
+                                    @(list[i].TotalAmount.ToStringCustom())
                                 </div>
                                 <div class="col-4">
                                     @{
@@ -466,7 +475,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <span style="display:inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
-                                    @expenseSetup.Amount @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                                    @expenseSetup.Amount.ToStringCustom() @currencyGroupItem.currencyGroup.Key?.CurrencyCode
                                 </span>
                             </div>
                         </div>

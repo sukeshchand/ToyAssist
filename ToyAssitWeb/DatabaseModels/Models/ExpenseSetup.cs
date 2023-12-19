@@ -17,9 +17,9 @@ public partial class ExpenseSetup
 
     public DateTime? EndDate { get; set; }
 
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     public int? CurrencyId { get; set; }
 

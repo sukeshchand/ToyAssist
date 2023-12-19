@@ -68,7 +68,7 @@ namespace ToyAssist.Web.Pages
 
         }
 
-        public string GetConversionListForToolTip(Currency baseCurrency, double amount)
+        public string GetConversionListForToolTip(Currency baseCurrency, decimal amount)
         {
             var list = GetConversionList(baseCurrency, amount);
             return $" ≈ {string.Join(", ", list)}";
@@ -90,7 +90,7 @@ namespace ToyAssist.Web.Pages
             return (totalAmount, totalTax);
         }
 
-        public List<string> GetConversionList(Currency baseCurrency, double amount)
+        public List<string> GetConversionList(Currency baseCurrency, decimal amount)
         {
             var currenciesInUse = ExpenseSetups.Select(x => x.Currency).Distinct().ToList();
             var conversionList = new List<string>();
@@ -99,32 +99,32 @@ namespace ToyAssist.Web.Pages
                 var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == baseCurrency.CurrencyId && x.ToCurrencyId == currency!.CurrencyId);
                 if (conversionRate != null)
                 {
-                    conversionList.Add($"{currency.CurrencyCode} {(int)(amount * (double)conversionRate.ConversionRate)}");
+                    conversionList.Add($"{currency.CurrencyCode} {(int)(amount * (decimal)conversionRate.ConversionRate)}");
                 }
                 else
                 {
                     var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currency.CurrencyId && x.ToCurrencyId == baseCurrency.CurrencyId);
                     if (conversionRateReverse != null)
                     {
-                        conversionList.Add($"{currency.CurrencyCode} {(int)(amount / (double)conversionRateReverse.ConversionRate)}");
+                        conversionList.Add($"{currency.CurrencyCode} {(int)(amount / (decimal)conversionRateReverse.ConversionRate)}");
                     }
                 }
             }
             return conversionList;
         }
 
-        private List<(int Index, DateTime DateAndTime, double? Amount, double? Tax)> GetExpenseRunningList()
+        private List<(int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax)> GetExpenseRunningList()
         {
-            return new List<(int Index, DateTime DateAndTime, double? Amount, double? Tax)>();
+            return new List<(int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax)>();
         }
 
         public class ExpenseRunningModel
         {
             public int Index { get; set; }
             public DateTime? DateAndTime { get; set; }
-            public double? Amount { get; set; }
-            public double? Tax { get; set; }
-            public double? TotalAmount { get; set; }
+            public decimal? Amount { get; set; }
+            public decimal? Tax { get; set; }
+            public decimal? TotalAmount { get; set; }
             public string? Status { get; set; }
             public bool IsYearBreak { get; set; }
             public bool IsCurrentItem { get; set; }
@@ -172,9 +172,9 @@ namespace ToyAssist.Web.Pages
             return list;
         }
 
-        private (int Index, DateTime DateAndTime, double? Amount, double? Tax, string? Status) GetExpenseRunningItem()
+        private (int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax, string? Status) GetExpenseRunningItem()
         {
-            (int Index, DateTime DateAndTime, double? Amount, double? Tax, string? Status) item = new();
+            (int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax, string? Status) item = new();
             return item;
         }
 
