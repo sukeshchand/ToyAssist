@@ -8,12 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
+using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Pages
 {
 
     public partial class ExpenseSetupView
     {
+
         List<ExpenseSetup> ExpenseSetups = new List<ExpenseSetup>();
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
         public bool IsPostBack { get; set; }
@@ -22,6 +24,14 @@ namespace ToyAssist.Web.Pages
         {
             SetCulture("en-US");
         }
+
+        private ExpenseSetupViewModal expenseSetupViewModal = default;
+
+        private async Task OnShowModalClick(ExpenseSetup? data)
+        {
+            await expenseSetupViewModal.ShowModalAsync(data);
+        }
+
 
         private void SetCulture(string userCulture)
         {
@@ -74,7 +84,7 @@ namespace ToyAssist.Web.Pages
             return $" ≈ {string.Join(", ", list)}";
         }
 
-        private (decimal TotalAmount, decimal TotalTax) GetTotalAmountInfo(ExpenseSetup expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
+        public static (decimal TotalAmount, decimal TotalTax) GetTotalAmountInfo(ExpenseSetup expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
         {
             var totalAmount = 0m;
             var totalTax = 0m;
@@ -111,71 +121,6 @@ namespace ToyAssist.Web.Pages
                 }
             }
             return conversionList;
-        }
-
-        private List<(int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax)> GetExpenseRunningList()
-        {
-            return new List<(int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax)>();
-        }
-
-        public class ExpenseRunningModel
-        {
-            public int Index { get; set; }
-            public DateTime? DateAndTime { get; set; }
-            public decimal? Amount { get; set; }
-            public decimal? Tax { get; set; }
-            public decimal? TotalAmount { get; set; }
-            public string? Status { get; set; }
-            public bool IsYearBreak { get; set; }
-            public bool IsCurrentItem { get; set; }
-        }
-
-        private List<ExpenseRunningModel> GetExpenseRunningList1(ExpenseSetup expenseSetup)
-        {
-            var list = new List<ExpenseRunningModel>();
-            if (@ModalData?.StartDate == null || @ModalData.EndDate == null) return list;
-
-            var startDate = (DateTime)@ModalData.StartDate;
-            var currentDate = (DateTime)@ModalData.StartDate;
-            var endDate = (DateTime)@ModalData.EndDate;
-            var index = 0;
-            var currentItemAssigned = false;
-
-            do
-            {
-                var listItem = new ExpenseRunningModel
-                {
-                    Index = index + 1,
-                    DateAndTime = currentDate,
-                    Amount = expenseSetup?.Amount ?? 0,
-                    Status = currentDate > DateTime.Now ? "Pending" : "Paid",
-                    TotalAmount = (expenseSetup?.Amount ?? 0) + (expenseSetup?.TaxAmount ?? 0)
-                };
-                if ((index + 1) % 12 == 0)
-                {
-                    listItem.IsYearBreak = true;
-                }
-
-                if ((!currentItemAssigned && index > 0 && list[index - 1].Status == "Paid" && listItem.Status == "Pending") ||
-                        (listItem.Status == "Pending" && index == 0))
-                {
-                    listItem.IsCurrentItem = true;
-                    currentItemAssigned = true;
-                }
-
-                // ------------------------ Calculations end ------------------------
-                list.Add(listItem);
-                currentDate = currentDate.AddMonths(1);
-                index++;
-
-            } while (endDate > currentDate);
-            return list;
-        }
-
-        private (int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax, string? Status) GetExpenseRunningItem()
-        {
-            (int Index, DateTime DateAndTime, decimal? Amount, decimal? Tax, string? Status) item = new();
-            return item;
         }
 
         public List<(string Text, string ToolTipText)> GetRecurringInfo(DateTime? startDate, DateTime? endDate)
