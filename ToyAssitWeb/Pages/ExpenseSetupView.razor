@@ -10,12 +10,6 @@
 <style>
     @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
 
-    /* body {
-                                                                                            margin: 0;
-                                                                                            font-family: 'Roboto Condensed';
-                                                                                            color: whitesmoke;
-                                                                                            background-color: #1e1e1e;
-                                                                                        } */
 
     .link-box {
         border: solid 1px rgba(0, 255, 94, 0);
@@ -26,9 +20,8 @@
     }
 
     .box {
-/*      border: solid 1px #0000ff5e;
-        border-radius: 5px;
- */
+      /* border: solid 1px #0000ff5e;
+      border-radius: 5px; */
     }
 
     .head {
@@ -536,16 +529,17 @@
                 </div>
                 if (index == expenseSetupsByCurrency.Count - 1)
                 {
-                    <div class="row" style="padding: 6px;">
-                        <div class="col-4  col-descr  box"></div>
-                        <div class="col-2 box">
-                            <hr />
+                    <div class="row" style="padding: 6px; border: 1px solid #ccc; margin:10px; border-radius:10px ">
+                        <div class="col-4  col-descr box">
+                            <span style="font-size:x-large">
+                                @currencyGroupItem.currencyGroup.Key?.CurrencyCode total:
+                            </span>
+
+                        </div>
+                        <div class="col-8 box">
                             <div style="" class="box">
                                 <div>
-                                    <span>
-                                        @currencyGroupItem.currencyGroup.Key?.CurrencyCode total:
-                                    </span>
-                                    <span style="font-weight: bold">
+                                    <span style="font-weight: bold; font-size:x-large;">
                                         @(@expenseSetupsByCurrency.Sum(x => x.Amount).ToStringCustom()) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
                                     </span>
                                 </div>
@@ -568,10 +562,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2 box"></div>
-                        <div class="col-2 box"></div>
-                        <div class="col-1 box"></div>
-                        <div class="col-1 box"></div>
                     </div>
                 }
                 <hr style="border:3px black; border-style: inset;" />
