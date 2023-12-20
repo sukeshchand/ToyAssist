@@ -43,11 +43,20 @@ namespace ToyAssist.Web.Pages
         private List<ExpenseRunningModel> GetExpenseRunningList(ExpenseSetup expenseSetup)
         {
             var list = new List<ExpenseRunningModel>();
-            if (@ModalData?.StartDate == null || @ModalData.EndDate == null) return list;
 
-            var startDate = (DateTime)@ModalData.StartDate;
-            var currentDate = (DateTime)@ModalData.StartDate;
-            var endDate = (DateTime)@ModalData.EndDate;
+            DateTime? startDate = null;
+            DateTime endDate = @ModalData.EndDate != null ? (DateTime)@ModalData.EndDate : DateTime.Now;
+
+            if (@ModalData.StartDate != null)
+            {
+                startDate = (DateTime)@ModalData.StartDate;
+            }
+
+
+            if (startDate == null) return list;
+
+            
+            var currentDate =(DateTime)startDate;
             var index = 0;
             var currentItemAssigned = false;
 
