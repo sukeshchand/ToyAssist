@@ -47,12 +47,14 @@ namespace ToyAssist.Web.Helpers
             return ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
         }
 
-        public static (int Years, int Months) CalculateYearMonthDifference(DateTime startDate, DateTime endDate)
+        public static (int Years, int Months, bool IsError) CalculateYearMonthDifference(DateTime? startDate, DateTime? endDate)
         {
-            var totalMonths = CalculateMonthDifference(startDate, endDate);
+            if(startDate == null || endDate == null) return (0, 0, true);
+
+            var totalMonths = CalculateMonthDifference((DateTime)startDate, (DateTime)endDate);
             var yearsLeft = totalMonths / 12;
             var yearsAndMonthsLeft = totalMonths % 12;
-            return (yearsLeft, yearsAndMonthsLeft);
+            return (yearsLeft, yearsAndMonthsLeft, false);
         }
 
         public static List<(string Name, PropertyInfo PropertyInfo)> GetProperties(Object obj)
