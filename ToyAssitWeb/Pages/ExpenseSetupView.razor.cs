@@ -84,10 +84,57 @@ namespace ToyAssist.Web.Pages
             return $" ≈ {string.Join(", ", list)}";
         }
 
-        public static (decimal TotalAmount, decimal TotalTax) GetTotalAmountInfo(ExpenseSetup expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountToBePaidInfo(ExpenseSetup expenseSetupItem)
+        {
+            if(expenseSetupItem.StartDate == null || expenseSetupItem.EndDate == null)
+            {
+                return (0, 0, true);
+            }
+
+            var calculationStartDate = (DateTime)expenseSetupItem.StartDate;
+            var calculationEndDate = (DateTime)expenseSetupItem.EndDate;
+
+            var amountInfo = CalculateTotalAmount(expenseSetupItem, calculationStartDate, calculationEndDate);
+
+            return (amountInfo.TotalAmount, amountInfo.TotalTax, false);
+        }
+
+
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountAlreadyPaidInfo(ExpenseSetup expenseSetupItem)
+        {
+            if (expenseSetupItem.StartDate == null)
+            {
+                return (0, 0, true);
+            }
+
+            var calculationStartDate = (DateTime)expenseSetupItem.StartDate;
+            var calculationEndDate = DateTime.Now;
+
+            var amountInfo = CalculateTotalAmount(expenseSetupItem, calculationStartDate, calculationEndDate);
+
+            return (amountInfo.TotalAmount, amountInfo.TotalTax, false);
+        }
+
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountLeftToPayInfo(ExpenseSetup expenseSetupItem)
+        {
+            if (expenseSetupItem.EndDate == null)
+            {
+                return (0, 0, true);
+            }
+
+            var calculationStartDate = DateTime.Now;
+            var calculationEndDate = (DateTime)expenseSetupItem.EndDate;
+
+            var amountInfo = CalculateTotalAmount(expenseSetupItem, calculationStartDate, calculationEndDate);
+
+            return (amountInfo.TotalAmount, amountInfo.TotalTax, false);
+        }
+
+        private static (decimal TotalAmount, decimal TotalTax) CalculateTotalAmount(ExpenseSetup expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
         {
             var totalAmount = 0m;
             var totalTax = 0m;
+
             var currentItem = calculationStartDate;
 
             do
