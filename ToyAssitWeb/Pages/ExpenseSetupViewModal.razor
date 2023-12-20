@@ -18,33 +18,37 @@
 <Modal @ref="@ModalRef" Title="@ModalData?.ExpenseName" Size="ModalSize.Large">
     <BodyTemplate>
         <div>
-            @ModalData?.ExpenseName
+            @ModalData.ExpenseName
         </div>
-        @if (@ModalData?.StartDate != null && @ModalData.EndDate != null)
-        {
+        <div class="row" style="padding: 10px;">
             @* Start date*@
-            <div class="row" style="padding: 10px;">
-                <div class="col-3" style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
-                    <div style="font-size:small;display:inline-block;">Start date</div>
-                    <br />
-                    <div style="display:inline-block;">@ModalData.StartDate.Value.ToShortDateString()</div>
-                </div>
-
-                @* End date*@
-                <div class="col-3" style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
-                    <div style="font-size:small;display:inline-block;">End date</div>
-                    <br />
-                    <div style="display:inline-block;">@ModalData.EndDate.Value.ToShortDateString()</div>
-                </div>
-                <div class="col-6">
+            <div class="col-3" style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
+                <div style="font-size:small;display:inline-block;">Start date</div>
+                <br />
+                <div style="display:inline-block;">
+                    @(@ModalData.StartDate == null ? "N/A" : @ModalData.StartDate.Value.ToShortDateString())
                 </div>
             </div>
 
-            <div class="row" style="padding: 10px;">
-                @* Monthly Amount *@
-                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
-                    <div style="font-size:small;display:inline-block;">Monthly Amount</div>
-                    <br />
+            @* End date*@
+            <div class="col-3" style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin:10px 10px 10px 0; color:black;">
+                <div style="font-size:small;display:inline-block;">End date</div>
+                <br />
+                <div style="display:inline-block;">
+                    @(@ModalData.EndDate == null ? "N/A" : @ModalData.EndDate.Value.ToShortDateString())
+                </div>
+            </div>
+            <div class="col-6">
+            </div>
+        </div>
+
+        <div class="row" style="padding: 10px;">
+            @* Monthly Amount *@
+            <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div style="font-size:small;display:inline-block;">Monthly Amount</div>
+                <br />
+                @if (@ModalData.Amount != null)
+                {
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
                             @ModalData.Amount.ToStringCustom()
@@ -73,15 +77,25 @@
                         </div>
 
                     </div>
-                </div>
-
-                @* Total Amount to be paid *@
-                @{
-                    var totalInfo = ExpenseSetupView.CalculateTotalAmountToBePaidInfo(@ModalData);
                 }
-                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
-                    <div style="font-size:small;display:inline-block;">Total amount</div>
-                    <br />
+                else
+                {
+                    <div style="display:inline-block;">
+                        N/A
+                    </div>
+                }
+            </div>
+
+            @* Total Amount to be paid *@
+            @{
+                var totalInfo = ExpenseSetupView.CalculateTotalAmountToBePaidInfo(@ModalData);
+            }
+            <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+
+                <div style="font-size:small;display:inline-block;">Total amount</div>
+                <br />
+                @if (!totalInfo.IsError)
+                {
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
                             @totalInfo.TotalAmount.ToStringCustom()
@@ -108,18 +122,23 @@
                         <div style="display:inline-block; margin:0 0 0 5px">
                             @ModalData?.Currency?.CurrencyCode
                         </div>
-
                     </div>
-                </div>
-
-
-                @* Total Paid Amount *@
-                @{
-                    var totalPaidInfo = ExpenseSetupView.CalculateTotalAmountAlreadyPaidInfo(@ModalData);
                 }
-                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
-                    <div style="font-size:small;display:inline-block;">Total paid till now</div>
-                    <br />
+                else
+                {
+                    <div style="font-size:small;display:inline-block;">N/A</div>
+                }
+            </div>
+
+            @* Total Paid Amount *@
+            @{
+                var totalPaidInfo = ExpenseSetupView.CalculateTotalAmountAlreadyPaidInfo(@ModalData);
+            }
+            <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div style="font-size:small;display:inline-block;">Total paid till now</div>
+                <br />
+                @if (!totalPaidInfo.IsError)
+                {
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
                             @totalPaidInfo.TotalAmount.ToStringCustom()
@@ -148,16 +167,24 @@
                         </div>
 
                     </div>
-                </div>
-
-
-                @* Total Left Amount *@
-                @{
-                    var totalLeftInfo = ExpenseSetupView.CalculateTotalAmountLeftToPayInfo(@ModalData);
                 }
-                <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
-                    <div style="font-size:small;display:inline-block;">Total left</div>
-                    <br />
+                else
+                {
+                    <div style="font-size:small;display:inline-block;">N/A</div>
+                }
+            </div>
+
+
+            @* Total Left Amount *@
+            @{
+                var totalLeftInfo = ExpenseSetupView.CalculateTotalAmountLeftToPayInfo(@ModalData);
+            }
+            <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
+                <div style="font-size:small;display:inline-block;">Total left</div>
+                <br />
+                @if (!totalLeftInfo.IsError)
+                {
+
                     <div style="display:inline-block;">
                         <div style="display:inline-block;">
                             @totalLeftInfo.TotalAmount.ToStringCustom()
@@ -186,15 +213,22 @@
                         </div>
 
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div style="font-size:small;display:inline-block;">N/A</div>
+                }
 
             </div>
+        </div>
 
+        @if (@ModalData?.StartDate != null && @ModalData.EndDate != null)
+        {
             <div>
                 @* Total Months *@
                 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin-left:10px; color:black;">
-                    <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</div>
                     <div style="font-size:small;">Total months</div>
+                    <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, (DateTime)@ModalData.EndDate)</div>
                 </div>
 
                 @* Total Years + months *@
@@ -206,14 +240,14 @@
                     <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:cyan; margin-left:10px; color:black;">
                         @if (totalMonths.Years > 0)
                         {
-                            <div style="display:inline-block;">@totalMonths.Years</div>
-                            <br />
                             <div style="font-size:small;display:inline-block;">Total years</div>
+                            <br />
+                            <div style="display:inline-block;">@totalMonths.Years</div>
+                            <div style="display:inline-block; font-size:small;">years</div>
                         }
                         @if (totalMonths.Years > 0 && totalMonths.Months > 0)
                         {
-                            <br />
-                            <div style="display:inline-block;margin-left: 2px;"> + </div>
+                            <div style="display:inline-block;margin-left: 2px;"> </div>
                         }
                         @if (totalMonths.Months > 0)
                         {
@@ -225,8 +259,8 @@
 
                 @* Months Left *@
                 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin-left:10px;color:black;">
-                    <div>@GeneralHelper.CalculateMonthDifference(DateTime.Now, (DateTime)@ModalData.EndDate)</div>
                     <div style="font-size:small;">Months left</div>
+                    <div>@GeneralHelper.CalculateMonthDifference(DateTime.Now, (DateTime)@ModalData.EndDate)</div>
                 </div>
 
                 @* Years + Months Left *@
@@ -236,21 +270,20 @@
                 @if (yearMonthLeft.Years > 0 || yearMonthLeft.Months > 0)
                 {
                     <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin-left:10px;color:black;">
+                        <div style="font-size:small;">Years left</div>
                         @if (yearMonthLeft.Years > 0)
                         {
                             <div style="display:inline-block;">@yearMonthLeft.Years</div>
-                            <br />
-                            <div style="font-size:small;display:inline-block;">Years</div>
+                            <div style="font-size:small;display:inline-block;">years</div>
                         }
                         @if (yearMonthLeft.Years > 0 && yearMonthLeft.Months > 0)
                         {
-                            <br />
-                            <div style="display:inline-block;margin-left: 2px;"> + </div>
+                            <div style="display:inline-block;margin-left: 2px;"> </div>
                         }
                         @if (yearMonthLeft.Months > 0)
                         {
                             <div style="display:inline-block;">@yearMonthLeft.Months</div>
-                            <div style="font-size:small;display:inline-block;"> Months</div>
+                            <div style="font-size:small;display:inline-block;"> months</div>
                         }
                         <div style="font-size:small;display:inline-block; margin-left:2px;">Left</div>
                     </div>

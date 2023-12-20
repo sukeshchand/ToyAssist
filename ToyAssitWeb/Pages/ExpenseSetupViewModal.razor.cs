@@ -5,13 +5,18 @@ using ToyAssist.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace ToyAssist.Web.Pages
 {
     public partial class ExpenseSetupViewModal
     {
-        private ExpenseSetup? ModalData { get; set; }
+        public ExpenseSetupViewModal()
+        {
+            ModalData = new ExpenseSetup();
+        }
+        private ExpenseSetup ModalData { get; set; }
         private Modal ModalRef = default!;
 
         JsonSerializerOptions options = new JsonSerializerOptions

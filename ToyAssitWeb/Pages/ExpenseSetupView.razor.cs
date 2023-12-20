@@ -84,9 +84,9 @@ namespace ToyAssist.Web.Pages
             return $" ≈ {string.Join(", ", list)}";
         }
 
-        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountToBePaidInfo(ExpenseSetup expenseSetupItem)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountToBePaidInfo(ExpenseSetup? expenseSetupItem)
         {
-            if(expenseSetupItem.StartDate == null || expenseSetupItem.EndDate == null)
+            if(expenseSetupItem?.StartDate == null || expenseSetupItem.EndDate == null)
             {
                 return (0, 0, true);
             }
@@ -100,7 +100,7 @@ namespace ToyAssist.Web.Pages
         }
 
 
-        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountAlreadyPaidInfo(ExpenseSetup expenseSetupItem)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountAlreadyPaidInfo(ExpenseSetup? expenseSetupItem)
         {
             if (expenseSetupItem.StartDate == null)
             {
@@ -115,7 +115,7 @@ namespace ToyAssist.Web.Pages
             return (amountInfo.TotalAmount, amountInfo.TotalTax, false);
         }
 
-        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountLeftToPayInfo(ExpenseSetup expenseSetupItem)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountLeftToPayInfo(ExpenseSetup? expenseSetupItem)
         {
             if (expenseSetupItem.EndDate == null)
             {
