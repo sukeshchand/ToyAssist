@@ -3,6 +3,9 @@ using System.Text.Json;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using static System.Net.Mime.MediaTypeNames;
+
 
 namespace ToyAssist.Web.Pages
 {
@@ -17,11 +20,19 @@ namespace ToyAssist.Web.Pages
             WriteIndented = true, // Optional: Make the output more readable
         };
 
+        private ElementReference elementRefToScrollInto = default;
+
+        private async Task ScrollIntoDivAsync(ElementReference elementRefToScrollInto)
+        {
+            await JSRuntime.InvokeVoidAsync("scrollIntoView", elementRefToScrollInto);
+        }
+
         public async Task ShowModalAsync(ExpenseSetup? data)
         {
             ModalData = data;
-            StateHasChanged();
             await ModalRef.ShowAsync();
+            await ScrollIntoDivAsync(elementRefToScrollInto);
+            StateHasChanged();
         }
 
         private List<ExpenseRunningModel> GetExpenseRunningList(ExpenseSetup expenseSetup)
@@ -68,13 +79,12 @@ namespace ToyAssist.Web.Pages
 
         private async Task OnShowModalClick(ExpenseSetup? data)
         {
-            // ModalData = data;
-            // await modal.ShowAsync();
+            
         }
 
         private async Task OnHideModalClick()
         {
-            // await modal.HideAsync();
+            await ModalRef.HideAsync();
         }
     }
 }

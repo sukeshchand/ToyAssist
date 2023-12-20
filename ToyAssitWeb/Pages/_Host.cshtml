@@ -47,6 +47,15 @@
         window.setTheme = function (className) {
             document.body.className = className;
         };
+
+        window.scrollIntoView = function (element) {
+            setTimeout(function () {
+                try {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } catch (e) {
+                }
+            }, 500);
+        }
     </script>
 </body>
 </html>
