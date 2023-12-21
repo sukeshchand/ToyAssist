@@ -6,96 +6,15 @@
 @using System.Collections.Generic;
 @using ToyAssist.Web.TypeExtensions;
 
-
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed');
-
-
-    .link-box {
-        border: solid 1px rgba(0, 255, 94, 0);
-        border-radius: 5px;
-        padding: 4px;
-        font-size: x-small;
-        display: inline-block;
-    }
-
-    .box {
-      /* border: solid 1px #0000ff5e;
-      border-radius: 5px; */
-    }
-
-    .head {
-        font-weight: bold;
-    }
-
-    .col-descr {
-        max-width: 300px;
-    }
-
-    .col-amt {
-        max-width: 200px;
-        text-align: right;
-    }
-
-    .col-bill-setting {
-        max-width: 150px;
-    }
-
-    .col-payment-setting {
-        max-width: 200px;
-    }
-
-    .col-start-end-dt {
-        width: 200px;
-        max-width: 200px;
-    }
-
-    .col-links {
-        width: 200px;
-    }
-
-    .model-content-custom {
-        background-color: black;
-    }
-
-</style>
-
-
-
 <PageTitle>Assist Toy</PageTitle>
 
 <ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
 
 <div class="box" style="width:100%">
     <h2 style="padding:10px;">Expense setup</h2>
-    <div class="row">
-        <div class="col-12 box">
-            <div class="row" style="padding: 5px;">
-                <div class="col-12 box">
-                    <span style="border: 1px solid #ccc; padding: 6px; border-radius:5px;">
-                        <span>
-                            Today:
-                        </span>
-                        <span style="font-weight: bold">
-                            @* @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd") *@
-                        </span>
-                        <span>
-                            @DateTime.Now.ToLongDateString()
-                        </span>
-                    </span>
-                    <span style="margin-left:10px; border: 1px solid #ccc; padding: 6px; border-radius:5px;white-space: nowrap;">
-                        <span>
-                            Week number:
-                        </span>
-                        <span>
-                            @GeneralHelper.GetCurrentWeekNumber(DateTime.Now)
-                        </span>
-                    </span>
-                </div>
+    
+    <DateInfoHeader></DateInfoHeader>
 
-            </div>
-        </div>
-    </div>
     <div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px">
         <div class="row">
             <div class="col-4 head col-descr box">Detail</div>

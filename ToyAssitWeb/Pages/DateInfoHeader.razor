@@ -1,0 +1,30 @@
+﻿
+@using ToyAssist.Web.Helpers;
+
+<div class="row">
+    <div class="col-12 box">
+        <div class="row" style="padding: 5px;">
+            <div class="col-12 box">
+                <span style="border: 1px solid #ccc; padding: 6px; border-radius:5px;">
+                    <span>
+                        Today:
+                    </span>
+                    <span style="font-weight: bold">
+                        @* @DateTime.Now.ToString("yyyy-MM-dd, MMMM, dddd") *@
+                    </span>
+                    <span>
+                        @DateTime.Now.ToLongDateString()
+                    </span>
+                </span>
+                <span style="margin-left:10px; border: 1px solid #ccc; padding: 6px; border-radius:5px;white-space: nowrap;">
+                    <span>
+                        Week number:
+                    </span>
+                    <span>
+                        @GeneralHelper.GetCurrentWeekNumber(DateTime.Now)
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
