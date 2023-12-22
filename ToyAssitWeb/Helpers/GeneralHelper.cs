@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ToyAssist.Web.DatabaseModels.Models;
+using ToyAssist.Web.TypeExtensions;
 
 namespace ToyAssist.Web.Helpers
 {
@@ -134,6 +135,18 @@ namespace ToyAssist.Web.Helpers
         {
             FormattableString sqlExec = FormattableStringFactory.Create(sql);
             return dataContext.Database.SqlQuery<T>(sqlExec).ToList();
+        }
+
+        public static string? FormattedAmount(decimal? amount, Currency? currency)
+        {
+            if(amount == null) { return null; }
+            
+            var str = amount.ToStringCustom();
+            if(currency != null) 
+            {
+                str = $"{str} {currency.CurrencyCode}";
+            }
+            return str;
         }
     }
 }

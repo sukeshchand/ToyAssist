@@ -11,4 +11,29 @@
 <div class="box" style="width:100%">
     <h2 style="padding:10px;">Expense Monthly</h2>
     <DateInfoHeader></DateInfoHeader>
+
+
+    <div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px; max-width:580px;">
+        @for (int indexCurrencyGroup = 0; indexCurrencyGroup < ViewModel.CurrencyGroups.Count; indexCurrencyGroup++)
+        {
+            var currencyGroup = ViewModel.CurrencyGroups[indexCurrencyGroup];
+            @for (int indexExpenseItem = 0; indexExpenseItem < ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems.Count; indexExpenseItem++)
+            {
+                var expenseItem = ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexExpenseItem];
+                <div class="row" style="padding:10px; margin:5px; border: 0px groove white; border-radius:5px;">
+                    <div class="col-6 box">
+                        <span>@expenseItem.ExpenseName</span>
+
+                    </div>
+                    <div class="box col-6" style="text-align:right;">
+                        <span>
+                            @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
+                        </span>
+                    </div>
+                </div>
+                <hr style="border:2px groove #ccc;" />
+            }
+            <hr />
+        }
+    </div>
 </div>
