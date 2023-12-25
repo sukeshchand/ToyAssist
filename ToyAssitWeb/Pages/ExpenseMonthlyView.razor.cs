@@ -119,6 +119,7 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
                     expenseItemViewModel.Amount = expenseItem.Amount;
+                    expenseItemViewModel.TaxAmount = expenseItem.TaxAmount;
 
                     currencyGroup.ExpenseItems.Add(expenseItemViewModel);
                 }

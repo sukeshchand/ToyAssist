@@ -140,7 +140,7 @@ namespace ToyAssist.Web.Helpers
             return dataContext.Database.SqlQuery<T>(sqlExec).ToList();
         }
 
-        public static string? FormattedAmount(decimal? amount, Currency? currency)
+        public static string? FormattedAmount(decimal? amount, Currency? currency = null)
         {
             if (amount == null) { return null; }
 

@@ -46,9 +46,33 @@
 
                         </div>
                         <div class="box col-6" style="text-align:right;">
-                            <span>
-                                @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
-                            </span>
+                            @if (@expenseItem.TaxAmount != null)
+                            {
+                                <span>
+                                    @(GeneralHelper.FormattedAmount(@expenseItem.Amount))
+                                </span>
+                                <span>
+                                    +
+                                </span>
+                                <span>
+                                    @(GeneralHelper.FormattedAmount(@expenseItem.TaxAmount))
+                                </span>
+                                <span style="font-size: small">
+                                    Tax
+                                </span>
+                                <span>
+                                    =
+                                </span>
+                                <span>
+                                    @(GeneralHelper.FormattedAmount(@expenseItem.Amount + @expenseItem.TaxAmount, @currencyGroup?.Currency))
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
+                                </span>
+                            }
                             @if (IsShowCurrencyConversion)
                             {
                                 <div style="margin-right: -25px;">
@@ -69,7 +93,7 @@
                             </div>
                             <div class="box col-6" style="text-align:right;">
                                 <span style="font-weight:bold">
-                                    @(GeneralHelper.FormattedAmount(@currencyGroup.TotalAmount, @currencyGroup?.Currency))
+                                    @(GeneralHelper.FormattedAmount(@currencyGroup.TotalAmount + @currencyGroup.TotalTaxAmount, @currencyGroup?.Currency))
                                 </span>
                                 @if (IsShowCurrencyConversion)
                                 {
