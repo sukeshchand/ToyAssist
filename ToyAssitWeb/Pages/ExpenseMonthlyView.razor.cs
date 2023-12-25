@@ -96,6 +96,13 @@ namespace ToyAssist.Web.Pages
             ViewModel = BuildViewModel(expenseSetups);
         }
 
+        public bool IsShowCurrencyConversion { get; set; }
+
+        private async Task OnShowCurrencyConversion()
+        {
+            IsShowCurrencyConversion = !IsShowCurrencyConversion;
+        }
+
         private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups)
         {
            var expenseViewModel = new ExpenseViewModel();
