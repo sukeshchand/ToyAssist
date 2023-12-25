@@ -55,8 +55,10 @@ namespace ToyAssist.Web.Pages
         public int? CurrencyId { get; set; }
 
         public int? BillGeneratedDay { get; set; }
+        public string? BillGeneratedText { get; set; }
 
         public int? BillPaymentDay { get; set; }
+        public string? BillPaymentText { get; set; }
 
         public int? ExpirationDay { get; set; }
 
@@ -120,7 +122,10 @@ namespace ToyAssist.Web.Pages
                     expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
                     expenseItemViewModel.Amount = expenseItem.Amount;
                     expenseItemViewModel.TaxAmount = expenseItem.TaxAmount;
+                    expenseItemViewModel.BillGeneratedText = "Bill generated in 2 days";
+                    expenseItemViewModel.BillPaymentText = "Payment in 10 days";
 
+                    //----------------
                     currencyGroup.ExpenseItems.Add(expenseItemViewModel);
                 }
                 currencyGroup.TotalAmount = expenseItems.Sum(x => x.Amount ?? 0);
