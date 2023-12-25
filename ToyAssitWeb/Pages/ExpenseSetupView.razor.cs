@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
+using ToyAssist.Web.Helpers;
 using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Pages
@@ -17,12 +18,15 @@ namespace ToyAssist.Web.Pages
     {
 
         List<ExpenseSetup> ExpenseSetups = new List<ExpenseSetup>();
-        List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
+        List<Currency> CurrenciesInUse = new List<Currency>();
+
         public bool IsPostBack { get; set; }
+        public int AccountId { get; set; }
 
         public ExpenseSetupView()
         {
             SetCulture("en-US");
+            AccountId = 1;
         }
 
         private ExpenseSetupViewModal expenseSetupViewModal = default;
@@ -44,11 +48,13 @@ namespace ToyAssist.Web.Pages
         {
             var dataContext = DataContextFactory.Create();
             ExpenseSetups = dataContext.ExpenseSetups
-                // .Where(x=>x.CurrencyId == 1) // this is for testing
+                .Where(x=>x.AccountId == AccountId)
                 .Include(i1 => i1.Currency)
                 .Include(i2 => i2.Account)
                 .ToList();
-            CurrencyConversionRates = dataContext.CurrencyConversionRates.ToList();
+
+            CurrenciesInUse = ExpenseSetups.Where(w => w.Currency != null).Select(x => x.Currency).Distinct().ToList();
+
         }
 
         protected override void OnInitialized()
@@ -80,7 +86,7 @@ namespace ToyAssist.Web.Pages
 
         public string GetConversionListForToolTip(Currency baseCurrency, decimal amount)
         {
-            var list = GetConversionList(baseCurrency, amount);
+            var list = GeneralHelper.GetConversionList(baseCurrency, CurrenciesInUse, amount);
             return $" ≈ {string.Join(", ", list)}";
         }
 
@@ -145,29 +151,6 @@ namespace ToyAssist.Web.Pages
             } while (currentItem <= calculationEndDate);
 
             return (totalAmount, totalTax);
-        }
-
-        public List<string> GetConversionList(Currency baseCurrency, decimal amount)
-        {
-            var currenciesInUse = ExpenseSetups.Select(x => x.Currency).Distinct().ToList();
-            var conversionList = new List<string>();
-            foreach (var currency in currenciesInUse)
-            {
-                var conversionRate = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == baseCurrency.CurrencyId && x.ToCurrencyId == currency!.CurrencyId);
-                if (conversionRate != null)
-                {
-                    conversionList.Add($"{currency.CurrencyCode} {(int)(amount * (decimal)conversionRate.ConversionRate)}");
-                }
-                else
-                {
-                    var conversionRateReverse = CurrencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currency.CurrencyId && x.ToCurrencyId == baseCurrency.CurrencyId);
-                    if (conversionRateReverse != null)
-                    {
-                        conversionList.Add($"{currency.CurrencyCode} {(int)(amount / (decimal)conversionRateReverse.ConversionRate)}");
-                    }
-                }
-            }
-            return conversionList;
         }
 
         public List<(string Text, string ToolTipText)> GetRecurringInfo(DateTime? startDate, DateTime? endDate)

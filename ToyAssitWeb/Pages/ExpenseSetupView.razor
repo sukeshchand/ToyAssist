@@ -5,6 +5,7 @@
 @using System.Text.Json;
 @using System.Collections.Generic;
 @using ToyAssist.Web.TypeExtensions;
+@using ToyAssist.Web.Shared.Components;
 
 <PageTitle>Assist Toy - Expense Setup</PageTitle>
 
@@ -103,40 +104,8 @@
                 </div>
                 if (index == expenseSetupsByCurrency.Count - 1)
                 {
-                    <div class="row" style="padding: 6px; border: 1px solid #ccc; margin:10px; border-radius:10px ">
-                        <div class="col-4  col-descr box">
-                            <span style="font-size:x-large">
-                                @currencyGroupItem.currencyGroup.Key?.CurrencyCode total:
-                            </span>
-
-                        </div>
-                        <div class="col-8 box">
-                            <div style="" class="box">
-                                <div>
-                                    <span style="font-weight: bold; font-size:x-large;">
-                                        @(@expenseSetupsByCurrency.Sum(x => x.Amount).ToStringCustom()) @currencyGroupItem.currencyGroup.Key?.CurrencyCode
-                                    </span>
-                                </div>
-                                <div style="margin:5px;" class="box">
-                                    @{
-                                        var conversionItems = GetConversionList(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetupsByCurrency.Sum(x => x.Amount));
-                                    }
-                                    @if (conversionItems.Count > 0)
-                                    {
-                                        <span>
-                                            ≈
-                                        </span>
-                                    }
-                                    @foreach (var conversionItem in conversionItems)
-                                    {
-                                        <div style="font-size: small; border: 1px solid #ccc; margin: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
-                                            @conversionItem
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    var amount = @expenseSetupsByCurrency.Sum(x => x.Amount) ?? 0;
+                    <CurrencyConversionBox CurrencyFrom="@currencyGroupItem.currencyGroup.Key" CurrenciesTo="@CurrenciesInUse" Amount="@amount"></CurrencyConversionBox>
                 }
                 <hr style="border:3px black; border-style: inset;" />
             }

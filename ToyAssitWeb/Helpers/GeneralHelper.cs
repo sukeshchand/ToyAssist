@@ -1,15 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LazyCache;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using ToyAssist.Web.DatabaseModels.Models;
+using ToyAssist.Web.Factories;
 using ToyAssist.Web.TypeExtensions;
 
 namespace ToyAssist.Web.Helpers
 {
     public class GeneralHelper
     {
+
         public static string GetOrdinalSuffix(int? number)
         {
             if (number == null) return string.Empty;
@@ -50,7 +53,7 @@ namespace ToyAssist.Web.Helpers
 
         public static (int Years, int Months, bool IsError) CalculateYearMonthDifference(DateTime? startDate, DateTime? endDate)
         {
-            if(startDate == null || endDate == null) return (0, 0, true);
+            if (startDate == null || endDate == null) return (0, 0, true);
 
             var totalMonths = CalculateMonthDifference((DateTime)startDate, (DateTime)endDate);
             var yearsLeft = totalMonths / 12;
@@ -139,14 +142,52 @@ namespace ToyAssist.Web.Helpers
 
         public static string? FormattedAmount(decimal? amount, Currency? currency)
         {
-            if(amount == null) { return null; }
-            
+            if (amount == null) { return null; }
+
             var str = amount.ToStringCustom();
-            if(currency != null) 
+            if (currency != null)
             {
                 str = $"{str} {currency.CurrencyCode}";
             }
             return str;
         }
+
+        public static List<CurrencyConversionRate> CurrencyConversionRates()
+        {
+            var cache = new CachingService();
+            var cachedResults = cache.GetOrAdd("__CurrencyConversionRates", CurrencyConversionRatesNotCached, new TimeSpan(0, 0, 60, 0));
+            return cachedResults;
+        }
+
+        public static List<CurrencyConversionRate> CurrencyConversionRatesNotCached()
+        {
+            var dataContext = DataContextFactory.Create();
+            var currencyConversionRates = dataContext.CurrencyConversionRates.ToList();
+            return currencyConversionRates;
+        }
+
+        public static List<string> GetConversionList(Currency fromCurrency, List<Currency> toCurrencies, decimal amount)
+        {
+            var currencyConversionRates = GeneralHelper.CurrencyConversionRates();
+            var conversionList = new List<string>();
+            foreach (var currency in toCurrencies)
+            {
+                var conversionRate = currencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == fromCurrency.CurrencyId && x.ToCurrencyId == currency!.CurrencyId);
+                if (conversionRate != null)
+                {
+                    conversionList.Add($"{currency.CurrencyCode} {(int)(amount * (decimal)conversionRate.ConversionRate)}");
+                }
+                else
+                {
+                    var conversionRateReverse = currencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currency.CurrencyId && x.ToCurrencyId == fromCurrency.CurrencyId);
+                    if (conversionRateReverse != null)
+                    {
+                        conversionList.Add($"{currency.CurrencyCode} {(int)(amount / (decimal)conversionRateReverse.ConversionRate)}");
+                    }
+                }
+            }
+            return conversionList;
+        }
+
     }
 }
