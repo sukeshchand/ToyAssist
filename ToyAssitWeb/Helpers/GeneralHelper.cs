@@ -169,20 +169,24 @@ namespace ToyAssist.Web.Helpers
         public static List<string> GetConversionList(Currency fromCurrency, List<Currency> toCurrencies, decimal amount)
         {
             var currencyConversionRates = GeneralHelper.CurrencyConversionRates();
+            var toCurrenciesActual = toCurrencies.Where(c => c.CurrencyId != fromCurrency.CurrencyId);
             var conversionList = new List<string>();
-            foreach (var currency in toCurrencies)
+            decimal amountConverted = 0;
+            foreach (var currency in toCurrenciesActual)
             {
                 var conversionRate = currencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == fromCurrency.CurrencyId && x.ToCurrencyId == currency!.CurrencyId);
+                amountConverted = (amount * conversionRate?.ConversionRate ?? 0);
                 if (conversionRate != null)
                 {
-                    conversionList.Add($"{currency.CurrencyCode} {(int)(amount * (decimal)conversionRate.ConversionRate)}");
+                    conversionList.Add($"{amountConverted.ToStringCustom()} {currency.CurrencyCode}");
                 }
                 else
                 {
                     var conversionRateReverse = currencyConversionRates.FirstOrDefault(x => x.BaseCurrencyId == currency.CurrencyId && x.ToCurrencyId == fromCurrency.CurrencyId);
                     if (conversionRateReverse != null)
                     {
-                        conversionList.Add($"{currency.CurrencyCode} {(int)(amount / (decimal)conversionRateReverse.ConversionRate)}");
+                        amountConverted = (amount / conversionRateReverse.ConversionRate);
+                        conversionList.Add($"{amountConverted.ToStringCustom()} {currency.CurrencyCode}");
                     }
                 }
             }

@@ -26,7 +26,15 @@ namespace ToyAssist.Web.Shared.Components
         public required List<Currency> CurrenciesTo { get; set; }
 
         [Parameter]
-        public required decimal Amount { get; set; }
+        public required decimal? Amount { get; set; }
+
+        [Parameter]
+        public bool IsShowBaseAmount { get; set; } = true;
+
+        [Parameter]
+        public bool IsShowBox { get; set; } = true;
+
+        public string BorderStyle => IsShowBox ? "border: 1px solid #ccc; border-radius:10px;" : "";
 
     }
 }

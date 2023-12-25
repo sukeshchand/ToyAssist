@@ -71,11 +71,13 @@ namespace ToyAssist.Web.Pages
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
+        public List<Currency> CurrenciesInUse { get; set; }
 
         public ExpenseViewModel ViewModel { get; set; }
 
         public ExpenseMonthlyView()
         {
+            AccountId = 1;
             LoadData();
         }
 
@@ -84,10 +86,12 @@ namespace ToyAssist.Web.Pages
             var dataContext = DataContextFactory.Create();
 
             var expenseSetups = dataContext.ExpenseSetups
-                .Where(x => x.CurrencyId == AccountId)
+                .Where(x => x.AccountId == AccountId)
                 .Include(i1 => i1.Currency)
                 .Include(i2 => i2.Account)
                 .ToList();
+
+            CurrenciesInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency).Distinct().ToList();
 
             ViewModel = BuildViewModel(expenseSetups);
         }
@@ -113,7 +117,7 @@ namespace ToyAssist.Web.Pages
                 }
                 currencyGroup.TotalAmount = expenseItems.Sum(x => x.Amount ?? 0);
                 currencyGroup.TotalTaxAmount = expenseItems.Sum(x => x.TaxAmount ?? 0);
-                ViewModel.CurrencyGroups.Add(currencyGroup);
+                expenseViewModel.CurrencyGroups.Add(currencyGroup);
             }
             return expenseViewModel;
         }

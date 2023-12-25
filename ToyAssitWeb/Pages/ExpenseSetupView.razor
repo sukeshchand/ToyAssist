@@ -105,7 +105,9 @@
                 if (index == expenseSetupsByCurrency.Count - 1)
                 {
                     var amount = @expenseSetupsByCurrency.Sum(x => x.Amount) ?? 0;
-                    <CurrencyConversionBox CurrencyFrom="@currencyGroupItem.currencyGroup.Key" CurrenciesTo="@CurrenciesInUse" Amount="@amount"></CurrencyConversionBox>
+                    <div style="margin: 10px;" >
+                        <CurrencyConversionBox CurrencyFrom="@currencyGroupItem.currencyGroup.Key" CurrenciesTo="@CurrenciesInUse" Amount="@amount"></CurrencyConversionBox>
+                    </div>
                 }
                 <hr style="border:3px black; border-style: inset;" />
             }

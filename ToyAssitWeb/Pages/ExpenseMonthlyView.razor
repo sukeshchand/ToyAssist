@@ -5,6 +5,7 @@
 @using System.Text.Json;
 @using System.Collections.Generic;
 @using ToyAssist.Web.TypeExtensions;
+@using ToyAssist.Web.Shared.Components;
 
 <PageTitle>Assist Toy - Expense Monthly</PageTitle>
 
@@ -32,6 +33,9 @@
                             <span>
                                 @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
                             </span>
+                            <div style="margin-right: -25px;">
+                                <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.Amount"></CurrencyConversionBox>
+                            </div>
                         </div>
                     </div>
 
@@ -48,6 +52,9 @@
                                 <span style="font-weight:bold">
                                     @(GeneralHelper.FormattedAmount(@currencyGroup.TotalAmount, @currencyGroup?.Currency))
                                 </span>
+                                <div style="margin: 10px 0 10px 0;">
+                                    <CurrencyConversionBox CurrencyFrom="@currencyGroup.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@currencyGroup.TotalAmount"></CurrencyConversionBox>
+                                </div>
                             </div>
                         </div>
                     }

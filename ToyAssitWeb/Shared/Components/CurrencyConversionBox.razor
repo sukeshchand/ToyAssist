@@ -5,37 +5,37 @@
 @using System.Collections.Generic;
 @using ToyAssist.Web.TypeExtensions;
 
-<div class="row" style="padding: 6px; border: 1px solid #ccc; margin:10px; border-radius:10px ">
-    <div class="col-4" style="font-weight: bold">
-        <span style="font-size:x-large">
-            @CurrencyFrom.CurrencyCode total:
-        </span>
-
-    </div>
-    <div class="col-8 box">
-        <div style="" class="box">
-            <div>
-                <span style="font-weight: bold; font-size:x-large;">
-                    @(Amount.ToStringCustom()) @CurrencyFrom.CurrencyCode
-                </span>
-            </div>
-            <div style="margin:5px;" class="box">
-                @{
-                    var conversionItems = GeneralHelper.GetConversionList(@CurrencyFrom, @CurrenciesTo, (int)@Amount);
-                }
-                @if (conversionItems.Count > 0)
+@if (Amount != null)
+{
+    <div class="row" style="padding: 6px; @BorderStyle">
+        <div class="col-12 box">
+            <div style="" class="box">
+                @if (IsShowBaseAmount)
                 {
-                    <span>
-                        ≈
-                    </span>
-                }
-                @foreach (var conversionItem in conversionItems)
-                {
-                    <div style="font-size: small; border: 1px solid #ccc; margin: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
-                        @conversionItem
+                    <div>
+                        <span style="font-weight: bold; font-size:x-large;">
+                            @(Amount.ToStringCustom()) @CurrencyFrom.CurrencyCode
+                        </span>
                     </div>
                 }
+                <div style="margin:5px;" class="box">
+                    @{
+                        var conversionItems = GeneralHelper.GetConversionList(@CurrencyFrom, @CurrenciesTo, (int)@Amount);
+                    }
+                    @if (conversionItems.Count > 0)
+                    {
+                        <span>
+                            ≈
+                        </span>
+                    }
+                    @foreach (var conversionItem in conversionItems)
+                    {
+                        <div style="font-size: small; border: 1px solid #ccc; margin: 5px; padding: 5px; display: inline-block; border-radius: 4px;">
+                            @conversionItem
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
