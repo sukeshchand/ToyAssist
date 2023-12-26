@@ -13,7 +13,7 @@
                 ReferenceHandler = ReferenceHandler.IgnoreCycles,
                 WriteIndented = true
             };
-    string Title = "Handle payment" + ModalData?.ExpenseName;
+    string Title = "Handle payment: - " + ModalData?.ExpenseName;
 }
 
 <Modal @ref="@ModalRef" Title="@Title" Size="ModalSize.Large">
