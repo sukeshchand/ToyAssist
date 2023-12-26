@@ -15,15 +15,15 @@ namespace ToyAssist.Web.Pages
     public class ExpenseViewModel
     {
         public List<CurrencyGroup> CurrencyGroups { get; set; }
-         public ExpenseViewModel()
+        public ExpenseViewModel()
         {
-            CurrencyGroups = new List<CurrencyGroup>(); 
+            CurrencyGroups = new List<CurrencyGroup>();
         }
     }
 
     public class CurrencyGroup
     {
-        public CurrencyGroup() 
+        public CurrencyGroup()
         {
             ExpenseItems = new List<ExpenseItemViewModel>();
         }
@@ -107,7 +107,7 @@ namespace ToyAssist.Web.Pages
 
         private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups)
         {
-           var expenseViewModel = new ExpenseViewModel();
+            var expenseViewModel = new ExpenseViewModel();
             var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
             for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroups.Count; indexCurrencyGroup++)
             {
@@ -122,8 +122,11 @@ namespace ToyAssist.Web.Pages
                     expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
                     expenseItemViewModel.Amount = expenseItem.Amount;
                     expenseItemViewModel.TaxAmount = expenseItem.TaxAmount;
-                    expenseItemViewModel.BillGeneratedText = "Bill generated in 2 days";
-                    expenseItemViewModel.BillPaymentText = "Payment in 10 days";
+                    expenseItemViewModel.BillGeneratedDay = expenseItem.BillGeneratedDay;
+                    expenseItemViewModel.BillPaymentDay = expenseItem.BillPaymentDay;
+
+                    expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
+                    expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
 
                     //----------------
                     currencyGroup.ExpenseItems.Add(expenseItemViewModel);
@@ -133,6 +136,51 @@ namespace ToyAssist.Web.Pages
                 expenseViewModel.CurrencyGroups.Add(currencyGroup);
             }
             return expenseViewModel;
+        }
+
+        private static string? GetBillGeneratedText(ExpenseItemViewModel expenseItemViewModel)
+        {
+            var remindDaysBillGenerated = GetRemindDays(expenseItemViewModel.BillGeneratedDay);
+            if (remindDaysBillGenerated != null)
+            {
+                return $"Bill will generate in {remindDaysBillGenerated} days";
+            }
+            return null;
+        }
+
+        private static string? GetBillPaymentText(ExpenseItemViewModel expenseItemViewModel)
+        {
+            var remindDaysBillPayment = GetRemindDays(expenseItemViewModel.BillPaymentDay);
+            if (remindDaysBillPayment != null)
+            {
+                return $"Bill payment in {remindDaysBillPayment} days";
+            }
+            return null;
+        }
+
+        private static int? GetRemindDays(int? reminderDay)
+        {
+            var remindBeforeDays = 7;
+            if (reminderDay == null)
+            {
+                return null;
+            }
+
+            var reminderDateThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, (int)reminderDay);
+            var alertFromDateForThisMonth = reminderDateThisMonth.AddDays(-1 * remindBeforeDays);
+            if (DateTime.Now.Date >= alertFromDateForThisMonth.Date && DateTime.Now.Date <= reminderDateThisMonth.Date)
+            {
+                return (reminderDateThisMonth.Date - DateTime.Now.Date).Days;
+            }
+
+            var reminderDateNextMonth = reminderDateThisMonth.AddMonths(1);
+            var alertFromDateForNextMonth = reminderDateThisMonth.AddDays(-1 * remindBeforeDays);
+            if (DateTime.Now.Date >= alertFromDateForNextMonth.Date && DateTime.Now.Date <= reminderDateNextMonth.Date)
+            {
+                return (reminderDateNextMonth.Date - DateTime.Now.Date).Days;
+            }
+
+            return null;
         }
     }
 }
