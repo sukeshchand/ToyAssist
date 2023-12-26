@@ -87,6 +87,7 @@ namespace ToyAssist.Web.Pages
 
 
         private ExpenseSetupViewModal expenseSetupViewModal = default;
+        private ExpenseMontlyHandlePaymentModal expenseMonthlyHandlePaymentModal = default;
 
         private async Task OnViewExpenseItemClick(ExpenseItemViewModel expenseItem)
         {
@@ -115,9 +116,9 @@ namespace ToyAssist.Web.Pages
             IsShowCurrencyConversion = !IsShowCurrencyConversion;
         }
 
-        private async Task onHandlePayment(ExpenseItemViewModel item)
+        private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
         {
-
+            await expenseMonthlyHandlePaymentModal.ShowModalAsync(expenseItem.ExpenseSetup);
         }
 
         private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups)
