@@ -115,7 +115,10 @@ namespace ToyAssist.Web.Pages
             IsShowCurrencyConversion = !IsShowCurrencyConversion;
         }
 
-     
+        private async Task onHandlePayment(ExpenseItemViewModel item)
+        {
+
+        }
 
         private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups)
         {

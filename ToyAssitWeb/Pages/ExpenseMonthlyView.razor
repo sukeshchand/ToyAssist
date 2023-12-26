@@ -23,7 +23,7 @@
                     <tr>
                         <td>
                             <div style="">
-                                <Button Color="ButtonColor.Primary" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowCurrencyConversion()">
+                                <Button Color="ButtonColor.Light" style="color:#ccc;" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowCurrencyConversion()">
                                     <Icon Name="IconName.CurrencyExchange" />
                                 </Button>
                             </div>
@@ -110,9 +110,11 @@
                                 </div>
                             }
                             <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
-                                <span style="border: 1px solid #ccc; border-radius: 5px; padding: 5px; color: #dc3545; border-color: red; display:inline-block;">
-                                    Payment not handled
-                                </span>
+                                <Button Color="ButtonColor.Danger" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                    <span >
+                                        Payment not handled
+                                    </span>
+                                </Button>
                             </div>
                         </div>
                     </div>
