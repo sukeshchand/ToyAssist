@@ -7,6 +7,8 @@
 @using ToyAssist.Web.TypeExtensions;
 @using ToyAssist.Web.Shared.Components;
 
+<ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
+
 <PageTitle>Assist Toy - Expense Monthly</PageTitle>
 
 <div class="box" style="max-width:580px;">
@@ -42,7 +44,17 @@
                     var expenseItem = ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexExpenseItem];
                     <div class="row" style="padding:10px; margin:5px; border: 0px groove white; border-radius:5px;">
                         <div class="col-6 box">
-                            <div>@expenseItem.ExpenseName</div>
+                            <div class="row">
+                                <div class="col-8">
+                                    @expenseItem.ExpenseName
+                                </div>
+                                <div class="col-4">
+
+                                    <Button Color="ButtonColor.Light" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnViewExpenseItemClick(expenseItem)">
+                                        <Icon Name="IconName.ZoomIn" />
+                                    </Button>
+                                </div>
+                            </div>
                             @if (@expenseItem.BillGeneratedText != null)
                             {
                                 <div style="border: 1px solid #ffa200; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">

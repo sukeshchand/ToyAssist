@@ -36,6 +36,7 @@ namespace ToyAssist.Web.Pages
 
     public class ExpenseItemViewModel
     {
+        public ExpenseSetup ExpenseSetup { get; set; }
         public int ExpenseSetupId { get; set; }
 
         public int AccountId { get; set; }
@@ -80,7 +81,16 @@ namespace ToyAssist.Web.Pages
         public ExpenseMonthlyView()
         {
             AccountId = 1;
+            IsShowCurrencyConversion = true;
             LoadData();
+        }
+
+
+        private ExpenseSetupViewModal expenseSetupViewModal = default;
+
+        private async Task OnViewExpenseItemClick(ExpenseItemViewModel expenseItem)
+        {
+            await expenseSetupViewModal.ShowModalAsync(expenseItem.ExpenseSetup);
         }
 
         private void LoadData()
@@ -105,6 +115,8 @@ namespace ToyAssist.Web.Pages
             IsShowCurrencyConversion = !IsShowCurrencyConversion;
         }
 
+     
+
         private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups)
         {
             var expenseViewModel = new ExpenseViewModel();
@@ -118,6 +130,8 @@ namespace ToyAssist.Web.Pages
                 {
                     var expenseItem = expenseItems[indexExpenseItem];
                     var expenseItemViewModel = new ExpenseItemViewModel();
+                    
+                    expenseItemViewModel.ExpenseSetup = expenseItem;
 
                     expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
                     expenseItemViewModel.Amount = expenseItem.Amount;
