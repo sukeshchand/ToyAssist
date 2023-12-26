@@ -14,21 +14,23 @@
 <div class="box" style="max-width:580px;">
     <h2 style="padding:10px;">Expense Monthly</h2>
     <div class="row">
-        <div class="col-6">
-            <DateInfoHeader></DateInfoHeader>
-        </div>
-        <div class="col-6">
-            <table>
-                <tr>
-                    <td>
-                        <div style="">
-                            <Button Color="ButtonColor.Primary" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowCurrencyConversion()">
-                                <Icon Name="IconName.CurrencyExchange" />
-                            </Button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+        <div class="col-12">
+            <div style="display:inline-block;">
+                <DateInfoHeader></DateInfoHeader>
+            </div>
+            <div style="display:inline-block;vertical-align: middle;">
+                <table>
+                    <tr>
+                        <td>
+                            <div style="">
+                                <Button Color="ButtonColor.Primary" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowCurrencyConversion()">
+                                    <Icon Name="IconName.CurrencyExchange" />
+                                </Button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -69,32 +71,37 @@
                             }
                         </div>
                         <div class="box col-6" style="text-align:right;">
+
                             @if (@expenseItem.TaxAmount != null)
                             {
-                                <span>
-                                    @(GeneralHelper.FormattedAmount(@expenseItem.Amount))
-                                </span>
-                                <span>
-                                    +
-                                </span>
-                                <span>
-                                    @(GeneralHelper.FormattedAmount(@expenseItem.TaxAmount))
-                                </span>
-                                <span style="font-size: small">
-                                    Tax
-                                </span>
-                                <span>
-                                    =
-                                </span>
-                                <span>
-                                    @(GeneralHelper.FormattedAmount(@expenseItem.Amount + @expenseItem.TaxAmount, @currencyGroup?.Currency))
-                                </span>
+                                <div>
+                                    <span>
+                                        @(GeneralHelper.FormattedAmount(@expenseItem.Amount))
+                                    </span>
+                                    <span>
+                                        +
+                                    </span>
+                                    <span>
+                                        @(GeneralHelper.FormattedAmount(@expenseItem.TaxAmount))
+                                    </span>
+                                    <span style="font-size: small">
+                                        Tax
+                                    </span>
+                                    <span>
+                                        =
+                                    </span>
+                                    <span>
+                                        @(GeneralHelper.FormattedAmount(@expenseItem.Amount + @expenseItem.TaxAmount, @currencyGroup?.Currency))
+                                    </span>
+                                </div>
                             }
                             else
                             {
-                                <span>
-                                    @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
-                                </span>
+                                <div>
+                                    <span>
+                                        @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
+                                    </span>
+                                </div>
                             }
                             @if (IsShowCurrencyConversion)
                             {
@@ -102,6 +109,11 @@
                                     <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.Amount"></CurrencyConversionBox>
                                 </div>
                             }
+                            <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
+                                <span style="border: 1px solid #ccc; border-radius: 5px; padding: 5px; color: #dc3545; border-color: red; display:inline-block;">
+                                    Payment not handled
+                                </span>
+                            </div>
                         </div>
                     </div>
 
