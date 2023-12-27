@@ -159,6 +159,7 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.ExpenseSetup = expenseItem;
 
+                    expenseItemViewModel.AccountId = expenseItem.AccountId;
                     expenseItemViewModel.ExpenseSetupId = expenseItem.ExpenseSetupId;
                     expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
                     expenseItemViewModel.Amount = expenseItem.Amount;

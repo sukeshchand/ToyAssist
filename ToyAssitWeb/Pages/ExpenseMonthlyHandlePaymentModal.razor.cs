@@ -4,6 +4,8 @@ using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Microsoft.Identity.Client;
+using ToyAssist.Web.Factories;
 
 
 namespace ToyAssist.Web.Pages
@@ -45,15 +47,33 @@ namespace ToyAssist.Web.Pages
             StateHasChanged();
         }
 
-       
+
         private async Task OnShowModalClick()
         {
-            
+
         }
 
         private async Task OnMarkAsPaidClick()
         {
+            var dataContext = DataContextFactory.Create();
 
+            var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => x.ExpenseSetupId == ModalData.ExpenseSetupId && x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year);
+            if (expensePayment == null)
+            {
+                var expensePaymentToAdd = new ExpensePayment()
+                {
+                    AccountId = ModalData.AccountId,
+                    CreatedDateTime = DateTime.Now,
+                    ExpenseSetupId = ModalData.ExpenseSetupId,
+                    ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done,
+                    Month = DateTime.Now.Month,
+                    Year = DateTime.Now.Year,
+                    PaymentDoneDate = DateTime.Now
+                };
+
+                await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
+                await dataContext.SaveChangesAsync();
+            }
         }
 
         private async Task OnMarkAsNotPaidClick()
