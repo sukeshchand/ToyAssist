@@ -4,20 +4,24 @@ using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using static System.Net.Mime.MediaTypeNames;
-using System.Diagnostics.CodeAnalysis;
 
 
 namespace ToyAssist.Web.Pages
 {
-    public partial class ExpenseMontlyHandlePaymentModal
+    public partial class ExpenseMonthlyHandlePaymentModal
     {
-        public ExpenseMontlyHandlePaymentModal()
+        public ExpenseMonthlyHandlePaymentModal()
         {
-            ModalData = new ExpenseSetup();
+            ModalData = new ExpenseItemViewModel();
         }
-        private ExpenseSetup ModalData { get; set; }
+
+        private ExpenseItemViewModel ModalData { get; set; }
         private Modal ModalRef = default!;
+
+        [Parameter]
+        public required List<Currency> CurrenciesInUse { get; set; } = new List<Currency>();
+
+        public bool IsShowCurrencyConversion { get; set; }
 
         JsonSerializerOptions options = new JsonSerializerOptions
         {
@@ -32,8 +36,9 @@ namespace ToyAssist.Web.Pages
             await JSRuntime.InvokeVoidAsync("scrollIntoView", elementRefToScrollInto);
         }
 
-        public async Task ShowModalAsync(ExpenseSetup? data)
+        public async Task ShowModalAsync(ExpenseItemViewModel? data)
         {
+            IsShowCurrencyConversion = true;
             ModalData = data;
             await ModalRef.ShowAsync();
             await ScrollIntoDivAsync(elementRefToScrollInto);
@@ -41,9 +46,19 @@ namespace ToyAssist.Web.Pages
         }
 
        
-        private async Task OnShowModalClick(ExpenseSetup? data)
+        private async Task OnShowModalClick()
         {
             
+        }
+
+        private async Task OnMarkAsPaidClick()
+        {
+
+        }
+
+        private async Task OnMarkAsNotPaidClick()
+        {
+
         }
 
         private async Task OnHideModalClick()

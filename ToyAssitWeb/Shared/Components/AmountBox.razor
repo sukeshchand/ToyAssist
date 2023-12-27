@@ -1,0 +1,39 @@
+﻿@using BlazorBootstrap
+@using ToyAssist.Web.DatabaseModels.Models
+@using ToyAssist.Web.Helpers
+@using System.Text.Json;
+@using System.Collections.Generic;
+@using ToyAssist.Web.TypeExtensions;
+
+
+@if (TaxAmount != null)
+{
+    <div>
+        <span>
+            @(GeneralHelper.FormattedAmount(Amount))
+        </span>
+        <span>
+            +
+        </span>
+        <span>
+            @(GeneralHelper.FormattedAmount(TaxAmount))
+        </span>
+        <span style="font-size: small">
+            Tax
+        </span>
+        <span>
+            =
+        </span>
+        <span>
+            @(GeneralHelper.FormattedAmount(Amount + TaxAmount, Currency))
+        </span>
+    </div>
+}
+else
+{
+    <div>
+        <span>
+            @(GeneralHelper.FormattedAmount(Amount, Currency))
+        </span>
+    </div>
+}

@@ -6,9 +6,12 @@
 @using System.Collections.Generic;
 @using ToyAssist.Web.TypeExtensions;
 @using ToyAssist.Web.Shared.Components;
+@using ToyAssist.Web.Pages;
 
+
+<ExpenseMonthlyHandlePaymentModal @ref="@expenseMonthlyHandlePaymentModal" CurrenciesInUse="@CurrenciesInUse"></ExpenseMonthlyHandlePaymentModal>
 <ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
-<ExpenseMontlyHandlePaymentModal @ref="@expenseMonthlyHandlePaymentModal"></ExpenseMontlyHandlePaymentModal>
+
 
 <PageTitle>Assist Toy - Expense Monthly</PageTitle>
 
@@ -73,50 +76,39 @@
                         </div>
                         <div class="box col-6" style="text-align:right;">
 
-                            @if (@expenseItem.TaxAmount != null)
-                            {
-                                <div>
-                                    <span>
-                                        @(GeneralHelper.FormattedAmount(@expenseItem.Amount))
-                                    </span>
-                                    <span>
-                                        +
-                                    </span>
-                                    <span>
-                                        @(GeneralHelper.FormattedAmount(@expenseItem.TaxAmount))
-                                    </span>
-                                    <span style="font-size: small">
-                                        Tax
-                                    </span>
-                                    <span>
-                                        =
-                                    </span>
-                                    <span>
-                                        @(GeneralHelper.FormattedAmount(@expenseItem.Amount + @expenseItem.TaxAmount, @currencyGroup?.Currency))
-                                    </span>
-                                </div>
-                            }
-                            else
-                            {
-                                <div>
-                                    <span>
-                                        @(GeneralHelper.FormattedAmount(@expenseItem.Amount, @currencyGroup?.Currency))
-                                    </span>
-                                </div>
-                            }
+                            <AmountBox Amount="@expenseItem?.Amount" TaxAmount="@expenseItem?.TaxAmount" Currency="@currencyGroup?.Currency"></AmountBox>
+
                             @if (IsShowCurrencyConversion)
                             {
                                 <div style="margin-right: -25px;">
                                     <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.Amount"></CurrencyConversionBox>
                                 </div>
                             }
-                            <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
-                                <Button Color="ButtonColor.Danger" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
-                                    <span >
-                                        Payment not handled
-                                    </span>
-                                </Button>
-                            </div>
+
+                            @* Payment Handle *@
+                            @{
+                                var currentExpensePayment = expenseItem.ExpensePayments.FirstOrDefault(x=>x.IsCurrent == true);
+                            }
+                            @if(currentExpensePayment?.ExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                            {
+                                <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
+                                    <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                        <span>
+                                            Payment handled - Done
+                                        </span>
+                                    </Button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
+                                    <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                        <span>
+                                            Payment not handled
+                                        </span>
+                                    </Button>
+                                </div>
+                            }
                         </div>
                     </div>
 

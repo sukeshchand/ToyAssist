@@ -34,9 +34,22 @@ namespace ToyAssist.Web.Pages
         public decimal TotalTaxAmount { get; set; }
     }
 
+    public class ExpensePaymentViewModel
+    {
+        public ExpensePayment ExpensePayment { get; set; }
+        public bool IsCurrent { get; set; }
+    }
+
     public class ExpenseItemViewModel
     {
-        public ExpenseSetup ExpenseSetup { get; set; }
+        public ExpenseItemViewModel()
+        {
+            ExpensePayments = new List<ExpensePaymentViewModel>();
+        }
+
+        public ExpenseSetup? ExpenseSetup { get; set; }
+        public List<ExpensePaymentViewModel> ExpensePayments { get; set; }
+
         public int ExpenseSetupId { get; set; }
 
         public int AccountId { get; set; }
@@ -72,6 +85,7 @@ namespace ToyAssist.Web.Pages
     {
 
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
+        List<ExpensePayment> ExpensePayments = new List<ExpensePayment>();
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
         public List<Currency> CurrenciesInUse { get; set; }
@@ -87,7 +101,19 @@ namespace ToyAssist.Web.Pages
 
 
         private ExpenseSetupViewModal expenseSetupViewModal = default;
-        private ExpenseMontlyHandlePaymentModal expenseMonthlyHandlePaymentModal = default;
+        private ExpenseMonthlyHandlePaymentModal expenseMonthlyHandlePaymentModal = default;
+
+        public bool IsShowCurrencyConversion { get; set; }
+
+        private async Task OnShowCurrencyConversion()
+        {
+            IsShowCurrencyConversion = !IsShowCurrencyConversion;
+        }
+
+        private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
+        {
+            await expenseMonthlyHandlePaymentModal.ShowModalAsync(expenseItem);
+        }
 
         private async Task OnViewExpenseItemClick(ExpenseItemViewModel expenseItem)
         {
@@ -104,24 +130,20 @@ namespace ToyAssist.Web.Pages
                 .Include(i2 => i2.Account)
                 .ToList();
 
+            var expensePayments = dataContext.ExpensePayments
+                .Where(x => x.AccountId == AccountId)
+                .ToList();
+
+            ExpensePayments = expensePayments;
+
             CurrenciesInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency).Distinct().ToList();
 
-            ViewModel = BuildViewModel(expenseSetups);
+            ViewModel = BuildViewModel(expenseSetups, expensePayments);
         }
 
-        public bool IsShowCurrencyConversion { get; set; }
 
-        private async Task OnShowCurrencyConversion()
-        {
-            IsShowCurrencyConversion = !IsShowCurrencyConversion;
-        }
 
-        private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
-        {
-            await expenseMonthlyHandlePaymentModal.ShowModalAsync(expenseItem.ExpenseSetup);
-        }
-
-        private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups)
+        private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups, List<ExpensePayment> expensePayments)
         {
             var expenseViewModel = new ExpenseViewModel();
             var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
@@ -134,9 +156,10 @@ namespace ToyAssist.Web.Pages
                 {
                     var expenseItem = expenseItems[indexExpenseItem];
                     var expenseItemViewModel = new ExpenseItemViewModel();
-                    
+
                     expenseItemViewModel.ExpenseSetup = expenseItem;
 
+                    expenseItemViewModel.ExpenseSetupId = expenseItem.ExpenseSetupId;
                     expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
                     expenseItemViewModel.Amount = expenseItem.Amount;
                     expenseItemViewModel.TaxAmount = expenseItem.TaxAmount;
@@ -145,6 +168,15 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
                     expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
+
+                    expenseItemViewModel.ExpensePayments = expensePayments
+                        .Where(x => x.ExpenseSetupId == expenseItem.ExpenseSetupId)
+                        .Select(x => new ExpensePaymentViewModel()
+                        {
+                            ExpensePayment = x,
+                            IsCurrent = (x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)
+                        })
+                        .ToList();
 
                     //----------------
                     currencyGroup.ExpenseItems.Add(expenseItemViewModel);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToyAssist.Web.Enums;
 
 namespace ToyAssist.Web.DatabaseModels.Models;
 
@@ -17,7 +18,7 @@ public partial class ExpensePayment
 
     public DateTime? PaymentDoneDate { get; set; }
 
-    public int ExpensePaymentStatus { get; set; }
+    public ExpensePaymentStatusEnum ExpensePaymentStatus { get; set; }
 
     public string? Descr { get; set; }
 

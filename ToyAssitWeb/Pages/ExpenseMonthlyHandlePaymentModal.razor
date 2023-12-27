@@ -1,0 +1,100 @@
+﻿@using BlazorBootstrap
+@using System.Text.Json.Serialization
+@using ToyAssist.Web.DatabaseModels.Models
+@using ToyAssist.Web.Helpers
+@using System.Text.Json;
+@using System.Collections.Generic;
+@using ToyAssist.Web.TypeExtensions;
+@using ToyAssist.Web.Shared.Components;
+@inject IJSRuntime JSRuntime;
+
+@{
+    JsonSerializerOptions options = new()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };
+    string Title = "Handle payment";
+}
+
+<Modal @ref="@ModalRef" Title="@Title" Size="ModalSize.Large">
+    <BodyTemplate>
+        <div style="padding:10px; margin:5px; border: 1px groove white; border-radius:5px;">
+            <div class="row">
+                <div class="col-6 box">
+                    <div class="row">
+                        <div class="col-8">
+                            <h3>
+                                @ModalData?.ExpenseSetup?.ExpenseName
+                            </h3>
+                        </div>
+                        <div class="col-4">
+                        </div>
+                    </div>
+                    @if (@ModalData?.BillGeneratedText != null)
+                    {
+                        <div style="border: 1px solid #ffa200; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
+                            @ModalData?.BillGeneratedText
+                        </div>
+                    }
+                    @if (@ModalData?.BillPaymentText != null)
+                    {
+                        <div style="border: 1px solid red; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
+                            @ModalData?.BillPaymentText
+                        </div>
+                    }
+                </div>
+                <div class="box col-6" style="text-align:right;">
+                    <h3>
+                        <AmountBox Amount="@ModalData?.ExpenseSetup?.Amount" TaxAmount="@ModalData?.ExpenseSetup?.TaxAmount" Currency="@ModalData?.ExpenseSetup?.Currency"></AmountBox>
+                    </h3>
+                    @if (IsShowCurrencyConversion)
+                    {
+                        <div style="margin-right: -12px;">
+                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@ModalData?.ExpenseSetup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@ModalData?.ExpenseSetup?.Amount"></CurrencyConversionBox>
+                        </div>
+                    }
+
+                    @* Payment Handle *@
+                    @{
+                        var currentExpensePayment = ModalData?.ExpensePayments.FirstOrDefault(x => x.IsCurrent == true);
+                    }
+                    @if (currentExpensePayment?.ExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                    {
+                        <div style="text-align:right; margin: 5px 0 5px 5px; ">
+                            <span style="border: 2px green;border-radius: 5px;padding: 6px;margin: 5px 0 5px 0;color: green;border-style: dotted;">
+                                Payment handled
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="text-align:right; margin: 5px 0 5px 5px; ">
+                            <span style="border: 2px red;border-radius: 5px;padding: 6px;margin: 5px 0 5px 0;color: red;border-style: dotted;">
+                                Payment not handled
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    @if (currentExpensePayment?.ExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                    {
+                        <Button Color="ButtonColor.Danger" @onclick="(data)=>OnMarkAsNotPaidClick()">Mark as not paid</Button>
+                    }
+                    else
+                    {
+                        <Button Color="ButtonColor.Primary" @onclick="(data)=>OnMarkAsPaidClick()">Mark as paid</Button>
+                    }
+                </div>
+                <div class="col-6" style="padding: 15px; text-align:right;">
+                    
+                </div>
+            </div>
+        </div>
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="OnHideModalClick">Close</Button>
+    </FooterTemplate>
+</Modal>
