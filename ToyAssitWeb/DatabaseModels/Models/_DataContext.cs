@@ -21,6 +21,8 @@ public partial class _DataContext : DbContext
 
     public virtual DbSet<CurrencyConversionRate> CurrencyConversionRates { get; set; }
 
+    public virtual DbSet<ExpensePayment> ExpensePayments { get; set; }
+
     public virtual DbSet<ExpenseSetup> ExpenseSetups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,11 +72,22 @@ public partial class _DataContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
+        modelBuilder.Entity<ExpensePayment>(entity =>
+        {
+            entity.ToTable("ExpensePayment");
+
+            entity.Property(e => e.CreatedDateTime)
+                .HasDefaultValueSql("(getutcdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.PaymentDoneDate).HasColumnType("datetime");
+        });
+
         modelBuilder.Entity<ExpenseSetup>(entity =>
         {
             entity.ToTable("ExpenseSetup");
 
             entity.Property(e => e.AccountProfileUrl).HasMaxLength(500);
+            entity.Property(e => e.Amount).HasColumnType("decimal(10, 4)");
             entity.Property(e => e.EndDate).HasColumnType("datetime");
             entity.Property(e => e.ExpenseDescr).HasMaxLength(500);
             entity.Property(e => e.ExpenseName)
@@ -82,6 +95,7 @@ public partial class _DataContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.PaymentUrl).HasMaxLength(500);
             entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.TaxAmount).HasColumnType("decimal(10, 4)");
 
             entity.HasOne(d => d.Account).WithMany(p => p.ExpenseSetups)
                 .HasForeignKey(d => d.AccountId)
