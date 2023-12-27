@@ -32,7 +32,7 @@
 <div class="row" style="padding: 10px;">
     @* Monthly Amount *@
     <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
-        <div style="font-size:small;display:inline-block;">Monthly Amount</div>
+        <div style="font-size:small;display:inline-block;">Monthly amount</div>
         <br />
         @if (@ModalData.Amount != null)
         {
@@ -252,6 +252,48 @@
     }
 </div>
 
+@* Total Months Over *@
+<div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:#cccc; margin-left:10px; color:black;">
+    <div style="font-size:small;">Total months over</div>
+    @if (@ModalData?.StartDate != null)
+    {
+        <div>@GeneralHelper.CalculateMonthDifference((DateTime)@ModalData.StartDate, DateTime.Now)</div>
+    }
+    else
+    {
+        <div>N/A</div>
+    }
+</div>
+
+@* Years + Months Over *@
+@{
+    var yearMonthOver = @GeneralHelper.CalculateYearMonthDifference(@ModalData.StartDate, DateTime.Now);
+}
+
+<div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:#cccc; margin-left:10px;color:black;">
+    <div style="font-size:small;">Years over</div>
+    @if (!yearMonthOver.IsError && (yearMonthOver.Years > 0 || yearMonthOver.Months > 0))
+    {
+        @if (yearMonthOver.Years > 0)
+        {
+            <div style="display:inline-block;">@yearMonthOver.Years</div>
+            <div style="font-size:small;display:inline-block;">years</div>
+        }
+        @if (yearMonthOver.Years > 0 && yearMonthOver.Months > 0)
+        {
+            <div style="display:inline-block;margin-left: 2px;"> </div>
+        }
+        @if (yearMonthOver.Months > 0)
+        {
+            <div style="display:inline-block;">@yearMonthOver.Months</div>
+            <div style="font-size:small;display:inline-block;"> months</div>
+        }
+    }
+    else
+    {
+        <div style="display:inline-block;">N/A</div>
+    }
+</div>
 
 @* Months Left *@
 <div style="display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin-left:10px;color:black;">
