@@ -1,11 +1,10 @@
-﻿using BlazorBootstrap;
-using System.Text.Json;
-using ToyAssist.Web.DatabaseModels.Models;
-using ToyAssist.Web.ViewModels;
+﻿using System.Text.Json;
+
+using BlazorBootstrap;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using static System.Net.Mime.MediaTypeNames;
-using System.Diagnostics.CodeAnalysis;
+using ToyAssist.Web.ViewModels;
 
 
 namespace ToyAssist.Web.Pages
@@ -14,9 +13,9 @@ namespace ToyAssist.Web.Pages
     {
         public ExpenseSetupViewModal()
         {
-            ModalData = new ExpenseSetup();
+            ModalData = new ExpenseSetupViewModel();
         }
-        private ExpenseSetup ModalData { get; set; }
+        private ExpenseSetupViewModel ModalData { get; set; }
         private Modal ModalRef = default!;
 
         JsonSerializerOptions options = new JsonSerializerOptions
@@ -32,7 +31,7 @@ namespace ToyAssist.Web.Pages
             await JSRuntime.InvokeVoidAsync("scrollIntoView", elementRefToScrollInto);
         }
 
-        public async Task ShowModalAsync(ExpenseSetup? data)
+        public async Task ShowModalAsync(ExpenseSetupViewModel? data)
         {
             ModalData = data;
             await ModalRef.ShowAsync();
@@ -40,7 +39,7 @@ namespace ToyAssist.Web.Pages
             StateHasChanged();
         }
 
-        private List<ExpenseRunningModel> GetExpenseRunningList(ExpenseSetup expenseSetup)
+        private List<ExpenseRunningModel> GetExpenseRunningList(ExpenseSetupViewModel expenseSetup)
         {
             var list = new List<ExpenseRunningModel>();
 
@@ -91,7 +90,7 @@ namespace ToyAssist.Web.Pages
             return list;
         }
 
-        private async Task OnShowModalClick(ExpenseSetup? data)
+        private async Task OnShowModalClick(ExpenseSetupViewModel? data)
         {
             
         }

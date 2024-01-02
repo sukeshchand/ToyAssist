@@ -23,7 +23,7 @@ namespace ToyAssist.Web.Shared.Components
         public required decimal? TaxAmount { get; set; }
 
         [Parameter]
-        public required Currency? Currency { get; set; }
+        public required CurrencyViewModel? Currency { get; set; }
 
     }
 }

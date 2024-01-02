@@ -17,13 +17,13 @@ namespace ToyAssist.Web.Shared.Components
     public partial class CurrencyConversionBox
     {
         [Parameter]
-        public required ExpenseSetup ModalData { get; set; }
+        public required ExpenseSetupViewModel ModalData { get; set; }
 
         [Parameter]
-        public required Currency CurrencyFrom { get; set; }
+        public required CurrencyViewModel CurrencyFrom { get; set; }
 
         [Parameter]
-        public required List<Currency> CurrenciesTo { get; set; }
+        public required List<CurrencyViewModel> CurrenciesTo { get; set; }
 
         [Parameter]
         public required decimal? Amount { get; set; }

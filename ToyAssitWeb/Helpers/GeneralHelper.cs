@@ -7,6 +7,7 @@ using System.Text;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.TypeExtensions;
+using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Helpers
 {
@@ -140,7 +141,7 @@ namespace ToyAssist.Web.Helpers
             return dataContext.Database.SqlQuery<T>(sqlExec).ToList();
         }
 
-        public static string? FormattedAmount(decimal? amount, Currency? currency = null)
+        public static string? FormattedAmount(decimal? amount, CurrencyViewModel? currency = null)
         {
             if (amount == null) { return null; }
 
@@ -166,7 +167,7 @@ namespace ToyAssist.Web.Helpers
             return currencyConversionRates;
         }
 
-        public static List<string> GetConversionList(Currency fromCurrency, List<Currency> toCurrencies, decimal amount)
+        public static List<string> GetConversionList(CurrencyViewModel fromCurrency, List<CurrencyViewModel> toCurrencies, decimal amount)
         {
             var currencyConversionRates = GeneralHelper.CurrencyConversionRates();
             var toCurrenciesActual = toCurrencies.Where(c => c.CurrencyId != fromCurrency.CurrencyId);

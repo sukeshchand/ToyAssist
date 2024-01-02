@@ -1,11 +1,10 @@
 ﻿using BlazorBootstrap;
 using System.Text.Json;
-using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Microsoft.Identity.Client;
 using ToyAssist.Web.Factories;
+using ToyAssist.Web.DatabaseModels.Models;
 
 
 namespace ToyAssist.Web.Pages
@@ -21,7 +20,7 @@ namespace ToyAssist.Web.Pages
         private Modal ModalRef = default!;
 
         [Parameter]
-        public required List<Currency> CurrenciesInUse { get; set; } = new List<Currency>();
+        public required List<CurrencyViewModel> CurrenciesInUse { get; set; } = new List<CurrencyViewModel>();
 
         public bool IsShowCurrencyConversion { get; set; }
 
