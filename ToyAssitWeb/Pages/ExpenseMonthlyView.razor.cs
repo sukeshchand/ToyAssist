@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 
 using ToyAssist.Web.DatabaseModels.Models;
+using ToyAssist.Web.EventArgsModels;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.Mappers.ViewModelRepoMappers;
 using ToyAssist.Web.ViewModels;
@@ -20,7 +21,7 @@ namespace ToyAssist.Web.Pages
     {
 
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
-        List<ExpensePayment> ExpensePayments = new List<ExpensePayment>();
+        //List<ExpensePayment> ExpensePayments = new List<ExpensePayment>();
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
         public List<CurrencyViewModel> CurrenciesInUse { get; set; }
@@ -70,7 +71,7 @@ namespace ToyAssist.Web.Pages
                 .Where(x => x.AccountId == AccountId)
                 .ToList();
 
-            ExpensePayments = expensePayments;
+            //ExpensePayments = expensePayments;
 
             // Currency List
             CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList();
@@ -84,7 +85,31 @@ namespace ToyAssist.Web.Pages
 
         }
 
-
+        private async void OnPaymentDataUpdatedEvent(ExpenseItemViewModel data)
+        {
+            //e.ExpenseItemViewModel
+            //LoadData();
+            //return;
+            var isUpdated = false;
+            for (int indexCurrencyGroup = 0; indexCurrencyGroup < ViewModel.CurrencyGroups.Count; indexCurrencyGroup++)
+            {
+                for (int indexItem = 0; indexItem < ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems.Count; indexItem++)
+                {
+                    if (ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem].ExpenseSetupId == data.ExpenseSetupId)
+                    {
+                        ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem] = data;
+                        isUpdated = true;
+                        break;
+                    }
+                }
+                if (isUpdated) break;
+            }
+            if (isUpdated)
+            {
+                StateHasChanged();
+                await Task.Delay(1);
+            }
+        }
 
         private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups, List<ExpensePayment> expensePayments)
         {
@@ -110,11 +135,7 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.ExpensePayments = expensePayments
                         .Where(x => x.ExpenseSetupId == expenseItem.ExpenseSetupId)
-                        .Select(x => new ExpensePaymentViewModel()
-                        {
-                            ExpensePayment = x,
-                            IsCurrent = (x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)
-                        })
+                        .Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month))
                         .ToList();
 
                     //----------------

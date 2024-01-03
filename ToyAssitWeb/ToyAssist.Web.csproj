@@ -37,4 +37,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EventArgsModels\" />
+  </ItemGroup>
+
 </Project>

@@ -5,15 +5,28 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.DatabaseModels.Models;
+using ToyAssist.Web.Mappers.ViewModelRepoMappers;
+using ToyAssist.Web.EventArgsModels;
 
 
 namespace ToyAssist.Web.Pages
 {
+
+
     public partial class ExpenseMonthlyHandlePaymentModal
     {
         public ExpenseMonthlyHandlePaymentModal()
         {
             ModalData = new ExpenseItemViewModel();
+        }
+
+        [Parameter]
+        public EventCallback<ExpenseItemViewModel?> OnPaymentDataUpdatedEvent { get; set; }
+
+        // This method will be called to raise the event.
+        protected async virtual Task OnDataUpdatedEvent(ExpenseItemViewModel? data)
+        {
+            await OnPaymentDataUpdatedEvent.InvokeAsync(data);
         }
 
         private ExpenseItemViewModel ModalData { get; set; }
@@ -56,6 +69,7 @@ namespace ToyAssist.Web.Pages
         {
             var dataContext = DataContextFactory.Create();
 
+            // Update payment
             var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => x.ExpenseSetupId == ModalData.ExpenseSetupId && x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year);
             if (expensePayment == null)
             {
@@ -73,6 +87,17 @@ namespace ToyAssist.Web.Pages
                 await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
                 await dataContext.SaveChangesAsync();
             }
+            else
+            {
+                expensePayment.PaymentDoneDate = null;
+                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
+                await dataContext.SaveChangesAsync();
+            }
+            // Refresh payment list
+            var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
+            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
+            await OnDataUpdatedEvent(ModalData);
+            await OnHideModalClick();
         }
 
         private async Task OnMarkAsNotPaidClick()
