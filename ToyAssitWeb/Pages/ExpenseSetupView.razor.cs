@@ -9,12 +9,13 @@ using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Pages
 {
-
+  
     public partial class ExpenseSetupView
     {
 
         List<ExpenseSetupViewModel> ExpenseSetups = new List<ExpenseSetupViewModel>();
         List<CurrencyViewModel> CurrenciesInUse = new List<CurrencyViewModel>();
+        List<CurrencyViewModel> CurrencyList = new List<CurrencyViewModel>();
 
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
@@ -43,15 +44,22 @@ namespace ToyAssist.Web.Pages
         private void LoadData()
         {
             var dataContext = DataContextFactory.Create();
+
+            // Currency List
+            CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList(); 
+            
+            // Expense setup
             var expenseSetups = dataContext.ExpenseSetups
                 .Where(x=>x.AccountId == AccountId)
                 .Include(i1 => i1.Currency)
                 .Include(i2 => i2.Account)
                 .ToList();
+
             ExpenseSetups = expenseSetups.Select(x => (ExpenseSetupViewModel)ExpenseSetupViewModelMapper.Map(x)).ToList();
 
-            CurrenciesInUse = ExpenseSetups.Where(w => w.Currency != null).Select(x => x.Currency).Distinct().ToList();
-
+            // Currencies in use
+            var currencyIdsInUse = ExpenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
+            CurrenciesInUse = CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
         }
 
         protected override void OnInitialized()

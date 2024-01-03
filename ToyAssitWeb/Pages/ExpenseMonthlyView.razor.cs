@@ -24,6 +24,7 @@ namespace ToyAssist.Web.Pages
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
         public List<CurrencyViewModel> CurrenciesInUse { get; set; }
+        public List<CurrencyViewModel> CurrencyList { get; set; }
 
         public ExpenseViewModel ViewModel { get; set; }
 
@@ -71,13 +72,16 @@ namespace ToyAssist.Web.Pages
 
             ExpensePayments = expensePayments;
 
-            CurrenciesInUse = expenseSetups
-                .Where(w => w.Currency != null)
-                .Select(x => (CurrencyViewModel)CurrencyViewModelMapper.Map(x.Currency))
-                .Distinct()
-                .ToList();
+            // Currency List
+            CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList();
+
+            // Currencies in use
+            var currencyIdsInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
+            CurrenciesInUse = CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
+
 
             ViewModel = BuildViewModel(expenseSetups, expensePayments);
+
         }
 
 

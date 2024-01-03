@@ -27,7 +27,8 @@ namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
                 BillPaymentDay = item.BillPaymentDay,
                 ExpirationDay = item.ExpirationDay,
                 PaymentUrl = item.PaymentUrl,
-                AccountProfileUrl = item.AccountProfileUrl
+                AccountProfileUrl = item.AccountProfileUrl,
+                Currency = CurrencyViewModelMapper.Map(item.Currency)
             };
         }
     }
