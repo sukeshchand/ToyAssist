@@ -104,11 +104,6 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.AccountId = expenseItem.AccountId;
                     expenseItemViewModel.ExpenseSetupId = expenseItem.ExpenseSetupId;
-                    expenseItemViewModel.ExpenseName = expenseItem.ExpenseName ?? string.Empty;
-                    expenseItemViewModel.Amount = expenseItem.Amount;
-                    expenseItemViewModel.TaxAmount = expenseItem.TaxAmount;
-                    expenseItemViewModel.BillGeneratedDay = expenseItem.BillGeneratedDay;
-                    expenseItemViewModel.BillPaymentDay = expenseItem.BillPaymentDay;
 
                     expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
                     expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
@@ -134,7 +129,7 @@ namespace ToyAssist.Web.Pages
 
         private static string? GetBillGeneratedText(ExpenseItemViewModel expenseItemViewModel)
         {
-            var remindDaysBillGenerated = GetRemindDays(expenseItemViewModel.BillGeneratedDay);
+            var remindDaysBillGenerated = GetRemindDays(expenseItemViewModel.ExpenseSetup.BillGeneratedDay);
             if (remindDaysBillGenerated != null)
             {
                 return $"Bill will generate in {remindDaysBillGenerated} days";
@@ -144,7 +139,7 @@ namespace ToyAssist.Web.Pages
 
         private static string? GetBillPaymentText(ExpenseItemViewModel expenseItemViewModel)
         {
-            var remindDaysBillPayment = GetRemindDays(expenseItemViewModel.BillPaymentDay);
+            var remindDaysBillPayment = GetRemindDays(expenseItemViewModel.ExpenseSetup.BillPaymentDay);
             if (remindDaysBillPayment != null)
             {
                 return $"Bill payment in {remindDaysBillPayment} days";

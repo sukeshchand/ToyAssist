@@ -52,7 +52,7 @@
                         <div class="col-6 box">
                             <div class="row">
                                 <div class="col-8">
-                                    @expenseItem.ExpenseName
+                                    @expenseItem.ExpenseSetup.ExpenseName
                                 </div>
                                 <div class="col-4">
 
@@ -76,12 +76,12 @@
                         </div>
                         <div class="box col-6" style="text-align:right;">
 
-                            <AmountBox Amount="@expenseItem?.Amount" TaxAmount="@expenseItem?.TaxAmount" Currency="@currencyGroup?.Currency"></AmountBox>
+                            <AmountBox Amount="@expenseItem?.ExpenseSetup.Amount" TaxAmount="@expenseItem?.ExpenseSetup.TaxAmount" Currency="@currencyGroup?.Currency"></AmountBox>
 
                             @if (IsShowCurrencyConversion)
                             {
                                 <div style="margin-right: -25px;">
-                                    <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.Amount"></CurrencyConversionBox>
+                                    <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
                                 </div>
                             }
 
@@ -119,8 +119,11 @@
                     {
                         <div class="row" style="padding:10px; margin:5px; border: 0px groove white; border-radius:5px;">
                             <div class="col-6 box">
-                                <span style="font-weight:bold">
-                                    Total
+                                <span style="font-weight:bold; font-size:large">
+                                    @currencyGroup?.Currency.CurrencyCode
+                                </span>
+                                <span style="margin-left:5px; font-weight:bold">
+                                    total
                                 </span>
                             </div>
                             <div class="box col-6" style="text-align:right;">
