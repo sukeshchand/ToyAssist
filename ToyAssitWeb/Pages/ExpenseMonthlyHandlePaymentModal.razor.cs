@@ -6,7 +6,6 @@ using Microsoft.JSInterop;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Mappers.ViewModelRepoMappers;
-using ToyAssist.Web.EventArgsModels;
 
 
 namespace ToyAssist.Web.Pages
