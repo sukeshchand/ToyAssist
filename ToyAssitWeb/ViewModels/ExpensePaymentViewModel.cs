@@ -22,6 +22,5 @@ namespace ToyAssist.Web.ViewModels
         public string? Descr { get; set; }
 
         public DateTime CreatedDateTime { get; set; }
-        public bool IsCurrent { get; set; }
     }
 }

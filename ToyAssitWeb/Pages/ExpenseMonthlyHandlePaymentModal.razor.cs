@@ -86,10 +86,10 @@ namespace ToyAssist.Web.Pages
                 await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
                 await dataContext.SaveChangesAsync();
             }
-            else
+            else if (expensePayment.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Pending)
             {
-                expensePayment.PaymentDoneDate = null;
-                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
+                expensePayment.PaymentDoneDate = DateTime.UtcNow;
+                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done;
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list
