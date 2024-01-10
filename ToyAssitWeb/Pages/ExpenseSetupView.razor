@@ -11,7 +11,7 @@
 
 <ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
 
-<div class="box" style="max-width:1000px">
+<div class="box" style="max-width:580px">
     <h2 style="padding:10px;">Expense setup</h2>
 
     <DateInfoHeader></DateInfoHeader>
@@ -32,9 +32,16 @@
 
                     </div>
                     <div class="col-6">
-                        <h4>
-                            @expenseSetup.Amount.ToStringCustom() @groupedCurrency.CurrencyCode
-                        </h4>
+                        <div>
+                            <h4 style="display:inline;">
+                                <AmountBox Amount="@expenseSetup.Amount" TaxAmount="@expenseSetup?.TaxAmount" Currency="@groupedCurrency"></AmountBox>
+                            </h4>
+                            @if (IsShowCurrencyConversion)
+                            {
+                                <CurrencyConversionBox CurrencyFrom="@groupedCurrency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseSetup.Amount" IsShowBaseAmount=false IsShowBox=false></CurrencyConversionBox>
+                            }
+                        </div>
+                        <hr / style="margin:0;">
                     </div>
                 </div>
                 <div class="row" style="padding: 6px;">
@@ -45,7 +52,7 @@
                                 <div>
                                     <span style="font-size: small">Bill generated on:</span>
                                 </div>
-                                <div style="font-weight:bold">
+                                <div >
                                     <span>
                                         @expenseSetup.BillGeneratedDay.ToString()
                                     </span>

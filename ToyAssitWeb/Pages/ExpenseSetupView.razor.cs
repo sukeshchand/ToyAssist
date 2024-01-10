@@ -17,6 +17,7 @@ namespace ToyAssist.Web.Pages
         List<CurrencyViewModel> CurrenciesInUse = new List<CurrencyViewModel>();
         List<CurrencyViewModel> CurrencyList = new List<CurrencyViewModel>();
 
+        public bool IsShowCurrencyConversion { get; set; }
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
 
@@ -24,6 +25,7 @@ namespace ToyAssist.Web.Pages
         {
             SetCulture("en-US");
             AccountId = 1;
+            IsShowCurrencyConversion = true;
         }
 
         private ExpenseSetupViewModal expenseSetupViewModal = default;
