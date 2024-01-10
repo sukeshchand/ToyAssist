@@ -11,22 +11,12 @@
 
 <ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
 
-<div class="box" style="width:100%">
+<div class="box" style="max-width:1000px">
     <h2 style="padding:10px;">Expense setup</h2>
-    
+
     <DateInfoHeader></DateInfoHeader>
 
     <div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px">
-        <div class="row">
-            <div class="col-4 head col-descr box">Detail</div>
-            <div class="col-2 head col-amt box">Amount</div>
-            <div class="col-2 head col-bill-setting box">Bill Generation</div>
-            <div class="col-2 head col-payment-setting col box">Payment</div>
-            <div class="col-1 head col-start-end-dt box">Start/End</div>
-            <div class="col-1 head col-links box"></div>
-        </div>
-
-        <hr />
         @{
             var groupedCurrencyIds = ExpenseSetups.GroupBy(x => x.Currency.CurrencyId).Select(g => g.Key).ToList();
         }
@@ -37,46 +27,60 @@
             @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
             {
                 <div class="row" style="padding: 6px;">
-                    <div class="col-4 col-descr box">@expenseSetup.ExpenseName</div>
-                    <div class="col-2 col-amt box">
-                        <div class="row">
-                            <div class="col-12">
-                                <span style="display:inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@groupedCurrency, (int)@expenseSetup.Amount)">
-                                    @expenseSetup.Amount.ToStringCustom() @groupedCurrency.CurrencyCode
-                                </span>
-                            </div>
-                        </div>
+                    <div class="col-6">
+                        <h4>@expenseSetup.ExpenseName</h4>
+
                     </div>
-                    <div class="col-2 col-bill-setting box">
+                    <div class="col-6">
+                        <h4>
+                            @expenseSetup.Amount.ToStringCustom() @groupedCurrency.CurrencyCode
+                        </h4>
+                    </div>
+                </div>
+                <div class="row" style="padding: 6px;">
+                    <div class="col-6">
                         @if ((expenseSetup.BillGeneratedDay ?? 0) != 0)
                         {
-                            <span>
-                                @expenseSetup.BillGeneratedDay.ToString()
-                            </span>
-                            <sup>
-                                @(GeneralHelper.GetOrdinalSuffix((expenseSetup.BillGeneratedDay)))
-                            </sup>
-                            <span>
-                                of every month
-                            </span>
+                            <div style="border:1px solid #cccccc14; margin: 5px; padding:5px; border-radius: 5px; display: inline-block;">
+                                <div>
+                                    <span style="font-size: small">Bill generated on:</span>
+                                </div>
+                                <div style="font-weight:bold">
+                                    <span>
+                                        @expenseSetup.BillGeneratedDay.ToString()
+                                    </span>
+                                    <sup>
+                                        @(GeneralHelper.GetOrdinalSuffix((expenseSetup.BillGeneratedDay)))
+                                    </sup>
+                                    <span>
+                                        of every month
+                                    </span>
+                                </div>
+                            </div>
                         }
-                    </div>
-                    <div class="col-2 col-payment-setting box">
                         @if ((expenseSetup.BillPaymentDay ?? 0) != 0)
                         {
-                            <span>
-                                @expenseSetup.BillPaymentDay
-                            </span>
-                            <sup>
-                                @(GeneralHelper.GetOrdinalSuffix((expenseSetup.BillPaymentDay)))
-                            </sup>
-                            <span>
-                                of every month
-                            </span>
+                            <div style="border:1px solid #cccccc14; margin: 5px 5px 5px 0; padding:5px; border-radius: 5px; display: inline-block;">
+                                <div>
+                                    <span style="font-size: small">Bill to be paid on:</span>
+                                </div>
+                                <span>
+                                    @expenseSetup.BillPaymentDay
+                                </span>
+                                <sup>
+                                    @(GeneralHelper.GetOrdinalSuffix((expenseSetup.BillPaymentDay)))
+                                </sup>
+                                <span>
+                                    of every month
+                                </span>
+                            </div>
                         }
                     </div>
-                    <div class="col-1 col-start-end-dt box">
-                        <div style="padding:3px;">
+                    <div class="col-6">
+                        <div style="border:1px solid #cccccc14; margin: 5px 5px 5px 0; padding:5px; border-radius: 5px; display: inline-block;">
+                            <span style="font-size: small; ">
+                                Duration
+                            </span>
                             @{
                                 var recurringInfo = @GetRecurringInfo(@expenseSetup.StartDate, @expenseSetup.EndDate);
                             }
@@ -87,10 +91,20 @@
                                     @recurringInfo[i].Text
                                 </div>
                             }
-                            <Button Color="ButtonColor.Light" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowModalClick(expenseSetup)">
+
+                        </div>
+                        <div>
+                            <Button Color="ButtonColor.Light" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnShowModalClick(expenseSetup)" title="View detailed history, payment information etc">
                                 <Icon Name="IconName.ZoomIn" />
+                                View more details
                             </Button>
                         </div>
+                    </div>
+
+                </div>
+
+                <div class="row" style="padding: 6px;">
+                    <div class="col-1 col-start-end-dt box">
                     </div>
                     <div class="col-1 box" style="display: inline-block;">
                         @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
@@ -106,7 +120,7 @@
                 if (index == expenseSetupsByCurrency.Count - 1)
                 {
                     var amount = @expenseSetupsByCurrency.Sum(x => x.Amount) ?? 0;
-                    <div style="margin: 10px;" >
+                    <div style="margin: 10px;">
                         <CurrencyConversionBox CurrencyFrom="@groupedCurrency" CurrenciesTo="@CurrenciesInUse" Amount="@amount"></CurrencyConversionBox>
                     </div>
                 }
