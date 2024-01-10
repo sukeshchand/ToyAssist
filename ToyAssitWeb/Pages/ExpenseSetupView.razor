@@ -99,24 +99,20 @@
                                 View more details
                             </Button>
                         </div>
+                        <div>
+                            @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
+                            {
+                                <a href="@expenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
+                            }
+                            @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
+                            {
+                                <a href="@expenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
+                            }
+                        </div>
                     </div>
 
                 </div>
 
-                <div class="row" style="padding: 6px;">
-                    <div class="col-1 col-start-end-dt box">
-                    </div>
-                    <div class="col-1 box" style="display: inline-block;">
-                        @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
-                        {
-                            <a href="@expenseSetup.PaymentUrl" target="_blank" class="link-box">Payment</a>
-                        }
-                        @if (!string.IsNullOrEmpty(expenseSetup.PaymentUrl))
-                        {
-                            <a href="@expenseSetup.AccountProfileUrl" target="_blank" class="link-box"> Account</a>
-                        }
-                    </div>
-                </div>
                 if (index == expenseSetupsByCurrency.Count - 1)
                 {
                     var amount = @expenseSetupsByCurrency.Sum(x => x.Amount) ?? 0;

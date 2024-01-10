@@ -6,6 +6,7 @@
     padding: 4px;
     font-size: x-small;
     display: inline-block;
+    cursor: pointer;
 }
 
 .box {
