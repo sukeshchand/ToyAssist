@@ -58,12 +58,6 @@ namespace ToyAssist.Web.Pages
             StateHasChanged();
         }
 
-
-        private async Task OnShowModalClick()
-        {
-
-        }
-
         private async Task OnMarkAsPaidClick()
         {
             var dataContext = DataContextFactory.Create();
@@ -75,12 +69,12 @@ namespace ToyAssist.Web.Pages
                 var expensePaymentToAdd = new ExpensePayment()
                 {
                     AccountId = ModalData.AccountId,
-                    CreatedDateTime = DateTime.Now,
+                    CreatedDateTime = DateTime.UtcNow,
                     ExpenseSetupId = ModalData.ExpenseSetupId,
                     ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done,
                     Month = DateTime.Now.Month,
                     Year = DateTime.Now.Year,
-                    PaymentDoneDate = DateTime.Now
+                    PaymentDoneDate = DateTime.UtcNow
                 };
 
                 await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
@@ -88,8 +82,8 @@ namespace ToyAssist.Web.Pages
             }
             else
             {
-                expensePayment.PaymentDoneDate = null;
-                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
+                expensePayment.PaymentDoneDate = DateTime.UtcNow;
+                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done;
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list
@@ -101,7 +95,21 @@ namespace ToyAssist.Web.Pages
 
         private async Task OnMarkAsNotPaidClick()
         {
+            var dataContext = DataContextFactory.Create();
 
+            // Update payment
+            var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => x.ExpenseSetupId == ModalData.ExpenseSetupId && x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year);
+            if (expensePayment != null)
+            {
+                expensePayment.PaymentDoneDate = null;
+                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
+                await dataContext.SaveChangesAsync();
+            }
+            // Refresh payment list
+            var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
+            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
+            await OnDataUpdatedEvent(ModalData);
+            await OnHideModalClick();
         }
 
         private async Task OnHideModalClick()
