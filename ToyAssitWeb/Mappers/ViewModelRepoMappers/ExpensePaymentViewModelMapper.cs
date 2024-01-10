@@ -23,7 +23,6 @@ namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
                 ExpensePaymentStatus = item.ExpensePaymentStatus,
                 ExpenseSetupId = item.ExpenseSetupId,
                 Month = item.Month,
-                IsCurrent = isCurrent
             };
         }
     }

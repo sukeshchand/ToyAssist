@@ -10,7 +10,7 @@ namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
             if (item == null)
             {
                 return null;
-            }
+            }           
 
             return new ExpenseSetupViewModel()
             {
