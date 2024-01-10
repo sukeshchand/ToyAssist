@@ -28,11 +28,12 @@
 
         <hr />
         @{
-            var currencyGroups = ExpenseSetups.GroupBy(x => x.Currency).Select(currencyGroup => new { currencyGroup }).ToList();
+            var groupedCurrencyIds = ExpenseSetups.GroupBy(x => x.Currency.CurrencyId).Select(g => g.Key).ToList();
         }
-        @foreach (var currencyGroupItem in currencyGroups)
+        @foreach (var groupedCurrencyId in groupedCurrencyIds)
         {
-            var expenseSetupsByCurrency = ExpenseSetups.Where(x => x.CurrencyId == currencyGroupItem.currencyGroup.Key?.CurrencyId).ToList();
+            var expenseSetupsByCurrency = ExpenseSetups.Where(x => x.CurrencyId == groupedCurrencyId).ToList();
+            var groupedCurrency = CurrenciesInUse.FirstOrDefault(x => x.CurrencyId == groupedCurrencyId);
             @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
             {
                 <div class="row" style="padding: 6px;">
@@ -40,8 +41,8 @@
                     <div class="col-2 col-amt box">
                         <div class="row">
                             <div class="col-12">
-                                <span style="display:inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@currencyGroupItem.currencyGroup.Key, (int)@expenseSetup.Amount)">
-                                    @expenseSetup.Amount.ToStringCustom() @currencyGroupItem.currencyGroup.Key?.CurrencyCode
+                                <span style="display:inline-block" tabindex="0" data-toggle="tooltip" title="@GetConversionListForToolTip(@groupedCurrency, (int)@expenseSetup.Amount)">
+                                    @expenseSetup.Amount.ToStringCustom() @groupedCurrency.CurrencyCode
                                 </span>
                             </div>
                         </div>
@@ -106,7 +107,7 @@
                 {
                     var amount = @expenseSetupsByCurrency.Sum(x => x.Amount) ?? 0;
                     <div style="margin: 10px;" >
-                        <CurrencyConversionBox CurrencyFrom="@currencyGroupItem.currencyGroup.Key" CurrenciesTo="@CurrenciesInUse" Amount="@amount"></CurrencyConversionBox>
+                        <CurrencyConversionBox CurrencyFrom="@groupedCurrency" CurrenciesTo="@CurrenciesInUse" Amount="@amount"></CurrencyConversionBox>
                     </div>
                 }
                 <hr style="border:3px black; border-style: inset;" />
