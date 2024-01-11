@@ -48,6 +48,23 @@ namespace ToyAssist.Web.Pages
             IsShowCurrencyConversion = !IsShowCurrencyConversion;
         }
 
+        private async Task OnClickGoFirst(ExpenseItemViewModel expenseItem)
+        {
+
+        }
+        private async Task OnClickGoPrevious(ExpenseItemViewModel expenseItem)
+        {
+
+        }
+        private async Task OnClickGoNext(ExpenseItemViewModel expenseItem)
+        {
+
+        }
+        private async Task OnClickGoLast(ExpenseItemViewModel expenseItem)
+        {
+
+        }
+
         private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
         {
             await expenseMonthlyHandlePaymentModal.ShowModalAsync(expenseItem);

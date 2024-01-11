@@ -87,59 +87,29 @@
                                     }
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <hr />
-                                </div>
-                            </div>
                             @* Payment information *@
                             <div class="row" style="border: 1px solid #cccccc2b; padding: 5px; margin: 0px; border-radius: 5px;">
                                 <div class="col-12 box">
                                     <div class="row">
-                                        <div class="col-12 box">
+                                        <div class="col-12" style="border:0px solid #ccc">
                                             @{
                                                 var expensePayments = expenseItem.ExpensePayments.OrderBy(x => x.Index).ToList();
                                             }
-                                            <div >
-                                                <span>
-                                                    <Button Color="ButtonColor.None" style="color:#ccc;" Outline="true" Size="Size.Large" @onclick="(data)=>OnShowCurrencyConversion()">
-                                                        <Icon Name="IconName.ChevronDoubleLeft" />
-                                                    </Button>
-                                                </span>
-                                                <span>
-                                                    <Button Color="ButtonColor.None" style="color:#ccc;" Outline="true" Size="Size.Large" @onclick="(data)=>OnShowCurrencyConversion()">
-                                                        <Icon Name="IconName.ChevronLeft" />
-                                                    </Button>
-                                                </span>
-
-                                                @for (int i = 0; i < expensePayments.Count; i++)
-                                                {
-
-                                                    var isShow = expensePayments[i].Index == 2 ? "" : "display:none";
-
-                                                    <span style="@isShow">
-                                                        <span> @expensePayments[i].Year</span>
-                                                        <span>-</span>
-                                                        <span> @expensePayments[i].Month</span>
-                                                        <span>-</span>
-                                                        <span> @expensePayments[i].Amount</span>
-                                                    </span>
-                                                }
-                                                <span>
-                                                    <Button Color="ButtonColor.None" style="color:#ccc;" Outline="true" Size="Size.Large" @onclick="(data)=>OnShowCurrencyConversion()">
-                                                        <Icon Name="IconName.ChevronRight" />
-                                                    </Button>
-                                                </span>
-                                                <span>
-                                                    <Button Color="ButtonColor.None" style="color:#ccc;" Outline="true" Size="Size.Large" @onclick="(data)=>OnShowCurrencyConversion()">
-                                                        <Icon Name="IconName.ChevronDoubleRight" />
-                                                    </Button>
-                                                </span>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    @for (int i = 0; i < expensePayments.Count; i++)
+                                                    {
+                                                        var isShow = expensePayments[i].Index == 2 ? "" : "display:none";
+                                                        <span style="@isShow">
+                                                            <span> @expensePayments[i].Year</span>
+                                                            <span>-</span>
+                                                            <span> @expensePayments[i].Month</span>
+                                                            <span>-</span>
+                                                            <span> @expensePayments[i].Amount</span>
+                                                        </span>
+                                                    }
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 box">
                                             <div class="row">
                                                 <div class="col-12 box" style="border: 0px solid #ccc">
                                                     @* Payment Handle *@
@@ -159,7 +129,7 @@
                                                     }
                                                     else
                                                     {
-                                                        <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
+                                                        <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px; ">
                                                             <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
                                                                 <Icon Name="IconName.ExclamationCircleFill"></Icon>
                                                                 <span>
@@ -169,6 +139,27 @@
                                                         </div>
                                                     }
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @* Page controls *@
+                                    <div class="row">
+                                        <div class="col-12 page-control">
+                                            <hr />
+                                            <div style="text-align: center; padding: 5px;">
+                                                <span @onclick="(data)=>OnClickGoFirst(expenseItem)">
+                                                    <Icon Name="IconName.ChevronDoubleLeft" />
+                                                </span>
+                                                <span @onclick="(data)=>OnClickGoPrevious(expenseItem)">
+                                                    <Icon Name="IconName.ChevronLeft" />
+                                                </span>
+                                                <span @onclick="(data)=>OnClickGoNext(expenseItem)">
+                                                    <Icon Name="IconName.ChevronRight" />
+                                                </span>
+                                                <span @onclick="(data)=>OnClickGoLast(expenseItem)">
+                                                    <Icon Name="IconName.ChevronDoubleRight" />
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
