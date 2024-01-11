@@ -33,6 +33,11 @@ public partial class ExpenseSetup
 
     public string? AccountProfileUrl { get; set; }
 
+    /// <summary>
+    /// Prepaid = 0, Postpaid = 1
+    /// </summary>
+    public bool? PrepaidOrPostpaid { get; set; }
+
     public virtual Account Account { get; set; } = null!;
 
     public virtual Currency? Currency { get; set; }

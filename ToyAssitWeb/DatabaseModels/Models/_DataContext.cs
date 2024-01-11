@@ -94,6 +94,7 @@ public partial class _DataContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.PaymentUrl).HasMaxLength(500);
+            entity.Property(e => e.PrepaidOrPostpaid).HasComment("Prepaid = 0, Postpaid = 1");
             entity.Property(e => e.StartDate).HasColumnType("datetime");
             entity.Property(e => e.TaxAmount).HasColumnType("decimal(10, 4)");
 
