@@ -93,14 +93,14 @@
                                 </div>
                             </div>
                             @* Payment information *@
-                            <div class="row">
+                            <div class="row" style="border: 1px solid #cccccc2b; padding: 5px; margin: 0px; border-radius: 5px;">
                                 <div class="col-12 box">
                                     <div class="row">
                                         <div class="col-12 box">
                                             @{
                                                 var expensePayments = expenseItem.ExpensePayments.OrderBy(x => x.Index).ToList();
                                             }
-                                            <div>
+                                            <div >
                                                 <span>
                                                     <Button Color="ButtonColor.None" style="color:#ccc;" Outline="true" Size="Size.Large" @onclick="(data)=>OnShowCurrencyConversion()">
                                                         <Icon Name="IconName.ChevronDoubleLeft" />
@@ -152,7 +152,7 @@
                                                             <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
                                                                 <Icon Name="IconName.CheckCircleFill"></Icon>
                                                                 <span>
-                                                                    Payment handled - Done...
+                                                                    Payment handled - Done
                                                                 </span>
                                                             </Button>
                                                         </div>
@@ -163,7 +163,7 @@
                                                             <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
                                                                 <Icon Name="IconName.ExclamationCircleFill"></Icon>
                                                                 <span>
-                                                                    Payment not handled...
+                                                                    Payment not handled
                                                                 </span>
                                                             </Button>
                                                         </div>
