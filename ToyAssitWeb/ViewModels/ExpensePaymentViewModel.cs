@@ -6,6 +6,7 @@ namespace ToyAssist.Web.ViewModels
     public class ExpensePaymentViewModel
     {
         public long ExpensePaymentId { get; set; }
+        public int Index { get; set; }
 
         public int ExpenseSetupId { get; set; }
 
@@ -20,6 +21,8 @@ namespace ToyAssist.Web.ViewModels
         public ExpensePaymentStatusEnum ExpensePaymentStatus { get; set; }
 
         public string? Descr { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? Tax { get; set; }
 
         public DateTime CreatedDateTime { get; set; }
     }

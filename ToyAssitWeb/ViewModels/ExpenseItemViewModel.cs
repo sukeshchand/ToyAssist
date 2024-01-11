@@ -8,7 +8,6 @@ namespace ToyAssist.Web.ViewModels
         {
             ExpensePayments = [];
         }
-
         public ExpenseSetupViewModel? ExpenseSetup { get; set; }
         public List<ExpensePaymentViewModel?> ExpensePayments { get; set; }
         public int ExpenseSetupId { get; set; }
