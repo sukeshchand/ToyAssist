@@ -87,6 +87,7 @@
                                     }
                                 </div>
                             </div>
+
                             @* Payment information *@
                             <div class="row" style="border: 1px solid #cccccc2b; padding: 5px; margin: 0px; border-radius: 5px;">
                                 <div class="col-12 box">
@@ -100,16 +101,35 @@
                                                     @for (int i = 0; i < expensePayments.Count; i++)
                                                     {
                                                         var isShow = expensePayments[i].Index == 2 ? "" : "display:none";
-                                                        <span style="@isShow">
-                                                            <span> @expensePayments[i].Year</span>
-                                                            <span>-</span>
-                                                            <span> @expensePayments[i].Month</span>
-                                                            <span>-</span>
-                                                            <span> @expensePayments[i].Amount</span>
-                                                        </span>
+                                                        <div style="@isShow">
+                                                            <div class="row">
+                                                                <div class="col-6">
+                                                                    <span style="font-size: small;">
+                                                                        Payment date
+                                                                    </span>
+                                                                    <br />
+                                                                    <span>
+                                                                        @expensePayments[i].Year
+                                                                    </span>
+                                                                    <span>-</span>
+                                                                    <span>
+                                                                        @expensePayments[i].Month
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-6" style="text-align:right;">
+                                                                    <span style="font-size: small;">
+                                                                        Amount paid
+                                                                    </span>
+                                                                    <span>
+                                                                        <AmountBox Amount="@expensePayments[i].Amount" TaxAmount="@expensePayments[i].Tax" Currency="@currencyGroup?.Currency"></AmountBox>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     }
                                                 </div>
                                             </div>
+
                                             <div class="row">
                                                 <div class="col-12 box" style="border: 0px solid #ccc">
                                                     @* Payment Handle *@
@@ -148,23 +168,26 @@
                                         <div class="col-12 page-control">
                                             <hr />
                                             <div style="text-align: center; padding: 5px;">
-                                                <span @onclick="(data)=>OnClickGoFirst(expenseItem)">
+                                                <span @onclick="(data)=>OnClickGoFirst(expenseItem)" style="cursor:pointer;">
                                                     <Icon Name="IconName.ChevronDoubleLeft" />
                                                 </span>
-                                                <span @onclick="(data)=>OnClickGoPrevious(expenseItem)">
+                                                <span @onclick="(data)=>OnClickGoPrevious(expenseItem)" style="cursor:pointer;">
                                                     <Icon Name="IconName.ChevronLeft" />
                                                 </span>
-                                                <span @onclick="(data)=>OnClickGoNext(expenseItem)">
+                                                <span @onclick="(data)=>OnClickGoNext(expenseItem)" style="cursor:pointer;">
                                                     <Icon Name="IconName.ChevronRight" />
                                                 </span>
-                                                <span @onclick="(data)=>OnClickGoLast(expenseItem)">
+                                                <span @onclick="(data)=>OnClickGoLast(expenseItem)" style="cursor:pointer;">
                                                     <Icon Name="IconName.ChevronDoubleRight" />
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
                     <hr style="border:1px solid #ccc;" />
