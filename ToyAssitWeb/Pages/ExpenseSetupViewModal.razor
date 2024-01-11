@@ -45,7 +45,7 @@
                     </div>
                     @{
 
-                        var list = GetExpenseRunningList(@ModalData);
+                        var list = GeneralHelper.GetExpenseRunningList(@ModalData);
                     }
                     <div style="height:300px; overflow-y:scroll;">
                         @for (var i = 0; i < list.Count; i++)

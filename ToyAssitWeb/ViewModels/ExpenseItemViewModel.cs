@@ -6,11 +6,11 @@ namespace ToyAssist.Web.ViewModels
     {
         public ExpenseItemViewModel()
         {
-            ExpensePayments = new List<ExpensePaymentViewModel>();
+            ExpensePayments = [];
         }
 
         public ExpenseSetupViewModel? ExpenseSetup { get; set; }
-        public List<ExpensePaymentViewModel> ExpensePayments { get; set; }
+        public List<ExpensePaymentViewModel?> ExpensePayments { get; set; }
         public int ExpenseSetupId { get; set; }
         public int AccountId { get; set; }
         public string? BillGeneratedText { get; set; }

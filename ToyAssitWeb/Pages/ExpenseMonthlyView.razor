@@ -50,71 +50,76 @@
                 {
                     var expenseItem = ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexExpenseItem];
                     <div class="row" style="padding:10px; margin:5px; border: 0px groove white; border-radius:5px;">
-                        <div class="col-6 box">
+                        <div class="col-12">
                             <div class="row">
-                                <div class="col-8">
-                                    @expenseItem.ExpenseSetup.ExpenseName
-                                </div>
-                                <div class="col-4">
+                                <div class="col-6 box">
+                                    <div class="row" >
+                                        <div class="col-8">
+                                            @expenseItem.ExpenseSetup.ExpenseName
+                                        </div>
+                                        <div class="col-4">
 
-                                    <Button Color="ButtonColor.Light" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnViewExpenseItemClick(expenseItem)">
-                                        <Icon Name="IconName.ZoomIn" />
-                                    </Button>
+                                            <Button Color="ButtonColor.Light" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnViewExpenseItemClick(expenseItem)">
+                                                <Icon Name="IconName.ZoomIn" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    @if (@expenseItem.BillGeneratedText != null)
+                                    {
+                                        <div style="border: 1px solid #ffa200; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
+                                            @expenseItem.BillGeneratedText
+                                        </div>
+                                    }
+                                    @if (@expenseItem.BillPaymentText != null)
+                                    {
+                                        <div style="border: 1px solid red; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
+                                            @expenseItem.BillPaymentText
+                                        </div>
+                                    }
+                                </div>
+                                <div class="box col-6" style="text-align:right;">
+
+                                    <AmountBox Amount="@expenseItem?.ExpenseSetup.Amount" TaxAmount="@expenseItem?.ExpenseSetup.TaxAmount" Currency="@currencyGroup?.Currency"></AmountBox>
+
+                                    @if (IsShowCurrencyConversion)
+                                    {
+                                        <div style="margin-right: -25px;">
+                                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
+                                        </div>
+                                    }
+
+                                    @* Payment Handle *@
+                                    @{
+                                        var currentExpensePayment = expenseItem.ExpensePayments.FirstOrDefault(x => x.Year == DateTime.UtcNow.Year && x.Month == DateTime.UtcNow.Month);
+                                    }
+                                    @if (currentExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                                    {
+                                        <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
+                                            <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                                <Icon Name="IconName.CheckCircleFill"></Icon>
+                                                <span>
+                                                    Payment handled - Done
+                                                </span>
+                                            </Button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
+                                            <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                                <Icon Name="IconName.ExclamationCircleFill"></Icon>
+                                                <span>
+                                                    Payment not handled
+                                                </span>
+                                            </Button>
+                                        </div>
+                                    }
+                                </div>
+                                <div>
                                 </div>
                             </div>
-                            @if (@expenseItem.BillGeneratedText != null)
-                            {
-                                <div style="border: 1px solid #ffa200; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
-                                    @expenseItem.BillGeneratedText
-                                </div>
-                            }
-                            @if (@expenseItem.BillPaymentText != null)
-                            {
-                                <div style="border: 1px solid red; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
-                                    @expenseItem.BillPaymentText
-                                </div>
-                            }
-                        </div>
-                        <div class="box col-6" style="text-align:right;">
-
-                            <AmountBox Amount="@expenseItem?.ExpenseSetup.Amount" TaxAmount="@expenseItem?.ExpenseSetup.TaxAmount" Currency="@currencyGroup?.Currency"></AmountBox>
-
-                            @if (IsShowCurrencyConversion)
-                            {
-                                <div style="margin-right: -25px;">
-                                    <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
-                                </div>
-                            }
-
-                            @* Payment Handle *@
-                            @{
-                                var currentExpensePayment = expenseItem.ExpensePayments.FirstOrDefault(x => x.Year == DateTime.UtcNow.Year && x.Month == DateTime.UtcNow.Month);
-                            }
-                            @if(currentExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
-                            {
-                                <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
-                                    <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
-                                        <Icon Name="IconName.CheckCircleFill"></Icon>
-                                        <span>
-                                            Payment handled - Done
-                                        </span>
-                                    </Button>
-                                </div>
-                            }
-                            else
-                            {
-                                <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
-                                    <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
-                                        <Icon Name="IconName.ExclamationCircleFill"></Icon>
-                                        <span>
-                                            Payment not handled
-                                        </span>
-                                    </Button>
-                                </div>
-                            }
                         </div>
                     </div>
-
                     <hr style="border:1px solid #ccc;" />
                     @if (indexExpenseItem == currencyGroup.ExpenseItems.Count - 1)
                     {

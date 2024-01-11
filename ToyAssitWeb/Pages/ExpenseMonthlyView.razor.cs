@@ -132,13 +132,8 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
                     expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
+                    expenseItemViewModel.ExpensePayments = GetExpensePayments(expensePayments, expenseItem);
 
-                    expenseItemViewModel.ExpensePayments = expensePayments
-                        .Where(x => x.ExpenseSetupId == expenseItem.ExpenseSetupId)
-                        .Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month))
-                        .ToList();
-
-                    //----------------
                     currencyGroup.ExpenseItems.Add(expenseItemViewModel);
                 }
                 currencyGroup.TotalAmount = expenseItems.Sum(x => x.Amount ?? 0);
@@ -148,12 +143,20 @@ namespace ToyAssist.Web.Pages
             return expenseViewModel;
         }
 
+        private static List<ExpensePaymentViewModel?> GetExpensePayments(List<ExpensePayment> expensePayments, ExpenseSetup expenseSetup)
+        {
+             return expensePayments
+                .Where(x => x.ExpenseSetupId == expenseSetup.ExpenseSetupId)
+                .Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month))
+                .ToList();
+        }
+
         private static string? GetBillGeneratedText(ExpenseItemViewModel expenseItemViewModel)
         {
             var remindDaysBillGenerated = GetRemindDays(expenseItemViewModel.ExpenseSetup.BillGeneratedDay);
             if (remindDaysBillGenerated != null)
             {
-                return $"Bill will generate in {remindDaysBillGenerated} days";
+                return $"Next Invoice will generate in {remindDaysBillGenerated} days";
             }
             return null;
         }
@@ -163,7 +166,7 @@ namespace ToyAssist.Web.Pages
             var remindDaysBillPayment = GetRemindDays(expenseItemViewModel.ExpenseSetup.BillPaymentDay);
             if (remindDaysBillPayment != null)
             {
-                return $"Bill payment in {remindDaysBillPayment} days";
+                return $"Next Invoice should pay in {remindDaysBillPayment} days";
             }
             return null;
         }
