@@ -10,6 +10,8 @@ namespace ToyAssist.Web.ViewModels
         }
         public ExpenseSetupViewModel? ExpenseSetup { get; set; }
         public List<ExpensePaymentViewModel?> ExpensePayments { get; set; }
+        public int ExpensePaymentCurrentIndex { get; set; }
+
         public int ExpenseSetupId { get; set; }
         public int AccountId { get; set; }
         public string? BillGeneratedText { get; set; }

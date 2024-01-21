@@ -50,19 +50,25 @@ namespace ToyAssist.Web.Pages
 
         private async Task OnClickGoFirst(ExpenseItemViewModel expenseItem)
         {
-
+            expenseItem.ExpensePaymentCurrentIndex = 0;
         }
         private async Task OnClickGoPrevious(ExpenseItemViewModel expenseItem)
         {
-
+            if (expenseItem.ExpensePaymentCurrentIndex > 0)
+            {
+                expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePaymentCurrentIndex - 1;
+            }
         }
         private async Task OnClickGoNext(ExpenseItemViewModel expenseItem)
         {
-
+            if (expenseItem.ExpensePaymentCurrentIndex < expenseItem.ExpensePayments.Count - 1)
+            {
+                expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePaymentCurrentIndex + 1;
+            }
         }
         private async Task OnClickGoLast(ExpenseItemViewModel expenseItem)
         {
-
+            expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePayments.Count - 1;
         }
 
         private async Task onHandlePayment(ExpenseItemViewModel expenseItem)

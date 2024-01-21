@@ -99,12 +99,12 @@
                                                 <div class="col-12">
                                                     @for (int i = 0; i < expensePayments.Count; i++)
                                                     {
-                                                        var isShowCss = expensePayments[i].Index == 1 ? "" : "display:none";
+                                                        var isShowCss = expenseItem.ExpensePaymentCurrentIndex == i ? "" : "display:none";
                                                         <div style="@isShowCss">
                                                             <div class="row">
                                                                 <div class="col-6">
                                                                     <span style="font-size: small;">
-                                                                        Payment date
+                                                                        Payment date @(@expenseItem?.ExpensePaymentCurrentIndex == i ? " (Current Item)" : "")
                                                                     </span>
                                                                     <br />
                                                                     <span>
@@ -159,29 +159,31 @@
                                                     }
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    @* Page controls *@
-                                    <div class="row">
-                                        <div class="col-12 page-control">
-                                            <hr />
-                                            <div style="text-align: center; padding: 5px;">
-                                                <span @onclick="(data)=>OnClickGoFirst(expenseItem)" style="cursor:pointer;">
-                                                    <Icon Name="IconName.ChevronDoubleLeft" />
-                                                </span>
-                                                <span @onclick="(data)=>OnClickGoPrevious(expenseItem)" style="cursor:pointer;">
-                                                    <Icon Name="IconName.ChevronLeft" />
-                                                </span>
-                                                <span @onclick="(data)=>OnClickGoNext(expenseItem)" style="cursor:pointer;">
-                                                    <Icon Name="IconName.ChevronRight" />
-                                                </span>
-                                                <span @onclick="(data)=>OnClickGoLast(expenseItem)" style="cursor:pointer;">
-                                                    <Icon Name="IconName.ChevronDoubleRight" />
-                                                </span>
+                                            @* Page controls *@
+                                            <div class="row">
+                                                <div class="col-12 page-control">
+                                                    <hr />
+                                                    <div style="text-align: center; padding: 5px;">
+                                                        <span @onclick="(data)=>OnClickGoFirst(expenseItem)" style="cursor:pointer;">
+                                                            <Icon Name="IconName.ChevronDoubleLeft" />
+                                                        </span>
+                                                        <span @onclick="(data)=>OnClickGoPrevious(expenseItem)" style="cursor:pointer;">
+                                                            <Icon Name="IconName.ChevronLeft" />
+                                                        </span>
+                                                        <span @onclick="(data)=>OnClickGoNext(expenseItem)" style="cursor:pointer;">
+                                                            <Icon Name="IconName.ChevronRight" />
+                                                        </span>
+                                                        <span @onclick="(data)=>OnClickGoLast(expenseItem)" style="cursor:pointer;">
+                                                            <Icon Name="IconName.ChevronDoubleRight" />
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
+
 
                                 </div>
 
@@ -189,7 +191,7 @@
 
                         </div>
                     </div>
-                    <hr style="border:1px solid #ccc;" />
+                    <hr style="border:3px solid #ccc;" />
                     @if (indexExpenseItem == currencyGroup.ExpenseItems.Count - 1)
                     {
                         <div class="row" style="padding:10px; margin:5px; border: 0px groove white; border-radius:5px;">
