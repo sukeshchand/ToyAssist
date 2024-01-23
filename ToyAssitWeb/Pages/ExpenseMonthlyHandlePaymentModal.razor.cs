@@ -36,12 +36,6 @@ namespace ToyAssist.Web.Pages
 
         public bool IsShowCurrencyConversion { get; set; }
 
-        JsonSerializerOptions options = new JsonSerializerOptions
-        {
-            ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
-            WriteIndented = true, // Optional: Make the output more readable
-        };
-
         private ElementReference elementRefToScrollInto = default;
 
         private async Task ScrollIntoDivAsync(ElementReference elementRefToScrollInto)

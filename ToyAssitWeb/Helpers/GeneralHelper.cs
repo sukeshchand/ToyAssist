@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.TypeExtensions;
@@ -268,6 +269,18 @@ namespace ToyAssist.Web.Helpers
         {
             var dt = new DateTime(2020, monthNumber, 13);
             return dt.ToString(format);
+        }
+
+        public static string SerializeObject(dynamic obj, bool isIndented = false)
+        {
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
+                WriteIndented = isIndented, // Optional: Make the output more readable
+            };
+
+            var json = JsonSerializer.Serialize(obj, options);
+            return json;
         }
     }
 }

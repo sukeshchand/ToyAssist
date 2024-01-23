@@ -135,7 +135,7 @@ namespace ToyAssist.Web.Pages
             }
         }
 
-        private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups, List<ExpensePayment> allAxpensePayments)
+        private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups, List<ExpensePayment> allExpensePayments)
         {
             var expenseViewModel = new ExpenseViewModel();
             var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
@@ -156,7 +156,7 @@ namespace ToyAssist.Web.Pages
 
                     expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
                     expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
-                    expenseItemViewModel.ExpensePayments = GetExpensePayments(allAxpensePayments, expenseSetupItem);
+                    expenseItemViewModel.ExpensePayments = GetExpensePayments(allExpensePayments, expenseSetupItem);
 
                     currencyGroup.ExpenseItems.Add(expenseItemViewModel);
                 }
@@ -175,16 +175,31 @@ namespace ToyAssist.Web.Pages
             for (int i = 0; i < runningExpensePayments.Count; i++)
             {
                 var runningExpensePayment = runningExpensePayments[i];
-                var expensePayment = new ExpensePaymentViewModel()
+                var expensePaymentExist = allExpensePayments.FirstOrDefault(x => x.AccountId == expenseSetup.AccountId 
+                                                                        && x.ExpenseSetupId == expenseSetup.ExpenseSetupId
+                                                                        && x.Month == ((DateTime)runningExpensePayment.DateAndTime).Month
+                                                                        && x.Year == ((DateTime)runningExpensePayment.DateAndTime).Year
+                                                                        );
+                ExpensePaymentViewModel? expensePayment = null;
+                if (expensePaymentExist == null)
                 {
-                    Index = runningExpensePayment.Index,
-                    AccountId = expenseSetup.AccountId,
-                    ExpenseSetupId = expenseSetup.ExpenseSetupId,
-                    Amount = runningExpensePayment.Amount,
-                    Tax = runningExpensePayment.Tax,
-                    Month = ((DateTime)runningExpensePayment.DateAndTime).Month,
-                    Year = ((DateTime)runningExpensePayment.DateAndTime).Year,
-                };
+                    expensePayment = new ExpensePaymentViewModel()
+                    {
+                        Index = runningExpensePayment.Index,
+                        AccountId = expenseSetup.AccountId,
+                        ExpenseSetupId = expenseSetup.ExpenseSetupId,
+                        Amount = runningExpensePayment.Amount,
+                        Tax = runningExpensePayment.Tax,
+                        Month = ((DateTime)runningExpensePayment.DateAndTime).Month,
+                        Year = ((DateTime)runningExpensePayment.DateAndTime).Year,
+                    };
+                }
+                else
+                {
+                    expensePayment = ExpensePaymentViewModelMapper.Map(expensePaymentExist);
+                    expensePayment.Index = runningExpensePayment.Index;
+                }
+               
                 expensePayments.Add(expensePayment);
             }
             return expensePayments;
