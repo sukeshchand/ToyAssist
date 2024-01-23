@@ -55,13 +55,8 @@
                             <div class="row">
                                 <div class="col-6 box">
                                     <div class="row">
-                                        <div class="col-8">
+                                        <div class="col-12">
                                             @expenseItem.ExpenseSetup.ExpenseName
-                                        </div>
-                                        <div class="col-4">
-                                            <Button Color="ButtonColor.Light" Style="color:#b6b6b6" Outline="true" Size="Size.ExtraSmall" @onclick="(data)=>OnViewExpenseItemClick(expenseItem)">
-                                                <Icon Name="IconName.ZoomIn" />
-                                            </Button>
                                         </div>
                                     </div>
                                     @if (@expenseItem.BillGeneratedText != null)
@@ -131,11 +126,6 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-12 box" style="border: 0px solid #ccc">
-                                                                    @* Payment Handle *@
-                                                                   @*  <div style="width:300px; height: 100px; overflow:auto;">
-                                                                        @GeneralHelper.SerializeObject(expensePayments[i], true)
-                                                                    </div> *@
-                                                                    @expensePayments[i]?.ExpensePaymentStatus
                                                                     @if (expensePayments[i]?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
                                                                     {
                                                                         <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
@@ -164,12 +154,12 @@
                                                     }
                                                 </div>
                                             </div>
-
+                                            <hr />
                                             @* Page controls *@
                                             <div class="row">
-                                                <div class="col-12 page-control">
-                                                    <hr />
-                                                    <div style="text-align: center; padding: 5px;">
+                                                <div class="col-6 page-control">
+
+                                                    <div style="text-align: right; padding: 5px;">
                                                         <span @onclick="(data)=>OnClickGoFirst(expenseItem)" class="paging-button" style="cursor:pointer;">
                                                             <Icon Name="IconName.ChevronDoubleLeft" />
                                                         </span>
@@ -181,6 +171,30 @@
                                                         </span>
                                                         <span @onclick="(data)=>OnClickGoLast(expenseItem)" class="paging-button" style="cursor:pointer;">
                                                             <Icon Name="IconName.ChevronDoubleRight" />
+                                                        </span>
+                                                        <span style="margin-left: 10px">
+                                                            <span @onclick="(data)=>OnClickGoCurrent(expenseItem)" class="paging-button" style="cursor:pointer;  border: 1px solid #6c757d70;">
+                                                                <Icon Name="IconName.ArrowClockwise" />
+                                                            </span>
+                                                            <span @onclick="(data)=>OnViewExpenseItemClick(expenseItem)" class="paging-button" style="cursor:pointer;">
+                                                                <Icon Name="IconName.ZoomIn" />
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div style="text-align: left; padding: 5px;">
+                                                        <span>
+                                                            Payment:
+                                                        </span>
+                                                        <span>
+                                                            @(expenseItem.ExpensePaymentCurrentIndex + 1)
+                                                        </span>
+                                                        <span>
+                                                            /
+                                                        </span>
+                                                        <span>
+                                                            @expenseItem.ExpensePayments.Count
                                                         </span>
                                                     </div>
                                                 </div>

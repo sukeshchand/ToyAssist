@@ -71,6 +71,16 @@ namespace ToyAssist.Web.Pages
             expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePayments.Count - 1;
         }
 
+        private async Task OnClickGoCurrent(ExpenseItemViewModel expenseItem)
+        {
+            // expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePayments.Count - 1;
+            var item = expenseItem.ExpensePayments.Where(x=>x.Year >= DateTime.UtcNow.Year && x.Month >= DateTime.UtcNow.Month).OrderBy(o=>o.Year).ThenBy(o2=>o2.Month).FirstOrDefault();
+            if (item != null)
+            {
+                expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePayments.IndexOf(item);
+            }
+        }
+
         private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
         {
             await expenseMonthlyHandlePaymentModal.ShowModalAsync(expenseItem);
