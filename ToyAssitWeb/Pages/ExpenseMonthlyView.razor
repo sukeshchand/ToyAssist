@@ -104,7 +104,7 @@
                                                             <div class="row">
                                                                 <div class="col-6">
                                                                     <span style="font-size: small;">
-                                                                        Payment date @(@expenseItem?.ExpensePaymentCurrentIndex == i ? " (Current Item)" : "")
+                                                                        Payment date
                                                                     </span>
                                                                     <br />
                                                                     <span>
@@ -113,6 +113,10 @@
                                                                     <span>-</span>
                                                                     <span>
                                                                         @expensePayments[i].Month
+                                                                    </span>
+                                                                    <span>-</span>
+                                                                    <span>
+                                                                        @GeneralHelper.GetMonthName((int)@expensePayments[i].Month)
                                                                     </span>
                                                                 </div>
                                                                 <div class="col-6" style="text-align:right;">
