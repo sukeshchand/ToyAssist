@@ -165,16 +165,16 @@
                                                 <div class="col-12 page-control">
                                                     <hr />
                                                     <div style="text-align: center; padding: 5px;">
-                                                        <span @onclick="(data)=>OnClickGoFirst(expenseItem)" style="cursor:pointer;">
+                                                        <span @onclick="(data)=>OnClickGoFirst(expenseItem)" class="paging-button" style="cursor:pointer;">
                                                             <Icon Name="IconName.ChevronDoubleLeft" />
                                                         </span>
-                                                        <span @onclick="(data)=>OnClickGoPrevious(expenseItem)" style="cursor:pointer;">
+                                                        <span @onclick="(data)=>OnClickGoPrevious(expenseItem)" class="paging-button" style="cursor:pointer;">
                                                             <Icon Name="IconName.ChevronLeft" />
                                                         </span>
-                                                        <span @onclick="(data)=>OnClickGoNext(expenseItem)" style="cursor:pointer;">
+                                                        <span @onclick="(data)=>OnClickGoNext(expenseItem)" class="paging-button" style="cursor:pointer;">
                                                             <Icon Name="IconName.ChevronRight" />
                                                         </span>
-                                                        <span @onclick="(data)=>OnClickGoLast(expenseItem)" style="cursor:pointer;">
+                                                        <span @onclick="(data)=>OnClickGoLast(expenseItem)" class="paging-button" style="cursor:pointer;">
                                                             <Icon Name="IconName.ChevronDoubleRight" />
                                                         </span>
                                                     </div>
@@ -182,13 +182,8 @@
                                             </div>
                                         </div>
                                     </div>
-
-
-
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                     <hr style="border:3px solid #ccc;" />

@@ -1,5 +1,22 @@
 ﻿.page-control{
     border: 0px solid #ccc;
     font-size: large;
-
 }
+
+.page-button {
+    cursor: pointer;
+}
+
+.paging-button {
+    border: 1px solid #6c757d70;
+    border-radius: 4px;
+    padding: 1px;
+    margin: 1px;
+}
+
+.paging-button:hover {
+    background-color: #ccc;
+    color: black;
+    font-weight:bold;
+}
+
