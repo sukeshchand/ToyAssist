@@ -76,6 +76,7 @@ public partial class _DataContext : DbContext
         {
             entity.ToTable("ExpensePayment");
 
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 4)");
             entity.Property(e => e.CreatedDateTime)
                 .HasDefaultValueSql("(getutcdate())")
                 .HasColumnType("datetime");

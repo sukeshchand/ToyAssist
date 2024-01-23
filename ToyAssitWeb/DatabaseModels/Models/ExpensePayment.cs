@@ -16,6 +16,8 @@ public partial class ExpensePayment
 
     public int? Month { get; set; }
 
+    public int? Day { get; set; }
+
     public DateTime? PaymentDoneDate { get; set; }
 
     public ExpensePaymentStatusEnum ExpensePaymentStatus { get; set; }
@@ -23,4 +25,6 @@ public partial class ExpensePayment
     public string? Descr { get; set; }
 
     public DateTime CreatedDateTime { get; set; }
+
+    public decimal? Amount { get; set; }
 }
