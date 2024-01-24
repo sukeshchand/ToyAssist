@@ -2,10 +2,13 @@
 
 namespace ToyAssist.Web.ViewModels
 {
-    public class ExpenseViewModel
+    public class ExpenseOccurrenceViewModel
     {
+        public List<CurrencyModel> CurrencyList { get; set; }
+        public List<CurrencyModel> CurrenciesInUse { get; set; }
+
         public List<CurrencyGroupViewModel> CurrencyGroups { get; set; }
-        public ExpenseViewModel()
+        public ExpenseOccurrenceViewModel()
         {
             CurrencyGroups = new List<CurrencyGroupViewModel>();
         }

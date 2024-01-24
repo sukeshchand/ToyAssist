@@ -20,26 +20,18 @@ namespace ToyAssist.Web.Pages
 
     public partial class ExpenseOccurrence
     {
-        public class DataSourceObjects
-        {
-            public List<CurrencyModel> CurrencyList { get; set; }
-            public List<CurrencyModel> CurrenciesInUse { get; set; }
-        }
-
-        public DataSourceObjects DataSource { get; set; }
+        public ExpenseOccurrenceViewModel ViewModel { get; set; }
 
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
 
 
-        public ExpenseViewModel ViewModel { get; set; }
-
         public ExpenseOccurrence()
         {
             AccountId = 1;
             IsShowCurrencyConversion = true;
-            DataSource = LoadData();
+            ViewModel = LoadData();
         }
 
 
@@ -96,9 +88,9 @@ namespace ToyAssist.Web.Pages
         }
 
 
-        private DataSourceObjects LoadData()
+        private ExpenseOccurrenceViewModel LoadData()
         {
-            var dataSource = new DataSourceObjects();
+            var viewModel = new ExpenseOccurrenceViewModel();
 
             var dataContext = DataContextFactory.Create();
 
@@ -113,18 +105,18 @@ namespace ToyAssist.Web.Pages
                 .ToList();
 
             // Currency List
-            dataSource.CurrencyList = dataContext.Currencies.ToList().Select(CurrencyModelMapper.Map).ToList();
+            viewModel.CurrencyList = dataContext.Currencies.ToList().Select(CurrencyModelMapper.Map).ToList();
 
             // Currencies in use
             var currencyIdsInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
-            dataSource.CurrenciesInUse = dataSource.CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
+            viewModel.CurrenciesInUse = viewModel.CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
 
-            ViewModel = BuildExpenseViewModel();
-            return dataSource;
+            viewModel = BuildExpenseViewModel();
+            return viewModel;
 
-            ExpenseViewModel BuildExpenseViewModel()
+            ExpenseOccurrenceViewModel BuildExpenseViewModel()
             {
-                var expenseViewModel = new ExpenseViewModel();
+                var expenseViewModel = new ExpenseOccurrenceViewModel();
                 var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
                 for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroups.Count; indexCurrencyGroup++)
                 {
@@ -143,7 +135,7 @@ namespace ToyAssist.Web.Pages
 
                         expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
                         expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
-                        expenseItemViewModel.ExpensePayments = GetExpensePayments(allExpensePayments, expenseSetupItem);
+                        expenseItemViewModel.ExpensePayments = GeneralHelper.BuildExpensePayments(allExpensePayments, expenseSetupItem);
 
                         currencyGroup.ExpenseItems.Add(expenseItemViewModel);
                     }
@@ -178,45 +170,6 @@ namespace ToyAssist.Web.Pages
             }
         }
 
-
-
-        private static List<ExpensePaymentModel?> GetExpensePayments(List<ExpensePayment> allExpensePayments, ExpenseSetup expenseSetup)
-        {
-            var expenseSetupViewModel = ExpenseSetupModelMapper.Map(expenseSetup);
-            var runningExpensePayments = GeneralHelper.GetExpenseRunningList(expenseSetupViewModel);
-            var expensePayments = new List<ExpensePaymentModel>();
-            for (int i = 0; i < runningExpensePayments.Count; i++)
-            {
-                var runningExpensePayment = runningExpensePayments[i];
-                var expensePaymentExist = allExpensePayments.FirstOrDefault(x => x.AccountId == expenseSetup.AccountId
-                                                                        && x.ExpenseSetupId == expenseSetup.ExpenseSetupId
-                                                                        && x.Month == ((DateTime)runningExpensePayment.DateAndTime).Month
-                                                                        && x.Year == ((DateTime)runningExpensePayment.DateAndTime).Year
-                                                                        );
-                ExpensePaymentModel? expensePayment = null;
-                if (expensePaymentExist == null)
-                {
-                    expensePayment = new ExpensePaymentModel()
-                    {
-                        Index = runningExpensePayment.Index,
-                        AccountId = expenseSetup.AccountId,
-                        ExpenseSetupId = expenseSetup.ExpenseSetupId,
-                        Amount = runningExpensePayment.Amount,
-                        Tax = runningExpensePayment.Tax,
-                        Month = ((DateTime)runningExpensePayment.DateAndTime).Month,
-                        Year = ((DateTime)runningExpensePayment.DateAndTime).Year,
-                    };
-                }
-                else
-                {
-                    expensePayment = ExpensePaymentModelMapper.Map(expensePaymentExist);
-                    expensePayment.Index = runningExpensePayment.Index;
-                }
-
-                expensePayments.Add(expensePayment);
-            }
-            return expensePayments;
-        }
 
         private static string? GetBillGeneratedText(ExpenseItemViewModel expenseItemViewModel)
         {

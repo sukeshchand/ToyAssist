@@ -13,7 +13,7 @@ namespace ToyAssist.Web.Pages
     public partial class ExpenseSetups
     {
 
-        List<ExpenseSetupModel> ExpenseSetups = new List<ExpenseSetupModel>();
+        List<ExpenseSetupModel> ExpenseSetupItems = new List<ExpenseSetupModel>();
         List<CurrencyModel> CurrenciesInUse = new List<CurrencyModel>();
         List<CurrencyModel> CurrencyList = new List<CurrencyModel>();
 
@@ -57,10 +57,10 @@ namespace ToyAssist.Web.Pages
                 .Include(i2 => i2.Account)
                 .ToList();
 
-            ExpenseSetups = expenseSetups.Select(x => (ExpenseSetupModel)ExpenseSetupModelMapper.Map(x)).ToList();
+            ExpenseSetupItems = expenseSetups.Select(x => (ExpenseSetupModel)ExpenseSetupModelMapper.Map(x)).ToList();
 
             // Currencies in use
-            var currencyIdsInUse = ExpenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
+            var currencyIdsInUse = ExpenseSetupItems.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
             CurrenciesInUse = CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
         }
 

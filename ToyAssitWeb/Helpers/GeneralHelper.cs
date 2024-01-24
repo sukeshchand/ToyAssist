@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
+using ToyAssist.Web.Mappers.ViewModelRepoMappers;
 using ToyAssist.Web.Models;
 using ToyAssist.Web.TypeExtensions;
 
@@ -281,6 +282,44 @@ namespace ToyAssist.Web.Helpers
 
             var json = JsonSerializer.Serialize(obj, options);
             return json;
+        }
+
+        public static List<ExpensePaymentModel?> BuildExpensePayments(List<ExpensePayment> allExpensePayments, ExpenseSetup expenseSetup)
+        {
+            var expenseSetupViewModel = ExpenseSetupModelMapper.Map(expenseSetup);
+            var runningExpensePayments = GeneralHelper.GetExpenseRunningList(expenseSetupViewModel);
+            var expensePayments = new List<ExpensePaymentModel>();
+            for (int i = 0; i < runningExpensePayments.Count; i++)
+            {
+                var runningExpensePayment = runningExpensePayments[i];
+                var expensePaymentExist = allExpensePayments.FirstOrDefault(x => x.AccountId == expenseSetup.AccountId
+                                                                        && x.ExpenseSetupId == expenseSetup.ExpenseSetupId
+                                                                        && x.Month == ((DateTime)runningExpensePayment.DateAndTime).Month
+                                                                        && x.Year == ((DateTime)runningExpensePayment.DateAndTime).Year
+                                                                        );
+                ExpensePaymentModel? expensePayment = null;
+                if (expensePaymentExist == null)
+                {
+                    expensePayment = new ExpensePaymentModel()
+                    {
+                        Index = runningExpensePayment.Index,
+                        AccountId = expenseSetup.AccountId,
+                        ExpenseSetupId = expenseSetup.ExpenseSetupId,
+                        Amount = runningExpensePayment.Amount,
+                        Tax = runningExpensePayment.Tax,
+                        Month = ((DateTime)runningExpensePayment.DateAndTime).Month,
+                        Year = ((DateTime)runningExpensePayment.DateAndTime).Year,
+                    };
+                }
+                else
+                {
+                    expensePayment = ExpensePaymentModelMapper.Map(expensePaymentExist);
+                    expensePayment.Index = runningExpensePayment.Index;
+                }
+
+                expensePayments.Add(expensePayment);
+            }
+            return expensePayments;
         }
     }
 }
