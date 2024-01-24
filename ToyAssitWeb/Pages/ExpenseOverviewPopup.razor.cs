@@ -9,9 +9,9 @@ using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Pages
 {
-    public partial class ExpenseSetupViewModal
+    public partial class ExpenseOverviewPopup
     {
-        public ExpenseSetupViewModal()
+        public ExpenseOverviewPopup()
         {
             ModalData = new ExpenseSetupViewModel();
         }

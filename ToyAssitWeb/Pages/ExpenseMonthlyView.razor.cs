@@ -38,8 +38,8 @@ namespace ToyAssist.Web.Pages
         }
 
 
-        private ExpenseSetupViewModal expenseSetupViewModal = default;
-        private ExpenseMonthlyHandlePaymentModal expenseMonthlyHandlePaymentModal = default;
+        private ExpenseOverviewPopup expenseOverviewPopup = default;
+        private PaymentHandlePopup paymentHandlePopup = default;
 
         public bool IsShowCurrencyConversion { get; set; }
 
@@ -83,12 +83,12 @@ namespace ToyAssist.Web.Pages
 
         private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
         {
-            await expenseMonthlyHandlePaymentModal.ShowModalAsync(expenseItem);
+            await paymentHandlePopup.ShowModalAsync(expenseItem);
         }
 
         private async Task OnViewExpenseItemClick(ExpenseItemViewModel expenseItem)
         {
-            await expenseSetupViewModal.ShowModalAsync(expenseItem.ExpenseSetup);
+            await expenseOverviewPopup.ShowModalAsync(expenseItem.ExpenseSetup);
         }
 
         private void LoadData()

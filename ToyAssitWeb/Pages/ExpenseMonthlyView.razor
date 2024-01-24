@@ -9,9 +9,9 @@
 @using ToyAssist.Web.Pages;
 
 
-<ExpenseMonthlyHandlePaymentModal @ref="@expenseMonthlyHandlePaymentModal" CurrenciesInUse="@CurrenciesInUse" OnPaymentDataUpdatedEvent="@OnPaymentDataUpdatedEvent"></ExpenseMonthlyHandlePaymentModal>
+<PaymentHandlePopup @ref="@paymentHandlePopup" CurrenciesInUse="@CurrenciesInUse" OnPaymentDataUpdatedEvent="@OnPaymentDataUpdatedEvent"></PaymentHandlePopup>
 
-<ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
+<ExpenseOverviewPopup @ref="@expenseOverviewPopup"></ExpenseOverviewPopup>
 
 
 <PageTitle>Assist Toy - Expense Monthly</PageTitle>

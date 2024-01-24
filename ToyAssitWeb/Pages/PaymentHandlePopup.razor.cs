@@ -12,9 +12,9 @@ namespace ToyAssist.Web.Pages
 {
 
 
-    public partial class ExpenseMonthlyHandlePaymentModal
+    public partial class PaymentHandlePopup
     {
-        public ExpenseMonthlyHandlePaymentModal()
+        public PaymentHandlePopup()
         {
             ModalData = new ExpenseItemViewModel();
         }

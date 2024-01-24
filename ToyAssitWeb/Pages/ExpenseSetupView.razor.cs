@@ -28,11 +28,11 @@ namespace ToyAssist.Web.Pages
             IsShowCurrencyConversion = true;
         }
 
-        private ExpenseSetupViewModal expenseSetupViewModal = default;
+        private ExpenseOverviewPopup expenseOverviewPopup = default;
 
         private async Task OnShowModalClick(ExpenseSetupViewModel? data)
         {
-            await expenseSetupViewModal.ShowModalAsync(data);
+            await expenseOverviewPopup.ShowModalAsync(data);
         }
 
 
