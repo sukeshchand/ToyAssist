@@ -20,7 +20,7 @@ public partial class ExpensePayment
 
     public DateTime? PaymentDoneDate { get; set; }
 
-    public ExpensePaymentStatusEnum ExpensePaymentStatus { get; set; }
+    public ExpensePaymentStatusEnum? PaymentStatus { get; set; }
 
     public string? Descr { get; set; }
 

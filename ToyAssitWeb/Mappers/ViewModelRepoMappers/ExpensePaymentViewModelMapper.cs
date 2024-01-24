@@ -20,7 +20,7 @@ namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
                 Year = item.Year,
                 CreatedDateTime = item.CreatedDateTime,
                 Descr = item.Descr,
-                ExpensePaymentStatus = item.ExpensePaymentStatus,
+                PaymentStatus = item.PaymentStatus,
                 ExpenseSetupId = item.ExpenseSetupId,
                 Month = item.Month,
                 Amount = item.Amount

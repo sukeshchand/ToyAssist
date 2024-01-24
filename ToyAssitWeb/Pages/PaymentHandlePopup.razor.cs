@@ -65,7 +65,7 @@ namespace ToyAssist.Web.Pages
                     AccountId = ModalData.AccountId,
                     CreatedDateTime = DateTime.UtcNow,
                     ExpenseSetupId = ModalData.ExpenseSetupId,
-                    ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done,
+                    PaymentStatus = Enums.ExpensePaymentStatusEnum.Paid,
                     Month = DateTime.Now.Month,
                     Year = DateTime.Now.Year,
                     PaymentDoneDate = DateTime.UtcNow
@@ -74,10 +74,10 @@ namespace ToyAssist.Web.Pages
                 await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
                 await dataContext.SaveChangesAsync();
             }
-            else if (expensePayment.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Pending)
+            else if (expensePayment.PaymentStatus == Enums.ExpensePaymentStatusEnum.Pending)
             {
                 expensePayment.PaymentDoneDate = DateTime.UtcNow;
-                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done;
+                expensePayment.PaymentStatus = Enums.ExpensePaymentStatusEnum.Paid;
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list
@@ -96,7 +96,7 @@ namespace ToyAssist.Web.Pages
             if (expensePayment != null)
             {
                 expensePayment.PaymentDoneDate = null;
-                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
+                expensePayment.PaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list

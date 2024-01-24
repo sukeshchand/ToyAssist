@@ -126,7 +126,7 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-12 box" style="border: 0px solid #ccc">
-                                                                    @if (expensePayments[i]?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                                                                    @if (expensePayments[i]?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                                                                     {
                                                                         <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
                                                                             <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">

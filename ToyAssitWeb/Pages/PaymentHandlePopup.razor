@@ -59,7 +59,7 @@
                     @{
                         var currentExpensePayment = ModalData?.ExpensePayments.FirstOrDefault(x => x.Year == DateTime.UtcNow.Year && x.Month == DateTime.UtcNow.Month);
                     }
-                    @if (currentExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                    @if (currentExpensePayment?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                     {
                         <div style="text-align:right; margin: 5px 0 5px 5px; ">
                             <span style="border: 2px green;border-radius: 5px;padding: 6px;margin: 5px 0 5px 0;color: green;border-style: dotted; display:inline-block;">
@@ -81,7 +81,7 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    @if (currentExpensePayment?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                    @if (currentExpensePayment?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                     {
                         <Button Color="ButtonColor.Danger" @onclick="(data)=>OnMarkAsNotPaidClick()">Mark as not paid</Button>
                     }
