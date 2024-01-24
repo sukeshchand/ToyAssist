@@ -9,7 +9,7 @@
 @using ToyAssist.Web.Pages;
 
 
-<PaymentHandlePopup @ref="@paymentHandlePopup" CurrenciesInUse="@CurrenciesInUse" OnPaymentDataUpdatedEvent="@OnPaymentDataUpdatedEvent"></PaymentHandlePopup>
+<PaymentHandlePopup @ref="@paymentHandlePopup" CurrenciesInUse="@DataSource.CurrenciesInUse" OnPaymentDataUpdatedEvent="@OnPaymentDataUpdatedEvent"></PaymentHandlePopup>
 
 <ExpenseOverviewPopup @ref="@expenseOverviewPopup"></ExpenseOverviewPopup>
 
@@ -77,7 +77,7 @@
                                     @if (IsShowCurrencyConversion)
                                     {
                                         <div style="margin-right: -25px;">
-                                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
+                                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@DataSource.CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
                                         </div>
                                     }
                                 </div>
@@ -224,7 +224,7 @@
                                 @if (IsShowCurrencyConversion)
                                 {
                                     <div style="margin: 10px 0 10px 0;">
-                                        <CurrencyConversionBox CurrencyFrom="@currencyGroup.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@currencyGroup.TotalAmount"></CurrencyConversionBox>
+                                        <CurrencyConversionBox CurrencyFrom="@currencyGroup.Currency" CurrenciesTo="@DataSource.CurrenciesInUse" Amount="@currencyGroup.TotalAmount"></CurrencyConversionBox>
                                     </div>
                                 }
                             </div>

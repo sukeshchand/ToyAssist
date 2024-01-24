@@ -17,15 +17,20 @@ using ToyAssist.Web.ViewModels;
 namespace ToyAssist.Web.Pages
 {
 
-
     public partial class ExpenseMonthlyView
     {
+        public class DataSourceObjects
+        {
+            public List<CurrencyViewModel> CurrencyList { get; set; }
+            public List<CurrencyViewModel> CurrenciesInUse { get; set; }
+        }
+
+        public DataSourceObjects DataSource { get; set; }
 
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
-        public List<CurrencyViewModel> CurrenciesInUse { get; set; }
-        public List<CurrencyViewModel> CurrencyList { get; set; }
+
 
         public ExpenseViewModel ViewModel { get; set; }
 
@@ -33,7 +38,7 @@ namespace ToyAssist.Web.Pages
         {
             AccountId = 1;
             IsShowCurrencyConversion = true;
-            LoadData();
+            DataSource = LoadData();
         }
 
 
@@ -72,7 +77,7 @@ namespace ToyAssist.Web.Pages
 
         private async Task OnClickGoCurrent(ExpenseItemViewModel expenseItem)
         {
-            var item = expenseItem.ExpensePayments.Where(x=>x.Year >= DateTime.UtcNow.Year && x.Month >= DateTime.UtcNow.Month).OrderBy(o=>o.Year).ThenBy(o2=>o2.Month).FirstOrDefault();
+            var item = expenseItem.ExpensePayments.Where(x => x.Year >= DateTime.UtcNow.Year && x.Month >= DateTime.UtcNow.Month).OrderBy(o => o.Year).ThenBy(o2 => o2.Month).FirstOrDefault();
             if (item != null)
             {
                 expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePayments.IndexOf(item);
@@ -89,9 +94,16 @@ namespace ToyAssist.Web.Pages
             await expenseOverviewPopup.ShowModalAsync(expenseItem.ExpenseSetup);
         }
 
-        private void LoadData()
+
+        private DataSourceObjects LoadData()
         {
+            var dataSource = new DataSourceObjects();
+
             var dataContext = DataContextFactory.Create();
+
+            var allExpensePayments = dataContext.ExpensePayments
+                .Where(x => x.AccountId == AccountId)
+                .ToList();
 
             var expenseSetups = dataContext.ExpenseSetups
                 .Where(x => x.AccountId == AccountId)
@@ -99,20 +111,47 @@ namespace ToyAssist.Web.Pages
                 .Include(i2 => i2.Account)
                 .ToList();
 
-            var expensePayments = dataContext.ExpensePayments
-                .Where(x => x.AccountId == AccountId)
-                .ToList();
-
             // Currency List
-            CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList();
+            dataSource.CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList();
 
             // Currencies in use
             var currencyIdsInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
-            CurrenciesInUse = CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
+            dataSource.CurrenciesInUse = dataSource.CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
 
+            ViewModel = BuildExpenseViewModel();
+            return dataSource;
 
-            ViewModel = BuildViewModel(expenseSetups, expensePayments);
+            ExpenseViewModel BuildExpenseViewModel()
+            {
+                var expenseViewModel = new ExpenseViewModel();
+                var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
+                for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroups.Count; indexCurrencyGroup++)
+                {
+                    var currencyGroup = new CurrencyGroupViewModel();
+                    currencyGroup.Currency = CurrencyViewModelMapper.Map(currencyGroups[indexCurrencyGroup].Currency);
+                    var expenseSetupGropedItems = expenseSetups.Where(x => x.CurrencyId == currencyGroup?.Currency?.CurrencyId).ToList();
+                    for (int indexExpenseItem = 0; indexExpenseItem < expenseSetupGropedItems.Count; indexExpenseItem++)
+                    {
+                        var expenseSetupItem = expenseSetupGropedItems[indexExpenseItem];
+                        var expenseItemViewModel = new ExpenseItemViewModel();
 
+                        expenseItemViewModel.ExpenseSetup = ExpenseSetupViewModelMapper.Map(expenseSetupItem);
+
+                        expenseItemViewModel.AccountId = expenseSetupItem.AccountId;
+                        expenseItemViewModel.ExpenseSetupId = expenseSetupItem.ExpenseSetupId;
+
+                        expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
+                        expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
+                        expenseItemViewModel.ExpensePayments = GetExpensePayments(allExpensePayments, expenseSetupItem);
+
+                        currencyGroup.ExpenseItems.Add(expenseItemViewModel);
+                    }
+                    currencyGroup.TotalAmount = expenseSetupGropedItems.Sum(x => x.Amount ?? 0);
+                    currencyGroup.TotalTaxAmount = expenseSetupGropedItems.Sum(x => x.TaxAmount ?? 0);
+                    expenseViewModel.CurrencyGroups.Add(currencyGroup);
+                }
+                return expenseViewModel;
+            }
         }
 
         private async void OnPaymentDataUpdatedEvent(ExpenseItemViewModel data)
@@ -138,37 +177,7 @@ namespace ToyAssist.Web.Pages
             }
         }
 
-        private ExpenseViewModel BuildViewModel(List<ExpenseSetup> expenseSetups, List<ExpensePayment> allExpensePayments)
-        {
-            var expenseViewModel = new ExpenseViewModel();
-            var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
-            for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroups.Count; indexCurrencyGroup++)
-            {
-                var currencyGroup = new CurrencyGroupViewModel();
-                currencyGroup.Currency = CurrencyViewModelMapper.Map(currencyGroups[indexCurrencyGroup].Currency);
-                var expenseSetupGropedItems = expenseSetups.Where(x => x.CurrencyId == currencyGroup?.Currency?.CurrencyId).ToList();
-                for (int indexExpenseItem = 0; indexExpenseItem < expenseSetupGropedItems.Count; indexExpenseItem++)
-                {
-                    var expenseSetupItem = expenseSetupGropedItems[indexExpenseItem];
-                    var expenseItemViewModel = new ExpenseItemViewModel();
 
-                    expenseItemViewModel.ExpenseSetup = ExpenseSetupViewModelMapper.Map(expenseSetupItem);
-
-                    expenseItemViewModel.AccountId = expenseSetupItem.AccountId;
-                    expenseItemViewModel.ExpenseSetupId = expenseSetupItem.ExpenseSetupId;
-
-                    expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
-                    expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
-                    expenseItemViewModel.ExpensePayments = GetExpensePayments(allExpensePayments, expenseSetupItem);
-
-                    currencyGroup.ExpenseItems.Add(expenseItemViewModel);
-                }
-                currencyGroup.TotalAmount = expenseSetupGropedItems.Sum(x => x.Amount ?? 0);
-                currencyGroup.TotalTaxAmount = expenseSetupGropedItems.Sum(x => x.TaxAmount ?? 0);
-                expenseViewModel.CurrencyGroups.Add(currencyGroup);
-            }
-            return expenseViewModel;
-        }
 
         private static List<ExpensePaymentViewModel?> GetExpensePayments(List<ExpensePayment> allExpensePayments, ExpenseSetup expenseSetup)
         {
@@ -178,7 +187,7 @@ namespace ToyAssist.Web.Pages
             for (int i = 0; i < runningExpensePayments.Count; i++)
             {
                 var runningExpensePayment = runningExpensePayments[i];
-                var expensePaymentExist = allExpensePayments.FirstOrDefault(x => x.AccountId == expenseSetup.AccountId 
+                var expensePaymentExist = allExpensePayments.FirstOrDefault(x => x.AccountId == expenseSetup.AccountId
                                                                         && x.ExpenseSetupId == expenseSetup.ExpenseSetupId
                                                                         && x.Month == ((DateTime)runningExpensePayment.DateAndTime).Month
                                                                         && x.Year == ((DateTime)runningExpensePayment.DateAndTime).Year
@@ -202,7 +211,7 @@ namespace ToyAssist.Web.Pages
                     expensePayment = ExpensePaymentViewModelMapper.Map(expensePaymentExist);
                     expensePayment.Index = runningExpensePayment.Index;
                 }
-               
+
                 expensePayments.Add(expensePayment);
             }
             return expensePayments;
