@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using ToyAssist.Web.ViewModels;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Pages
 {
@@ -7,6 +7,6 @@ namespace ToyAssist.Web.Pages
     public partial class ExpenseSetupViewTotals
     {
         [Parameter]
-        public required ExpenseSetupViewModel ModalData { get; set; }
+        public required ExpenseSetupModel ModalData { get; set; }
     }
 }

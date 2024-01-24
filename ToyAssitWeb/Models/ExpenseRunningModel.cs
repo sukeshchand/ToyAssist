@@ -1,4 +1,4 @@
-﻿namespace ToyAssist.Web.ViewModels
+﻿namespace ToyAssist.Web.Models
 {
     public class ExpenseRunningModel
     {

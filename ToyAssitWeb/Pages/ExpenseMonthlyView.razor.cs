@@ -12,6 +12,7 @@ using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.Helpers;
 using ToyAssist.Web.Mappers.ViewModelRepoMappers;
+using ToyAssist.Web.Models;
 using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Pages
@@ -21,8 +22,8 @@ namespace ToyAssist.Web.Pages
     {
         public class DataSourceObjects
         {
-            public List<CurrencyViewModel> CurrencyList { get; set; }
-            public List<CurrencyViewModel> CurrenciesInUse { get; set; }
+            public List<CurrencyModel> CurrencyList { get; set; }
+            public List<CurrencyModel> CurrenciesInUse { get; set; }
         }
 
         public DataSourceObjects DataSource { get; set; }
@@ -112,7 +113,7 @@ namespace ToyAssist.Web.Pages
                 .ToList();
 
             // Currency List
-            dataSource.CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList();
+            dataSource.CurrencyList = dataContext.Currencies.ToList().Select(CurrencyModelMapper.Map).ToList();
 
             // Currencies in use
             var currencyIdsInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
@@ -128,14 +129,14 @@ namespace ToyAssist.Web.Pages
                 for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroups.Count; indexCurrencyGroup++)
                 {
                     var currencyGroup = new CurrencyGroupViewModel();
-                    currencyGroup.Currency = CurrencyViewModelMapper.Map(currencyGroups[indexCurrencyGroup].Currency);
+                    currencyGroup.Currency = CurrencyModelMapper.Map(currencyGroups[indexCurrencyGroup].Currency);
                     var expenseSetupGropedItems = expenseSetups.Where(x => x.CurrencyId == currencyGroup?.Currency?.CurrencyId).ToList();
                     for (int indexExpenseItem = 0; indexExpenseItem < expenseSetupGropedItems.Count; indexExpenseItem++)
                     {
                         var expenseSetupItem = expenseSetupGropedItems[indexExpenseItem];
                         var expenseItemViewModel = new ExpenseItemViewModel();
 
-                        expenseItemViewModel.ExpenseSetup = ExpenseSetupViewModelMapper.Map(expenseSetupItem);
+                        expenseItemViewModel.ExpenseSetup = ExpenseSetupModelMapper.Map(expenseSetupItem);
 
                         expenseItemViewModel.AccountId = expenseSetupItem.AccountId;
                         expenseItemViewModel.ExpenseSetupId = expenseSetupItem.ExpenseSetupId;
@@ -179,11 +180,11 @@ namespace ToyAssist.Web.Pages
 
 
 
-        private static List<ExpensePaymentViewModel?> GetExpensePayments(List<ExpensePayment> allExpensePayments, ExpenseSetup expenseSetup)
+        private static List<ExpensePaymentModel?> GetExpensePayments(List<ExpensePayment> allExpensePayments, ExpenseSetup expenseSetup)
         {
-            var expenseSetupViewModel = ExpenseSetupViewModelMapper.Map(expenseSetup);
+            var expenseSetupViewModel = ExpenseSetupModelMapper.Map(expenseSetup);
             var runningExpensePayments = GeneralHelper.GetExpenseRunningList(expenseSetupViewModel);
-            var expensePayments = new List<ExpensePaymentViewModel>();
+            var expensePayments = new List<ExpensePaymentModel>();
             for (int i = 0; i < runningExpensePayments.Count; i++)
             {
                 var runningExpensePayment = runningExpensePayments[i];
@@ -192,10 +193,10 @@ namespace ToyAssist.Web.Pages
                                                                         && x.Month == ((DateTime)runningExpensePayment.DateAndTime).Month
                                                                         && x.Year == ((DateTime)runningExpensePayment.DateAndTime).Year
                                                                         );
-                ExpensePaymentViewModel? expensePayment = null;
+                ExpensePaymentModel? expensePayment = null;
                 if (expensePaymentExist == null)
                 {
-                    expensePayment = new ExpensePaymentViewModel()
+                    expensePayment = new ExpensePaymentModel()
                     {
                         Index = runningExpensePayment.Index,
                         AccountId = expenseSetup.AccountId,
@@ -208,7 +209,7 @@ namespace ToyAssist.Web.Pages
                 }
                 else
                 {
-                    expensePayment = ExpensePaymentViewModelMapper.Map(expensePaymentExist);
+                    expensePayment = ExpensePaymentModelMapper.Map(expensePaymentExist);
                     expensePayment.Index = runningExpensePayment.Index;
                 }
 

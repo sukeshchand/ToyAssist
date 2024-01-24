@@ -4,8 +4,7 @@ using BlazorBootstrap;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using ToyAssist.Web.ViewModels;
-
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Pages
 {
@@ -13,9 +12,9 @@ namespace ToyAssist.Web.Pages
     {
         public ExpenseOverviewPopup()
         {
-            ModalData = new ExpenseSetupViewModel();
+            ModalData = new ExpenseSetupModel();
         }
-        private ExpenseSetupViewModel ModalData { get; set; }
+        private ExpenseSetupModel ModalData { get; set; }
         private Modal ModalRef = default!;
 
         JsonSerializerOptions options = new JsonSerializerOptions
@@ -31,7 +30,7 @@ namespace ToyAssist.Web.Pages
             await JSRuntime.InvokeVoidAsync("scrollIntoView", elementRefToScrollInto);
         }
 
-        public async Task ShowModalAsync(ExpenseSetupViewModel? data)
+        public async Task ShowModalAsync(ExpenseSetupModel? data)
         {
             ModalData = data;
             await ModalRef.ShowAsync();
@@ -40,7 +39,7 @@ namespace ToyAssist.Web.Pages
         }
                 
 
-        private async Task OnShowModalClick(ExpenseSetupViewModel? data)
+        private async Task OnShowModalClick(ExpenseSetupModel? data)
         {
             
         }

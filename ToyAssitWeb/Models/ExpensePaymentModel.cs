@@ -1,9 +1,9 @@
 ﻿using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Enums;
 
-namespace ToyAssist.Web.ViewModels
+namespace ToyAssist.Web.Models
 {
-    public class ExpensePaymentViewModel
+    public class ExpensePaymentModel
     {
         public long ExpensePaymentId { get; set; }
         public int Index { get; set; }

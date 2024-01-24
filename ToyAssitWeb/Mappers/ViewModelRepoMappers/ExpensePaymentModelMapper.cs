@@ -1,18 +1,18 @@
 ﻿using ToyAssist.Web.DatabaseModels.Models;
-using ToyAssist.Web.ViewModels;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
 {
-    public static class ExpensePaymentViewModelMapper
+    public static class ExpensePaymentModelMapper
     {
-        public static ExpensePaymentViewModel? Map(ExpensePayment? item, bool isCurrent = false)
+        public static ExpensePaymentModel? Map(ExpensePayment? item, bool isCurrent = false)
         {
             if (item == null)
             {
                 return null;
             }
 
-            return new ExpensePaymentViewModel()
+            return new ExpensePaymentModel()
             {
                 AccountId = item.AccountId,
                 ExpensePaymentId = item.ExpensePaymentId,

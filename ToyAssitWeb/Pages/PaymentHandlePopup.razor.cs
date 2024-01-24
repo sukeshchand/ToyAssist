@@ -6,6 +6,7 @@ using Microsoft.JSInterop;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Mappers.ViewModelRepoMappers;
+using ToyAssist.Web.Models;
 
 
 namespace ToyAssist.Web.Pages
@@ -32,7 +33,7 @@ namespace ToyAssist.Web.Pages
         private Modal ModalRef = default!;
 
         [Parameter]
-        public required List<CurrencyViewModel> CurrenciesInUse { get; set; } = new List<CurrencyViewModel>();
+        public required List<CurrencyModel> CurrenciesInUse { get; set; } = new List<CurrencyModel>();
 
         public bool IsShowCurrencyConversion { get; set; }
 
@@ -82,7 +83,7 @@ namespace ToyAssist.Web.Pages
             }
             // Refresh payment list
             var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
-            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
+            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
             await OnDataUpdatedEvent(ModalData);
             await OnHideModalClick();
         }
@@ -101,7 +102,7 @@ namespace ToyAssist.Web.Pages
             }
             // Refresh payment list
             var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
-            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
+            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
             await OnDataUpdatedEvent(ModalData);
             await OnHideModalClick();
         }

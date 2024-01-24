@@ -7,8 +7,8 @@ using System.Text;
 using System.Text.Json;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
+using ToyAssist.Web.Models;
 using ToyAssist.Web.TypeExtensions;
-using ToyAssist.Web.ViewModels;
 
 namespace ToyAssist.Web.Helpers
 {
@@ -142,7 +142,7 @@ namespace ToyAssist.Web.Helpers
             return dataContext.Database.SqlQuery<T>(sqlExec).ToList();
         }
 
-        public static string? FormattedAmount(decimal? amount, CurrencyViewModel? currency = null)
+        public static string? FormattedAmount(decimal? amount, CurrencyModel? currency = null)
         {
             if (amount == null) { return null; }
 
@@ -168,7 +168,7 @@ namespace ToyAssist.Web.Helpers
             return currencyConversionRates;
         }
 
-        public static List<string> GetConversionList(CurrencyViewModel fromCurrency, List<CurrencyViewModel> toCurrencies, decimal amount)
+        public static List<string> GetConversionList(CurrencyModel fromCurrency, List<CurrencyModel> toCurrencies, decimal amount)
         {
             var currencyConversionRates = GeneralHelper.CurrencyConversionRates();
             var toCurrenciesActual = toCurrencies.Where(c => c.CurrencyId != fromCurrency.CurrencyId);
@@ -195,7 +195,7 @@ namespace ToyAssist.Web.Helpers
             return conversionList;
         }
 
-        public static List<ExpenseRunningModel> GetExpenseRunningList(ExpenseSetupViewModel expenseSetup)
+        public static List<ExpenseRunningModel> GetExpenseRunningList(ExpenseSetupModel expenseSetup)
         {
             var list = new List<ExpenseRunningModel>();
 
@@ -247,7 +247,7 @@ namespace ToyAssist.Web.Helpers
             // End of method - return list
 
             // Local methods
-            DateTime GetFirstBillPaymentDate(ExpenseSetupViewModel expenseSetup, DateTime startDate)
+            DateTime GetFirstBillPaymentDate(ExpenseSetupModel expenseSetup, DateTime startDate)
             {
                 if (expenseSetup.BillPaymentDay == null)
                 {
