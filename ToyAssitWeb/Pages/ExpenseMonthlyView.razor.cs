@@ -22,7 +22,6 @@ namespace ToyAssist.Web.Pages
     {
 
         List<CurrencyConversionRate> CurrencyConversionRates = new List<CurrencyConversionRate>();
-        //List<ExpensePayment> ExpensePayments = new List<ExpensePayment>();
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
         public List<CurrencyViewModel> CurrenciesInUse { get; set; }
@@ -73,7 +72,6 @@ namespace ToyAssist.Web.Pages
 
         private async Task OnClickGoCurrent(ExpenseItemViewModel expenseItem)
         {
-            // expenseItem.ExpensePaymentCurrentIndex = expenseItem.ExpensePayments.Count - 1;
             var item = expenseItem.ExpensePayments.Where(x=>x.Year >= DateTime.UtcNow.Year && x.Month >= DateTime.UtcNow.Month).OrderBy(o=>o.Year).ThenBy(o2=>o2.Month).FirstOrDefault();
             if (item != null)
             {
@@ -105,8 +103,6 @@ namespace ToyAssist.Web.Pages
                 .Where(x => x.AccountId == AccountId)
                 .ToList();
 
-            //ExpensePayments = expensePayments;
-
             // Currency List
             CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList();
 
@@ -121,9 +117,6 @@ namespace ToyAssist.Web.Pages
 
         private async void OnPaymentDataUpdatedEvent(ExpenseItemViewModel data)
         {
-            //e.ExpenseItemViewModel
-            //LoadData();
-            //return;
             var isUpdated = false;
             for (int indexCurrencyGroup = 0; indexCurrencyGroup < ViewModel.CurrencyGroups.Count; indexCurrencyGroup++)
             {
@@ -213,10 +206,6 @@ namespace ToyAssist.Web.Pages
                 expensePayments.Add(expensePayment);
             }
             return expensePayments;
-            // return expensePayments
-            //    .Where(x => x.ExpenseSetupId == expenseSetup.ExpenseSetupId)
-            //    .Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month))
-            //    .ToList();
         }
 
         private static string? GetBillGeneratedText(ExpenseItemViewModel expenseItemViewModel)
