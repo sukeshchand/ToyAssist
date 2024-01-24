@@ -18,7 +18,7 @@ using ToyAssist.Web.ViewModels;
 namespace ToyAssist.Web.Pages
 {
 
-    public partial class ExpenseMonthlyView
+    public partial class ExpenseMonthly
     {
         public class DataSourceObjects
         {
@@ -35,7 +35,7 @@ namespace ToyAssist.Web.Pages
 
         public ExpenseViewModel ViewModel { get; set; }
 
-        public ExpenseMonthlyView()
+        public ExpenseMonthly()
         {
             AccountId = 1;
             IsShowCurrencyConversion = true;
