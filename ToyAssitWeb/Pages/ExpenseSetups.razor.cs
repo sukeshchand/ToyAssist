@@ -10,7 +10,7 @@ using ToyAssist.Web.Models;
 namespace ToyAssist.Web.Pages
 {
 
-    public partial class ExpenseSetupView
+    public partial class ExpenseSetups
     {
 
         List<ExpenseSetupModel> ExpenseSetups = new List<ExpenseSetupModel>();
@@ -21,7 +21,7 @@ namespace ToyAssist.Web.Pages
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
 
-        public ExpenseSetupView()
+        public ExpenseSetups()
         {
             SetCulture("en-US");
             AccountId = 1;

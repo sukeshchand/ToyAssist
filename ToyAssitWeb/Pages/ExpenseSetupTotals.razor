@@ -75,7 +75,7 @@
 
     @* Total Amount to be paid *@
     @{
-        var totalInfo = ExpenseSetupView.CalculateTotalAmountToBePaidInfo(@ModalData);
+        var totalInfo = ExpenseSetups.CalculateTotalAmountToBePaidInfo(@ModalData);
     }
     <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
 
@@ -119,7 +119,7 @@
 
     @* Total Paid Amount *@
     @{
-        var totalPaidInfo = ExpenseSetupView.CalculateTotalAmountAlreadyPaidInfo(@ModalData);
+        var totalPaidInfo = ExpenseSetups.CalculateTotalAmountAlreadyPaidInfo(@ModalData);
     }
     <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
         <div style="font-size:small;display:inline-block;">Total paid till now</div>
@@ -164,7 +164,7 @@
 
     @* Total Left Amount *@
     @{
-        var totalLeftInfo = ExpenseSetupView.CalculateTotalAmountLeftToPayInfo(@ModalData);
+        var totalLeftInfo = ExpenseSetups.CalculateTotalAmountLeftToPayInfo(@ModalData);
     }
     <div class="col-3" style="max-width:180px; display: inline-block; text-align:center; border:1px solid #ccc; padding:5px; border-radius:5px; background-color:aquamarine; margin:10px 10px 10px 0; color:black;">
         <div style="font-size:small;display:inline-block;">Total left</div>
