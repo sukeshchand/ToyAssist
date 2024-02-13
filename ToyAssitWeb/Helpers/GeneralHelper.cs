@@ -171,6 +171,10 @@ namespace ToyAssist.Web.Helpers
 
         public static List<string> GetConversionList(CurrencyModel fromCurrency, List<CurrencyModel> toCurrencies, decimal amount)
         {
+            if(toCurrencies == null)
+            {
+                return new List<string>();
+            }
             var currencyConversionRates = GeneralHelper.CurrencyConversionRates();
             var toCurrenciesActual = toCurrencies.Where(c => c.CurrencyId != fromCurrency.CurrencyId);
             var conversionList = new List<string>();

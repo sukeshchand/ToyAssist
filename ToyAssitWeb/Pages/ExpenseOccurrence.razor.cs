@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
@@ -90,8 +91,6 @@ namespace ToyAssist.Web.Pages
 
         private ExpenseOccurrenceViewModel LoadData()
         {
-            var viewModel = new ExpenseOccurrenceViewModel();
-
             var dataContext = DataContextFactory.Create();
 
             var allExpensePayments = dataContext.ExpensePayments
@@ -105,46 +104,48 @@ namespace ToyAssist.Web.Pages
                 .ToList();
 
             // Currency List
+            var viewModel = new ExpenseOccurrenceViewModel();
             viewModel.CurrencyList = dataContext.Currencies.ToList().Select(CurrencyModelMapper.Map).ToList();
 
             // Currencies in use
             var currencyIdsInUse = expenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
             viewModel.CurrenciesInUse = viewModel.CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
 
-            viewModel = BuildExpenseViewModel();
+            viewModel.CurrencyGroups = BuildCurrencyGroups(expenseSetups, allExpensePayments);
             return viewModel;
+           
+        }
 
-            ExpenseOccurrenceViewModel BuildExpenseViewModel()
+        private static List<CurrencyGroupViewModel> BuildCurrencyGroups(List<ExpenseSetup> expenseSetups, List<ExpensePayment> allExpensePayments)
+        {
+            var currencyGroups = new List<CurrencyGroupViewModel>();
+            var currencyGroupsWithCount = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
+            for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroupsWithCount.Count; indexCurrencyGroup++)
             {
-                var expenseViewModel = new ExpenseOccurrenceViewModel();
-                var currencyGroups = expenseSetups.GroupBy(g => g.Currency).Select(g => new { Currency = g.Key, Count = g.Count() }).ToList();
-                for (int indexCurrencyGroup = 0; indexCurrencyGroup < currencyGroups.Count; indexCurrencyGroup++)
+                var currencyGroup = new CurrencyGroupViewModel();
+                currencyGroup.Currency = CurrencyModelMapper.Map(currencyGroupsWithCount[indexCurrencyGroup].Currency);
+                var expenseSetupGropedItems = expenseSetups.Where(x => x.CurrencyId == currencyGroup?.Currency?.CurrencyId).ToList();
+                for (int indexExpenseItem = 0; indexExpenseItem < expenseSetupGropedItems.Count; indexExpenseItem++)
                 {
-                    var currencyGroup = new CurrencyGroupViewModel();
-                    currencyGroup.Currency = CurrencyModelMapper.Map(currencyGroups[indexCurrencyGroup].Currency);
-                    var expenseSetupGropedItems = expenseSetups.Where(x => x.CurrencyId == currencyGroup?.Currency?.CurrencyId).ToList();
-                    for (int indexExpenseItem = 0; indexExpenseItem < expenseSetupGropedItems.Count; indexExpenseItem++)
-                    {
-                        var expenseSetupItem = expenseSetupGropedItems[indexExpenseItem];
-                        var expenseItemViewModel = new ExpenseItemViewModel();
+                    var expenseSetupItem = expenseSetupGropedItems[indexExpenseItem];
+                    var expenseItemViewModel = new ExpenseItemViewModel();
 
-                        expenseItemViewModel.ExpenseSetup = ExpenseSetupModelMapper.Map(expenseSetupItem);
+                    expenseItemViewModel.ExpenseSetup = ExpenseSetupModelMapper.Map(expenseSetupItem);
 
-                        expenseItemViewModel.AccountId = expenseSetupItem.AccountId;
-                        expenseItemViewModel.ExpenseSetupId = expenseSetupItem.ExpenseSetupId;
+                    expenseItemViewModel.AccountId = expenseSetupItem.AccountId;
+                    expenseItemViewModel.ExpenseSetupId = expenseSetupItem.ExpenseSetupId;
 
-                        expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
-                        expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
-                        expenseItemViewModel.ExpensePayments = GeneralHelper.BuildExpensePayments(allExpensePayments, expenseSetupItem);
+                    expenseItemViewModel.BillGeneratedText = GetBillGeneratedText(expenseItemViewModel);
+                    expenseItemViewModel.BillPaymentText = GetBillPaymentText(expenseItemViewModel);
+                    expenseItemViewModel.ExpensePayments = GeneralHelper.BuildExpensePayments(allExpensePayments, expenseSetupItem);
 
-                        currencyGroup.ExpenseItems.Add(expenseItemViewModel);
-                    }
-                    currencyGroup.TotalAmount = expenseSetupGropedItems.Sum(x => x.Amount ?? 0);
-                    currencyGroup.TotalTaxAmount = expenseSetupGropedItems.Sum(x => x.TaxAmount ?? 0);
-                    expenseViewModel.CurrencyGroups.Add(currencyGroup);
+                    currencyGroup.ExpenseItems.Add(expenseItemViewModel);
                 }
-                return expenseViewModel;
+                currencyGroup.TotalAmount = expenseSetupGropedItems.Sum(x => x.Amount ?? 0);
+                currencyGroup.TotalTaxAmount = expenseSetupGropedItems.Sum(x => x.TaxAmount ?? 0);
+                currencyGroups.Add(currencyGroup);
             }
+            return currencyGroups;
         }
 
         private async void OnPaymentDataUpdatedEvent(ExpenseItemViewModel data)
@@ -198,8 +199,7 @@ namespace ToyAssist.Web.Pages
             {
                 return null;
             }
-
-            var reminderDateThisMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, (int)reminderDay);
+            DateTime reminderDateThisMonth = CreateReminderDateOfThisMonth(reminderDay);
             var alertFromDateForThisMonth = reminderDateThisMonth.AddDays(-1 * remindBeforeDays);
             if (DateTime.Now.Date >= alertFromDateForThisMonth.Date && DateTime.Now.Date <= reminderDateThisMonth.Date)
             {
@@ -214,6 +214,23 @@ namespace ToyAssist.Web.Pages
             }
 
             return null;
+        }
+
+        private static DateTime CreateReminderDateOfThisMonth(int? reminderDay)
+        {
+            DateTime dt;
+            try
+            {
+                if(DateTime.TryParse($"{DateTime.Now.Year}-{DateTime.Now.Month}-{reminderDay}", out dt))
+                {
+                    return dt;
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
         }
     }
 }
