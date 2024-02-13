@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backup", "Backup", "{42F94D33-BCF7-416A-B051-4BAB0EFE05EE}"
 	ProjectSection(SolutionItems) = preProject
 		DBBackup_2024_01_11_001.sql = DBBackup_2024_01_11_001.sql
+		DBBackup_Latest.sql = DBBackup_Latest.sql
 		Backup\Readme.txt = Backup\Readme.txt
 	EndProjectSection
 EndProject
