@@ -157,9 +157,17 @@ namespace ToyAssist.Web.Pages
                 {
                     if (ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem].ExpenseSetupId == data.ExpenseSetupId)
                     {
-                        ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem] = data;
-                        isUpdated = true;
-                        break;
+                        var expenseItem = ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem];
+                        for (int indexPayment = 0; indexPayment < expenseItem.ExpensePayments.Count; indexPayment++)
+                        {
+                            if (expenseItem.ExpensePayments[indexPayment].ExpensePaymentId == data.ExpensePayments?.FirstOrDefault()?.ExpensePaymentId)
+                            {
+                                // expenseItem.ExpensePayments[indexPayment] = data.ExpensePayments[0];
+                                isUpdated = true;
+                                break;
+                            }
+                        }
+                        if (isUpdated) break;
                     }
                 }
                 if (isUpdated) break;
