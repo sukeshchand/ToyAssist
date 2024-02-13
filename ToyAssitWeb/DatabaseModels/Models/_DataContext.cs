@@ -85,6 +85,7 @@ public partial class _DataContext : DbContext
                 .HasDefaultValueSql("(getutcdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.PaymentDoneDate).HasColumnType("datetime");
+            entity.Property(e => e.PaymentStatus).HasConversion(new EnumToNumberConverter<ExpensePaymentStatusEnum, int>());
         });
 
         modelBuilder.Entity<ExpenseSetup>(entity =>
