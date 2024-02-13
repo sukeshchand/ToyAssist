@@ -1,18 +1,18 @@
 ﻿using ToyAssist.Web.DatabaseModels.Models;
-using ToyAssist.Web.ViewModels;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
 {
-    public static class CurrencyViewModelMapper
+    public static class CurrencyModelMapper
     {
-        public static CurrencyViewModel? Map(Currency? item)
+        public static CurrencyModel? Map(Currency? item)
         {
             if(item == null)
             {
                 return null;
             }
 
-            return new CurrencyViewModel()
+            return new CurrencyModel()
             {
                 CurrencyId = item.CurrencyId,
                 CurrencyName = item.CurrencyName,

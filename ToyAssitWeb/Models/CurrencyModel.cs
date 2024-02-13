@@ -1,6 +1,6 @@
-﻿namespace ToyAssist.Web.ViewModels
+﻿namespace ToyAssist.Web.Models
 {
-    public class CurrencyViewModel
+    public class CurrencyModel
     {
         public int CurrencyId { get; set; }
 

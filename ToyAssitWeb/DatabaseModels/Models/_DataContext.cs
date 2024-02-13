@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+using ToyAssist.Web.Enums;
 
 namespace ToyAssist.Web.DatabaseModels.Models;
 
@@ -27,6 +30,7 @@ public partial class _DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.AcountId);

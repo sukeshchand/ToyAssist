@@ -1,8 +1,8 @@
 ﻿using ToyAssist.Web.DatabaseModels.Models;
 
-namespace ToyAssist.Web.ViewModels
+namespace ToyAssist.Web.Models
 {
-    public class ExpenseSetupViewModel
+    public class ExpenseSetupModel
     {
         public int ExpenseSetupId { get; set; }
 
@@ -21,7 +21,7 @@ namespace ToyAssist.Web.ViewModels
         public decimal? TaxAmount { get; set; }
 
         public int? CurrencyId { get; set; }
-        public CurrencyViewModel? Currency { get; set; }
+        public CurrencyModel? Currency { get; set; }
 
         public int? BillGeneratedDay { get; set; }
 

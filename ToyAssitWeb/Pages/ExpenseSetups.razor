@@ -1,4 +1,4 @@
-﻿@page "/ExpenseSetup"
+﻿@page "/ExpenseSetups"
 @using BlazorBootstrap
 @using ToyAssist.Web.DatabaseModels.Models
 @using ToyAssist.Web.Helpers
@@ -9,7 +9,7 @@
 
 <PageTitle>Assist Toy - Expense Setup</PageTitle>
 
-<ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
+<ExpenseOverviewPopup @ref="@expenseOverviewPopup"></ExpenseOverviewPopup>
 
 <div class="box" style="max-width:580px">
     <h2 style="padding:10px;">Expense setup</h2>
@@ -18,11 +18,11 @@
 
     <div style="padding:15px; margin: 5px; border:1px solid #ccc; border-radius:5px">
         @{
-            var groupedCurrencyIds = ExpenseSetups.GroupBy(x => x.Currency.CurrencyId).Select(g => g.Key).ToList();
+            var groupedCurrencyIds = ExpenseSetupItems.GroupBy(x => x.Currency.CurrencyId).Select(g => g.Key).ToList();
         }
         @foreach (var groupedCurrencyId in groupedCurrencyIds)
         {
-            var expenseSetupsByCurrency = ExpenseSetups.Where(x => x.CurrencyId == groupedCurrencyId).ToList();
+            var expenseSetupsByCurrency = ExpenseSetupItems.Where(x => x.CurrencyId == groupedCurrencyId).ToList();
             var groupedCurrency = CurrenciesInUse.FirstOrDefault(x => x.CurrencyId == groupedCurrencyId);
             @foreach (var (expenseSetup, index) in expenseSetupsByCurrency.Select((value, i) => (value, i)))
             {

@@ -5,34 +5,34 @@ using Microsoft.EntityFrameworkCore;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.Helpers;
 using ToyAssist.Web.Mappers.ViewModelRepoMappers;
-using ToyAssist.Web.ViewModels;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Pages
 {
-  
-    public partial class ExpenseSetupView
+
+    public partial class ExpenseSetups
     {
 
-        List<ExpenseSetupViewModel> ExpenseSetups = new List<ExpenseSetupViewModel>();
-        List<CurrencyViewModel> CurrenciesInUse = new List<CurrencyViewModel>();
-        List<CurrencyViewModel> CurrencyList = new List<CurrencyViewModel>();
+        List<ExpenseSetupModel> ExpenseSetupItems = new List<ExpenseSetupModel>();
+        List<CurrencyModel> CurrenciesInUse = new List<CurrencyModel>();
+        List<CurrencyModel> CurrencyList = new List<CurrencyModel>();
 
         public bool IsShowCurrencyConversion { get; set; }
         public bool IsPostBack { get; set; }
         public int AccountId { get; set; }
 
-        public ExpenseSetupView()
+        public ExpenseSetups()
         {
             SetCulture("en-US");
             AccountId = 1;
             IsShowCurrencyConversion = true;
         }
 
-        private ExpenseSetupViewModal expenseSetupViewModal = default;
+        private ExpenseOverviewPopup expenseOverviewPopup = default;
 
-        private async Task OnShowModalClick(ExpenseSetupViewModel? data)
+        private async Task OnShowModalClick(ExpenseSetupModel? data)
         {
-            await expenseSetupViewModal.ShowModalAsync(data);
+            await expenseOverviewPopup.ShowModalAsync(data);
         }
 
 
@@ -48,7 +48,7 @@ namespace ToyAssist.Web.Pages
             var dataContext = DataContextFactory.Create();
 
             // Currency List
-            CurrencyList = dataContext.Currencies.ToList().Select(CurrencyViewModelMapper.Map).ToList(); 
+            CurrencyList = dataContext.Currencies.ToList().Select(CurrencyModelMapper.Map).ToList(); 
             
             // Expense setup
             var expenseSetups = dataContext.ExpenseSetups
@@ -57,10 +57,10 @@ namespace ToyAssist.Web.Pages
                 .Include(i2 => i2.Account)
                 .ToList();
 
-            ExpenseSetups = expenseSetups.Select(x => (ExpenseSetupViewModel)ExpenseSetupViewModelMapper.Map(x)).ToList();
+            ExpenseSetupItems = expenseSetups.Select(x => (ExpenseSetupModel)ExpenseSetupModelMapper.Map(x)).ToList();
 
             // Currencies in use
-            var currencyIdsInUse = ExpenseSetups.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
+            var currencyIdsInUse = ExpenseSetupItems.Where(w => w.Currency != null).Select(x => x.Currency.CurrencyId).Distinct().ToList();
             CurrenciesInUse = CurrencyList.Where(x => currencyIdsInUse.Contains(x.CurrencyId)).ToList();
         }
 
@@ -91,13 +91,13 @@ namespace ToyAssist.Web.Pages
 
         }
 
-        public string GetConversionListForToolTip(CurrencyViewModel baseCurrency, decimal amount)
+        public string GetConversionListForToolTip(CurrencyModel baseCurrency, decimal amount)
         {
             var list = GeneralHelper.GetConversionList(baseCurrency, CurrenciesInUse, amount);
             return $" ≈ {string.Join(", ", list)}";
         }
 
-        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountToBePaidInfo(ExpenseSetupViewModel? expenseSetupItem)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountToBePaidInfo(ExpenseSetupModel? expenseSetupItem)
         {
             if(expenseSetupItem?.StartDate == null || expenseSetupItem.EndDate == null)
             {
@@ -113,7 +113,7 @@ namespace ToyAssist.Web.Pages
         }
 
 
-        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountAlreadyPaidInfo(ExpenseSetupViewModel? expenseSetupItem)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountAlreadyPaidInfo(ExpenseSetupModel? expenseSetupItem)
         {
             if (expenseSetupItem.StartDate == null)
             {
@@ -128,7 +128,7 @@ namespace ToyAssist.Web.Pages
             return (amountInfo.TotalAmount, amountInfo.TotalTax, false);
         }
 
-        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountLeftToPayInfo(ExpenseSetupViewModel? expenseSetupItem)
+        public static (decimal TotalAmount, decimal TotalTax, bool IsError) CalculateTotalAmountLeftToPayInfo(ExpenseSetupModel? expenseSetupItem)
         {
             if (expenseSetupItem.EndDate == null)
             {
@@ -143,7 +143,7 @@ namespace ToyAssist.Web.Pages
             return (amountInfo.TotalAmount, amountInfo.TotalTax, false);
         }
 
-        private static (decimal TotalAmount, decimal TotalTax) CalculateTotalAmount(ExpenseSetupViewModel expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
+        private static (decimal TotalAmount, decimal TotalTax) CalculateTotalAmount(ExpenseSetupModel expenseSetupItem, DateTime calculationStartDate, DateTime calculationEndDate)
         {
             var totalAmount = 0m;
             var totalTax = 0m;

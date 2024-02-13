@@ -8,13 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="DatabaseModels\Entities\**" />
-    <Compile Remove="Models\**" />
+    <Compile Remove="EventArgsModels\**" />
     <Content Remove="DatabaseModels\Entities\**" />
-    <Content Remove="Models\**" />
+    <Content Remove="EventArgsModels\**" />
     <EmbeddedResource Remove="DatabaseModels\Entities\**" />
-    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="EventArgsModels\**" />
     <None Remove="DatabaseModels\Entities\**" />
-    <None Remove="Models\**" />
+    <None Remove="EventArgsModels\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +35,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="EventArgsModels\" />
   </ItemGroup>
 
 </Project>

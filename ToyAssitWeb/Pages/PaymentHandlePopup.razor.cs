@@ -6,15 +6,16 @@ using Microsoft.JSInterop;
 using ToyAssist.Web.Factories;
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Mappers.ViewModelRepoMappers;
+using ToyAssist.Web.Models;
 
 
 namespace ToyAssist.Web.Pages
 {
 
 
-    public partial class ExpenseMonthlyHandlePaymentModal
+    public partial class PaymentHandlePopup
     {
-        public ExpenseMonthlyHandlePaymentModal()
+        public PaymentHandlePopup()
         {
             ModalData = new ExpenseItemViewModel();
         }
@@ -32,7 +33,7 @@ namespace ToyAssist.Web.Pages
         private Modal ModalRef = default!;
 
         [Parameter]
-        public required List<CurrencyViewModel> CurrenciesInUse { get; set; } = new List<CurrencyViewModel>();
+        public required List<CurrencyModel> CurrenciesInUse { get; set; } = new List<CurrencyModel>();
 
         public bool IsShowCurrencyConversion { get; set; }
 
@@ -65,7 +66,7 @@ namespace ToyAssist.Web.Pages
                     AccountId = ModalData.AccountId,
                     CreatedDateTime = DateTime.UtcNow,
                     ExpenseSetupId = ModalData.ExpenseSetupId,
-                    ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done,
+                    PaymentStatus = Enums.ExpensePaymentStatusEnum.Paid,
                     Month = DateTime.Now.Month,
                     Year = DateTime.Now.Year,
                     PaymentDoneDate = DateTime.UtcNow
@@ -74,15 +75,15 @@ namespace ToyAssist.Web.Pages
                 await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
                 await dataContext.SaveChangesAsync();
             }
-            else if (expensePayment.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Pending)
+            else if (expensePayment.PaymentStatus == Enums.ExpensePaymentStatusEnum.Pending)
             {
                 expensePayment.PaymentDoneDate = DateTime.UtcNow;
-                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Done;
+                expensePayment.PaymentStatus = Enums.ExpensePaymentStatusEnum.Paid;
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list
             var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
-            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
+            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
             await OnDataUpdatedEvent(ModalData);
             await OnHideModalClick();
         }
@@ -96,12 +97,12 @@ namespace ToyAssist.Web.Pages
             if (expensePayment != null)
             {
                 expensePayment.PaymentDoneDate = null;
-                expensePayment.ExpensePaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
+                expensePayment.PaymentStatus = Enums.ExpensePaymentStatusEnum.Pending;
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list
             var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
-            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentViewModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
+            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
             await OnDataUpdatedEvent(ModalData);
             await OnHideModalClick();
         }

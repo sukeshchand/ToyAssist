@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 using ToyAssist.Web.DatabaseModels.Models;
 using ToyAssist.Web.Factories;
-using ToyAssist.Web.ViewModels;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Shared.Components
 {
@@ -23,7 +23,7 @@ namespace ToyAssist.Web.Shared.Components
         public required decimal? TaxAmount { get; set; }
 
         [Parameter]
-        public required CurrencyViewModel? Currency { get; set; }
+        public required CurrencyModel? Currency { get; set; }
 
     }
 }

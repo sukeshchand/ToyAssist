@@ -1,4 +1,4 @@
-﻿@page "/ExpenseMonthly"
+﻿@page "/ExpenseOccurrence"
 @using BlazorBootstrap
 @using ToyAssist.Web.DatabaseModels.Models
 @using ToyAssist.Web.Helpers
@@ -9,9 +9,9 @@
 @using ToyAssist.Web.Pages;
 
 
-<ExpenseMonthlyHandlePaymentModal @ref="@expenseMonthlyHandlePaymentModal" CurrenciesInUse="@CurrenciesInUse" OnPaymentDataUpdatedEvent="@OnPaymentDataUpdatedEvent"></ExpenseMonthlyHandlePaymentModal>
+<PaymentHandlePopup @ref="@paymentHandlePopup" CurrenciesInUse="@ViewModel.CurrenciesInUse" OnPaymentDataUpdatedEvent="@OnPaymentDataUpdatedEvent"></PaymentHandlePopup>
 
-<ExpenseSetupViewModal @ref="@expenseSetupViewModal"></ExpenseSetupViewModal>
+<ExpenseOverviewPopup @ref="@expenseOverviewPopup"></ExpenseOverviewPopup>
 
 
 <PageTitle>Assist Toy - Expense Monthly</PageTitle>
@@ -77,7 +77,7 @@
                                     @if (IsShowCurrencyConversion)
                                     {
                                         <div style="margin-right: -25px;">
-                                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
+                                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@currencyGroup?.Currency" CurrenciesTo="@ViewModel.CurrenciesInUse" Amount="@expenseItem.ExpenseSetup.Amount"></CurrencyConversionBox>
                                         </div>
                                     }
                                 </div>
@@ -126,7 +126,7 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-12 box" style="border: 0px solid #ccc">
-                                                                    @if (expensePayments[i]?.ExpensePaymentStatus == Enums.ExpensePaymentStatusEnum.Done)
+                                                                    @if (expensePayments[i]?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                                                                     {
                                                                         <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
                                                                             <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
@@ -224,7 +224,7 @@
                                 @if (IsShowCurrencyConversion)
                                 {
                                     <div style="margin: 10px 0 10px 0;">
-                                        <CurrencyConversionBox CurrencyFrom="@currencyGroup.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@currencyGroup.TotalAmount"></CurrencyConversionBox>
+                                        <CurrencyConversionBox CurrencyFrom="@currencyGroup.Currency" CurrenciesTo="@ViewModel.CurrenciesInUse" Amount="@currencyGroup.TotalAmount"></CurrencyConversionBox>
                                     </div>
                                 }
                             </div>

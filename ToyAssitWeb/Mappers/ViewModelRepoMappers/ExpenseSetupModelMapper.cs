@@ -1,18 +1,18 @@
 ﻿using ToyAssist.Web.DatabaseModels.Models;
-using ToyAssist.Web.ViewModels;
+using ToyAssist.Web.Models;
 
 namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
 {
-    public static class ExpenseSetupViewModelMapper
+    public static class ExpenseSetupModelMapper
     {
-        public static ExpenseSetupViewModel? Map(ExpenseSetup? item)
+        public static ExpenseSetupModel? Map(ExpenseSetup? item)
         {
             if (item == null)
             {
                 return null;
             }           
 
-            return new ExpenseSetupViewModel()
+            return new ExpenseSetupModel()
             {
                 ExpenseSetupId = item.ExpenseSetupId,
                 AccountId = item.AccountId,
@@ -28,7 +28,7 @@ namespace ToyAssist.Web.Mappers.ViewModelRepoMappers
                 ExpirationDay = item.ExpirationDay,
                 PaymentUrl = item.PaymentUrl,
                 AccountProfileUrl = item.AccountProfileUrl,
-                Currency = CurrencyViewModelMapper.Map(item.Currency)
+                Currency = CurrencyModelMapper.Map(item.Currency)
             };
         }
     }
