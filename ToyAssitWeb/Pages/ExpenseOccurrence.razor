@@ -95,6 +95,7 @@
                                                 <div class="col-12">
                                                     @for (int i = 0; i < expensePayments.Count; i++)
                                                     {
+                                                        var expensePayment = expensePayments[i];
                                                         var isShowCss = expenseItem.ExpensePaymentCurrentIndex == i ? "" : "display:none";
                                                         <div style="@isShowCss">
                                                             <div class="row">
@@ -104,15 +105,15 @@
                                                                     </span>
                                                                     <br />
                                                                     <span>
-                                                                        @expensePayments[i].Year
+                                                                        @expensePayment.Year
                                                                     </span>
                                                                     <span>-</span>
                                                                     <span>
-                                                                        @expensePayments[i].Month
+                                                                        @expensePayment.Month
                                                                     </span>
                                                                     <span>-</span>
                                                                     <span>
-                                                                        @GeneralHelper.GetMonthName((int)@expensePayments[i].Month)
+                                                                        @GeneralHelper.GetMonthName((int)@expensePayment.Month)
                                                                     </span>
                                                                 </div>
                                                                 <div class="col-6" style="text-align:right;">
@@ -120,16 +121,16 @@
                                                                         Amount paid
                                                                     </span>
                                                                     <span>
-                                                                        <AmountBox Amount="@expensePayments[i].Amount" TaxAmount="@expensePayments[i].Tax" Currency="@currencyGroup?.Currency"></AmountBox>
+                                                                        <AmountBox Amount="@expensePayment.Amount" TaxAmount="@expensePayment.Tax" Currency="@currencyGroup?.Currency"></AmountBox>
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-12 box" style="border: 0px solid #ccc">
-                                                                    @if (expensePayments[i]?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
+                                                                    @if (expensePayment?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                                                                     {
                                                                         <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px;">
-                                                                            <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                                                            <Button Color="ButtonColor.Success" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem, expensePayment)">
                                                                                 <Icon Name="IconName.CheckCircleFill"></Icon>
                                                                                 <span>
                                                                                     Payment handled - Done
@@ -140,7 +141,7 @@
                                                                     else
                                                                     {
                                                                         <div style="text-align:right; margin: 5px 0 5px 5px; margin-right: -10px; ">
-                                                                            <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem)">
+                                                                            <Button Color="ButtonColor.Danger" Size="Size.ExtraSmall" @onclick="(data)=>onHandlePayment(expenseItem, expensePayment)">
                                                                                 <Icon Name="IconName.ExclamationCircleFill"></Icon>
                                                                                 <span>
                                                                                     Payment not handled

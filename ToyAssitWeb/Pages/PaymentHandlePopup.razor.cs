@@ -12,44 +12,37 @@ using ToyAssist.Web.Models;
 namespace ToyAssist.Web.Pages
 {
 
-
     public partial class PaymentHandlePopup
     {
+        private ExpenseItemViewModel ExpenseItem { get; set; }
+        private ExpensePaymentModel ExpensePayment { get; set; }
+        private Modal ModalRef = default!;
+
         public PaymentHandlePopup()
         {
-            ModalData = new ExpenseItemViewModel();
+            ExpenseItem = new ExpenseItemViewModel();
         }
 
         [Parameter]
-        public EventCallback<ExpenseItemViewModel?> OnPaymentDataUpdatedEvent { get; set; }
+        public EventCallback<ExpensePaymentModel?> OnPaymentDataUpdatedEvent { get; set; }
 
         // This method will be called to raise the event.
-        protected async virtual Task OnDataUpdatedEvent(ExpenseItemViewModel? data)
+        protected async virtual Task OnDataUpdatedEvent(ExpensePaymentModel? data)
         {
             await OnPaymentDataUpdatedEvent.InvokeAsync(data);
         }
-
-        private ExpenseItemViewModel ModalData { get; set; }
-        private Modal ModalRef = default!;
 
         [Parameter]
         public required List<CurrencyModel> CurrenciesInUse { get; set; } = new List<CurrencyModel>();
 
         public bool IsShowCurrencyConversion { get; set; }
 
-        private ElementReference elementRefToScrollInto = default;
-
-        private async Task ScrollIntoDivAsync(ElementReference elementRefToScrollInto)
-        {
-            await JSRuntime.InvokeVoidAsync("scrollIntoView", elementRefToScrollInto);
-        }
-
-        public async Task ShowModalAsync(ExpenseItemViewModel? data)
+        public async Task ShowModalAsync(ExpenseItemViewModel? data, ExpensePaymentModel? expensePayment)
         {
             IsShowCurrencyConversion = true;
-            ModalData = data;
+            ExpenseItem = data;
+            ExpensePayment = expensePayment;
             await ModalRef.ShowAsync();
-            await ScrollIntoDivAsync(elementRefToScrollInto);
             StateHasChanged();
         }
 
@@ -58,33 +51,35 @@ namespace ToyAssist.Web.Pages
             var dataContext = DataContextFactory.Create();
 
             // Update payment
-            var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => x.ExpenseSetupId == ModalData.ExpenseSetupId && x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year);
+            var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => x.ExpensePaymentId == ExpensePayment.ExpensePaymentId);
             if (expensePayment == null)
             {
                 var expensePaymentToAdd = new ExpensePayment()
                 {
-                    AccountId = ModalData.AccountId,
+                    AccountId = ExpensePayment.AccountId,
+                    Amount = ExpenseItem.ExpenseSetup.Amount,
                     CreatedDateTime = DateTime.UtcNow,
-                    ExpenseSetupId = ModalData.ExpenseSetupId,
+                    ExpenseSetupId = ExpensePayment.ExpenseSetupId,
                     PaymentStatus = Enums.ExpensePaymentStatusEnum.Paid,
-                    Month = DateTime.Now.Month,
-                    Year = DateTime.Now.Year,
+                    Month = ExpensePayment.Month,
+                    Year = ExpensePayment.Year,
                     PaymentDoneDate = DateTime.UtcNow
                 };
 
                 await dataContext.ExpensePayments.AddAsync(expensePaymentToAdd);
                 await dataContext.SaveChangesAsync();
+                expensePayment = expensePaymentToAdd;
             }
             else if (expensePayment.PaymentStatus == Enums.ExpensePaymentStatusEnum.Pending)
             {
                 expensePayment.PaymentDoneDate = DateTime.UtcNow;
+                expensePayment.Amount = ExpenseItem.ExpenseSetup.Amount;
                 expensePayment.PaymentStatus = Enums.ExpensePaymentStatusEnum.Paid;
                 await dataContext.SaveChangesAsync();
             }
-            // Refresh payment list
-            var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
-            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
-            await OnDataUpdatedEvent(ModalData);
+            // Refresh payment
+            var expensePaymentModel = ExpensePaymentModelMapper.Map(expensePayment);
+            await OnDataUpdatedEvent(expensePaymentModel);
             await OnHideModalClick();
         }
 
@@ -93,7 +88,11 @@ namespace ToyAssist.Web.Pages
             var dataContext = DataContextFactory.Create();
 
             // Update payment
-            var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => x.ExpenseSetupId == ModalData.ExpenseSetupId && x.Month == DateTime.Now.Month && x.Year == DateTime.Now.Year);
+            var expensePayment = dataContext.ExpensePayments.FirstOrDefault(x => 
+                                    x.ExpensePaymentId == ExpensePayment.ExpensePaymentId
+                                    && x.ExpenseSetupId == ExpenseItem.ExpenseSetupId 
+                                    && x.Year == ExpensePayment.Year
+                                    && x.Month == ExpensePayment.Month);
             if (expensePayment != null)
             {
                 expensePayment.PaymentDoneDate = null;
@@ -101,9 +100,8 @@ namespace ToyAssist.Web.Pages
                 await dataContext.SaveChangesAsync();
             }
             // Refresh payment list
-            var expensePayments = dataContext.ExpensePayments.Where(x => x.ExpenseSetupId == ModalData.ExpenseSetupId).ToList();
-            ModalData.ExpensePayments = expensePayments.Select(x => ExpensePaymentModelMapper.Map(x, x.Year == DateTime.Now.Year && x.Month == DateTime.Now.Month)).ToList();
-            await OnDataUpdatedEvent(ModalData);
+            var expensePaymentModel = ExpensePaymentModelMapper.Map(expensePayment);
+            await OnDataUpdatedEvent(expensePaymentModel);
             await OnHideModalClick();
         }
 

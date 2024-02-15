@@ -78,9 +78,9 @@ namespace ToyAssist.Web.Pages
             }
         }
 
-        private async Task onHandlePayment(ExpenseItemViewModel expenseItem)
+        private async Task onHandlePayment(ExpenseItemViewModel expenseItem, ExpensePaymentModel? expensePayment)
         {
-            await paymentHandlePopup.ShowModalAsync(expenseItem);
+            await paymentHandlePopup.ShowModalAsync(expenseItem, expensePayment);
         }
 
         private async Task OnViewExpenseItemClick(ExpenseItemViewModel expenseItem)
@@ -148,21 +148,23 @@ namespace ToyAssist.Web.Pages
             return currencyGroups;
         }
 
-        private async void OnPaymentDataUpdatedEvent(ExpenseItemViewModel data)
+        private async void OnPaymentDataUpdatedEvent(ExpensePaymentModel data)
         {
             var isUpdated = false;
             for (int indexCurrencyGroup = 0; indexCurrencyGroup < ViewModel.CurrencyGroups.Count; indexCurrencyGroup++)
             {
-                for (int indexItem = 0; indexItem < ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems.Count; indexItem++)
+                for (int indexExpenseItem = 0; indexExpenseItem < ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems.Count; indexExpenseItem++)
                 {
-                    if (ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem].ExpenseSetupId == data.ExpenseSetupId)
+                    if (ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexExpenseItem].ExpenseSetupId == data.ExpenseSetupId)
                     {
-                        var expenseItem = ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexItem];
+                        var expenseItem = ViewModel.CurrencyGroups[indexCurrencyGroup].ExpenseItems[indexExpenseItem];
                         for (int indexPayment = 0; indexPayment < expenseItem.ExpensePayments.Count; indexPayment++)
                         {
-                            if (expenseItem.ExpensePayments[indexPayment].ExpensePaymentId == data.ExpensePayments?.FirstOrDefault()?.ExpensePaymentId)
+                            if (expenseItem.ExpensePayments[indexPayment].ExpenseSetupId == data.ExpenseSetupId && expenseItem.ExpensePayments[indexPayment].AccountId == data.AccountId && expenseItem.ExpensePayments[indexPayment].Year == data.Year && expenseItem.ExpensePayments[indexPayment].Month == data.Month)
                             {
-                                // expenseItem.ExpensePayments[indexPayment] = data.ExpensePayments[0];
+                                var index = expenseItem.ExpensePayments[indexPayment].Index;
+                                expenseItem.ExpensePayments[indexPayment] = data;
+                                expenseItem.ExpensePayments[indexPayment].Index = index;
                                 isUpdated = true;
                                 break;
                             }

@@ -6,15 +6,11 @@
 @using System.Collections.Generic;
 @using ToyAssist.Web.TypeExtensions;
 @using ToyAssist.Web.Shared.Components;
-    using ToyAssist.Web.Models;
+@using ToyAssist.Web.Models;
+
 @inject IJSRuntime JSRuntime;
 
 @{
-    JsonSerializerOptions options = new()
-            {
-                ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                WriteIndented = true
-            };
     string Title = "Handle payment";
 }
 
@@ -26,39 +22,39 @@
                     <div class="row">
                         <div class="col-8">
                             <h3>
-                                @ModalData?.ExpenseSetup?.ExpenseName
+                                @ExpenseItem?.ExpenseSetup?.ExpenseName
                             </h3>
                         </div>
                         <div class="col-4">
                         </div>
                     </div>
-                    @if (@ModalData?.BillGeneratedText != null)
+                    @if (ExpenseItem?.BillGeneratedText != null)
                     {
                         <div style="border: 1px solid #ffa200; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
-                            @ModalData?.BillGeneratedText
+                            @ExpenseItem?.BillGeneratedText
                         </div>
                     }
-                    @if (@ModalData?.BillPaymentText != null)
+                    @if (ExpenseItem?.BillPaymentText != null)
                     {
                         <div style="border: 1px solid red; border-radius: 5px; padding: 5px; width: fit-content; font-size: small; margin: 5px 0 5px 0;">
-                            @ModalData?.BillPaymentText
+                            @ExpenseItem?.BillPaymentText
                         </div>
                     }
                 </div>
                 <div class="box col-6" style="text-align:right;">
                     <h3>
-                        <AmountBox Amount="@ModalData?.ExpenseSetup?.Amount" TaxAmount="@ModalData?.ExpenseSetup?.TaxAmount" Currency="@ModalData?.ExpenseSetup?.Currency"></AmountBox>
+                        <AmountBox Amount="@ExpenseItem?.ExpenseSetup?.Amount" TaxAmount="@ExpenseItem?.ExpenseSetup?.TaxAmount" Currency="@ExpenseItem?.ExpenseSetup?.Currency"></AmountBox>
                     </h3>
                     @if (IsShowCurrencyConversion)
                     {
                         <div style="margin-right: -12px;">
-                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@ModalData?.ExpenseSetup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@ModalData?.ExpenseSetup?.Amount"></CurrencyConversionBox>
+                            <CurrencyConversionBox IsShowBaseAmount="false" IsShowBox="false" CurrencyFrom="@ExpenseItem?.ExpenseSetup?.Currency" CurrenciesTo="@CurrenciesInUse" Amount="@ExpenseItem?.ExpenseSetup?.Amount"></CurrencyConversionBox>
                         </div>
                     }
 
                     @* Payment Handle *@
                     @{
-                        var currentExpensePayment = ModalData?.ExpensePayments.FirstOrDefault(x => x.Year == DateTime.UtcNow.Year && x.Month == DateTime.UtcNow.Month);
+                        var currentExpensePayment = ExpenseItem?.ExpensePayments.FirstOrDefault(x => x.Year == ExpensePayment.Year && x.Month == ExpensePayment.Month);
                     }
                     @if (currentExpensePayment?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                     {
@@ -81,19 +77,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-6" style="padding: 15px; text-align:right;">
+                </div>
+                <div class="col-6" style="text-align:right;">
                     @if (currentExpensePayment?.PaymentStatus == Enums.ExpensePaymentStatusEnum.Paid)
                     {
-                        <Button Color="ButtonColor.Danger" @onclick="(data)=>OnMarkAsNotPaidClick()">Mark as not paid</Button>
+                        <Button Color="ButtonColor.Link" style="color: red;" @onclick="(data)=>OnMarkAsNotPaidClick()">
+                            <Icon Name="IconName.Trash"></Icon>
+                            Remove payment handled info
+                            </Button>
                     }
                     else
                     {
                         <Button Color="ButtonColor.Primary" @onclick="(data)=>OnMarkAsPaidClick()">Mark as paid</Button>
                     }
                 </div>
-                <div class="col-6" style="padding: 15px; text-align:right;">
-                    
-                </div>
+               
             </div>
         </div>
     </BodyTemplate>
